@@ -1,0 +1,4 @@
+/venv
+/buid
+*.env
+/src/__pycache__
