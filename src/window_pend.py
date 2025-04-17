@@ -179,23 +179,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addWidget(self.frame_current_companie)
 
-        self.tableWidget_pedency = QTableWidget(self.page_4)
-        if (self.tableWidget_pedency.columnCount() < 5):
-            self.tableWidget_pedency.setColumnCount(5)
-        __qtablewidgetitem = QTableWidgetItem()
-        self.tableWidget_pedency.setHorizontalHeaderItem(0, __qtablewidgetitem)
-        __qtablewidgetitem1 = QTableWidgetItem()
-        self.tableWidget_pedency.setHorizontalHeaderItem(1, __qtablewidgetitem1)
-        __qtablewidgetitem2 = QTableWidgetItem()
-        self.tableWidget_pedency.setHorizontalHeaderItem(2, __qtablewidgetitem2)
-        __qtablewidgetitem3 = QTableWidgetItem()
-        self.tableWidget_pedency.setHorizontalHeaderItem(3, __qtablewidgetitem3)
-        __qtablewidgetitem4 = QTableWidgetItem()
-        self.tableWidget_pedency.setHorizontalHeaderItem(4, __qtablewidgetitem4)
-        self.tableWidget_pedency.setObjectName(u"tableWidget_pedency")
-
-        self.verticalLayout_3.addWidget(self.tableWidget_pedency)
-
         self.line = QFrame(self.page_4)
         self.line.setObjectName(u"line")
         self.line.setFrameShape(QFrame.Shape.HLine)
@@ -206,10 +189,10 @@ class Ui_MainWindow(object):
         self.tableWidget_pedency_show = QTableWidget(self.page_4)
         if (self.tableWidget_pedency_show.columnCount() < 2):
             self.tableWidget_pedency_show.setColumnCount(2)
-        __qtablewidgetitem5 = QTableWidgetItem()
-        self.tableWidget_pedency_show.setHorizontalHeaderItem(0, __qtablewidgetitem5)
-        __qtablewidgetitem6 = QTableWidgetItem()
-        self.tableWidget_pedency_show.setHorizontalHeaderItem(1, __qtablewidgetitem6)
+        __qtablewidgetitem = QTableWidgetItem()
+        self.tableWidget_pedency_show.setHorizontalHeaderItem(0, __qtablewidgetitem)
+        __qtablewidgetitem1 = QTableWidgetItem()
+        self.tableWidget_pedency_show.setHorizontalHeaderItem(1, __qtablewidgetitem1)
         self.tableWidget_pedency_show.setObjectName(u"tableWidget_pedency_show")
         self.tableWidget_pedency_show.setShowGrid(True)
         self.tableWidget_pedency_show.horizontalHeader().setVisible(True)
@@ -352,20 +335,10 @@ class Ui_MainWindow(object):
 
         self.pushButton_exit_companie.setText("")
         self.label_current_companie.setText(QCoreApplication.translate("MainWindow", u"Nome Empresa", None))
-        ___qtablewidgetitem = self.tableWidget_pedency.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"Tipo", None));
-        ___qtablewidgetitem1 = self.tableWidget_pedency.horizontalHeaderItem(1)
+        ___qtablewidgetitem = self.tableWidget_pedency_show.horizontalHeaderItem(0)
+        ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"Tributo", None));
+        ___qtablewidgetitem1 = self.tableWidget_pedency_show.horizontalHeaderItem(1)
         ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"Valor", None));
-        ___qtablewidgetitem2 = self.tableWidget_pedency.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"Vencimento", None));
-        ___qtablewidgetitem3 = self.tableWidget_pedency.horizontalHeaderItem(3)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"New Column", None));
-        ___qtablewidgetitem4 = self.tableWidget_pedency.horizontalHeaderItem(4)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Observa\u00e7\u00f5es", None));
-        ___qtablewidgetitem5 = self.tableWidget_pedency_show.horizontalHeaderItem(0)
-        ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"Tributo", None));
-        ___qtablewidgetitem6 = self.tableWidget_pedency_show.horizontalHeaderItem(1)
-        ___qtablewidgetitem6.setText(QCoreApplication.translate("MainWindow", u"Valor", None));
         self.groupBox_email.setTitle(QCoreApplication.translate("MainWindow", u"Email", None))
         self.label_none_companie.setText(QCoreApplication.translate("MainWindow", u"Selecione uma \n"
 "empresa", None))

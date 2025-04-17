@@ -202,11 +202,6 @@
             <pointsize>14</pointsize>
            </font>
           </property>
-          <item>
-           <property name="text">
-            <string>Empresa</string>
-           </property>
-          </item>
          </widget>
         </item>
        </layout>
@@ -256,35 +251,6 @@
             </widget>
            </item>
           </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTableWidget" name="tableWidget_pedency">
-          <column>
-           <property name="text">
-            <string>Tipo</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Valor</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Vencimento</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>New Column</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Observações</string>
-           </property>
-          </column>
          </widget>
         </item>
         <item>
