@@ -6,15 +6,124 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>585</width>
-    <height>433</height>
+    <width>520</width>
+    <height>526</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Pendências Contáábeis</string>
+   <string>Pendências Contábeis</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0" rowspan="2">
+     <widget class="QGroupBox" name="groupBox_func">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Tw Cen MT</family>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="title">
+       <string>Funções</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QPushButton" name="pushButton_add_func">
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="text">
+          <string>Adcionar</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../../../../Downloads/add_icon.png</normaloff>../../../../../Downloads/add_icon.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>40</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_remove_func">
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="text">
+          <string>Remover</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../../../../Downloads/remove_icon.png</normaloff>../../../../../Downloads/remove_icon.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>35</width>
+           <height>35</height>
+          </size>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_edit_func">
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
+         <property name="text">
+          <string>Editar    </string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../../../../Downloads/edit_icon.png</normaloff>../../../../../Downloads/edit_icon.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>40</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_save_func">
+         <property name="text">
+          <string>Salvar   </string>
+         </property>
+         <property name="icon">
+          <iconset theme="QIcon::ThemeIcon::DocumentSave"/>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item row="0" column="1" rowspan="3">
      <widget class="QStackedWidget" name="stackedWidget_2">
       <property name="sizePolicy">
@@ -29,47 +138,74 @@
       <widget class="QWidget" name="page_3">
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="0">
-         <widget class="QTreeWidget" name="treeWidget">
+         <widget class="QFrame" name="frame_title_companie">
+          <property name="frameShape">
+           <enum>QFrame::Shape::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Shadow::Raised</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QLabel" name="label_companie_intro">
+             <property name="font">
+              <font>
+               <family>Tw Cen MT</family>
+               <pointsize>18</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Empresas Disponíveis</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_companie_subintro">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Tw Cen MT</family>
+               <pointsize>12</pointsize>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Clique 2x para selecionar</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QListWidget" name="listWidget_companie">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="font">
            <font>
             <pointsize>14</pointsize>
            </font>
           </property>
-          <property name="expandsOnDoubleClick">
-           <bool>false</bool>
-          </property>
-          <column>
-           <property name="text">
-            <string>Empresas cadastradas</string>
-           </property>
-           <property name="font">
-            <font>
-             <family>Tw Cen MT</family>
-             <pointsize>18</pointsize>
-            </font>
-           </property>
-           <property name="textAlignment">
-            <set>AlignCenter</set>
-           </property>
-           <property name="foreground">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>0</red>
-              <green>0</green>
-              <blue>0</blue>
-             </color>
-            </brush>
-           </property>
-          </column>
           <item>
            <property name="text">
-            <string>Empresa 1</string>
+            <string>Empresa</string>
            </property>
-           <item>
-            <property name="text">
-             <string>email1</string>
-            </property>
-           </item>
           </item>
          </widget>
         </item>
@@ -78,7 +214,7 @@
       <widget class="QWidget" name="page_4">
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <widget class="QFrame" name="frame">
+         <widget class="QFrame" name="frame_current_companie">
           <property name="frameShape">
            <enum>QFrame::Shape::StyledPanel</enum>
           </property>
@@ -87,7 +223,7 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
-            <widget class="QPushButton" name="pushButton_13">
+            <widget class="QPushButton" name="pushButton_exit_companie">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
                <horstretch>0</horstretch>
@@ -103,7 +239,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLabel" name="label_2">
+            <widget class="QLabel" name="label_current_companie">
              <property name="font">
               <font>
                <family>Tw Cen MT</family>
@@ -123,7 +259,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QTableWidget" name="tableWidget">
+         <widget class="QTableWidget" name="tableWidget_pedency">
           <column>
            <property name="text">
             <string>Tipo</string>
@@ -159,7 +295,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QTableWidget" name="tableWidget_2">
+         <widget class="QTableWidget" name="tableWidget_pedency_show">
           <property name="showGrid">
            <bool>true</bool>
           </property>
@@ -191,100 +327,10 @@
       </widget>
      </widget>
     </item>
-    <item row="0" column="0" rowspan="2">
-     <widget class="QGroupBox" name="groupBox">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <family>Tw Cen MT</family>
-        <pointsize>16</pointsize>
-       </font>
-      </property>
-      <property name="title">
-       <string>Funções</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QPushButton" name="pushButton">
-         <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
-         </property>
-         <property name="text">
-          <string>Adcionar</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>../../../../../Downloads/add_icon.png</normaloff>../../../../../Downloads/add_icon.png</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>40</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_2">
-         <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
-         </property>
-         <property name="text">
-          <string>Remover</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>../../../../../Downloads/remove_icon.png</normaloff>../../../../../Downloads/remove_icon.png</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>35</width>
-           <height>35</height>
-          </size>
-         </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_3">
-         <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
-         </property>
-         <property name="text">
-          <string>Editar</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>../../../../../Downloads/edit_icon.png</normaloff>../../../../../Downloads/edit_icon.png</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>40</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
     <item row="2" column="0">
-     <widget class="QGroupBox" name="groupBox_2">
+     <widget class="QGroupBox" name="groupBox_email">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+       <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -312,9 +358,13 @@
           <number>0</number>
          </property>
          <widget class="QWidget" name="page">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(222, 222, 222);
+</string>
+          </property>
           <layout class="QGridLayout" name="gridLayout_3">
            <item row="0" column="0">
-            <widget class="QLabel" name="label">
+            <widget class="QLabel" name="label_none_companie">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                <horstretch>0</horstretch>
@@ -323,8 +373,8 @@
              </property>
              <property name="font">
               <font>
-               <family>Segoe UI</family>
-               <pointsize>14</pointsize>
+               <family>Sitka</family>
+               <pointsize>18</pointsize>
                <italic>true</italic>
                <bold>false</bold>
               </font>
@@ -336,9 +386,6 @@ empresa</string>
              <property name="alignment">
               <set>Qt::AlignmentFlag::AlignCenter</set>
              </property>
-             <property name="margin">
-              <number>12</number>
-             </property>
             </widget>
            </item>
           </layout>
@@ -346,9 +393,9 @@ empresa</string>
          <widget class="QWidget" name="page_2">
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QListWidget" name="listWidget">
+            <widget class="QListWidget" name="listWidget_email">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -362,7 +409,49 @@ empresa</string>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_4">
+            <widget class="QFrame" name="frame_email_func">
+             <property name="frameShape">
+              <enum>QFrame::Shape::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Shadow::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QPushButton" name="pushButton_add_email">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_remove_email">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset theme="QIcon::ThemeIcon::ListRemove"/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_email_edit">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset theme="mail-message-new"/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_send_email">
              <property name="text">
               <string>Enviar</string>
              </property>
@@ -382,7 +471,7 @@ empresa</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>585</width>
+     <width>520</width>
      <height>22</height>
     </rect>
    </property>

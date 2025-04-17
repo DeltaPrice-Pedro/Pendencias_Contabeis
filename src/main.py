@@ -3,11 +3,16 @@ from PySide6.QtWidgets import (
 )
 
 from window_pend import Ui_MainWindow
+from database import DataBase
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent = None) -> None:
         super().__init__(parent)
         self.setupUi(self)
+        self.db = DataBase()
+
+    def fill_companies(self):
+        ...
 
 
 if __name__ == '__main__':

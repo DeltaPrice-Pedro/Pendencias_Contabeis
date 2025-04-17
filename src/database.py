@@ -2,7 +2,7 @@ from pymysql import err, connect
 from os import getenv
 
 class DataBase:
-    TABELA_EMPRESA = 'Empresa'
+    COMPANIES_TABLE = 'Companies'
     TABELA_USUARIO = 'Usuario'
     TABELA_EMAIL = 'Email'
 
@@ -18,7 +18,7 @@ class DataBase:
         self.query_endereco = (
             f'SELECT endereco FROM {self.TABELA_EMAIL} '
             'WHERE id_emp IN '
-            f'(SELECT id_emp FROM {self.TABELA_EMPRESA} '
+            f'(SELECT id_emp FROM {self.COMPANIES_TABLE} '
             'WHERE nome = %s)'
         )
 
@@ -45,21 +45,21 @@ class DataBase:
         )
 
         self.query_empresa = (
-            f'SELECT id_emp FROM {self.TABELA_EMPRESA} '
+            f'SELECT id_emp FROM {self.COMPANIES_TABLE} '
             'WHERE nome = %s'
         )
 
-        self.query_empresas = (
-            f'SELECT nome FROM {self.TABELA_EMPRESA} '
+        self.query_companies = (
+            f'SELECT name FROM {self.COMPANIES_TABLE} '
         )
 
         self.insert_empresa = (
-            f'INSERT INTO {self.TABELA_EMPRESA} '
+            f'INSERT INTO {self.COMPANIES_TABLE} '
             '(nome) VALUES (%s) '
         )
 
         self.delete_empresa = (
-            f'DELETE FROM {self.TABELA_EMPRESA} '
+            f'DELETE FROM {self.COMPANIES_TABLE} '
             'WHERE id_emp = %s'
         )
         
