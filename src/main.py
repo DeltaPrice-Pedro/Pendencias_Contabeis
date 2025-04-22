@@ -23,6 +23,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.listWidget_companie.itemDoubleClicked.connect(
             self.open_pedency
         )
+        self.tableWidget_pedency.itemDoubleClicked.connect(
+            self.edit_pedency
+        )
 
     def __init_icons(self):
         icon_ref ={
@@ -47,10 +50,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         id = item.__getattribute__('id')
         self.__pedency_table(id)
         self.__emails_list(id)
-        self.stackedWidget_2.setCurrentIndex(1)
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget_companie.setCurrentIndex(1)
+        self.stackedWidget_email.setCurrentIndex(1)
 
     def __pedency_table(self, companie_id):
+        self.tableWidget_pedency.clear()
         ids, data = self.db.pedency(companie_id)
         self.tableWidget_pedency.setColumnCount(len(data.keys()))
         self.tableWidget_pedency.setHorizontalHeaderLabels(data.keys())
@@ -64,12 +68,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.tableWidget_pedency.setItem(row, column, item)
 
     def __emails_list(self, companie_id):
+        self.listWidget_email.clear()
         ids, data = self.db.emails(companie_id)
         for row, value in enumerate(data):
             item = QListWidgetItem()
             item.__setattr__('id', ids[row])
             item.setText(str(value))
             self.listWidget_email.addItem(item)
+
+    def add_pedency(self):
+        row_index = self.tableWidget_pedency.rowCount() + 1
+        brush = QBrush(QColor(0, 234, 255, 255))
+        brush.setStyle(Qt.BrushStyle.Dense1Pattern)
+        for column_index in range(self.tableWidget_pedency.columnCount()):
+            item = QTableWidgetItem()
+            item.setBackground(brush)
+            self.tableWidget_pedency.setItem(row_index, column_index, item)
+        self.tableWidget_pedency.setRowCount(row_index)
+        self.tableWidget_pedency.setCurrentCell(row_index, 0)
+
+    def edit_pedency(self):
+        self.stackedWidget_pedency.setCurrentIndex(1)
 
 if __name__ == '__main__':
     app = QApplication()

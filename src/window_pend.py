@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(531, 526)
+        MainWindow.resize(531, 472)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -78,13 +78,13 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.groupBox_func, 0, 0, 2, 1)
 
-        self.stackedWidget_2 = QStackedWidget(self.centralwidget)
-        self.stackedWidget_2.setObjectName(u"stackedWidget_2")
+        self.stackedWidget_companie = QStackedWidget(self.centralwidget)
+        self.stackedWidget_companie.setObjectName(u"stackedWidget_companie")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.stackedWidget_2.sizePolicy().hasHeightForWidth())
-        self.stackedWidget_2.setSizePolicy(sizePolicy1)
+        sizePolicy1.setHeightForWidth(self.stackedWidget_companie.sizePolicy().hasHeightForWidth())
+        self.stackedWidget_companie.setSizePolicy(sizePolicy1)
         self.page_3 = QWidget()
         self.page_3.setObjectName(u"page_3")
         self.gridLayout_4 = QGridLayout(self.page_3)
@@ -135,7 +135,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.listWidget_companie, 2, 0, 1, 1)
 
-        self.stackedWidget_2.addWidget(self.page_3)
+        self.stackedWidget_companie.addWidget(self.page_3)
         self.page_4 = QWidget()
         self.page_4.setObjectName(u"page_4")
         self.verticalLayout_3 = QVBoxLayout(self.page_4)
@@ -184,8 +184,8 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addWidget(self.frame_current_companie)
 
-        self.stackedWidget_3 = QStackedWidget(self.page_4)
-        self.stackedWidget_3.setObjectName(u"stackedWidget_3")
+        self.stackedWidget_pedency = QStackedWidget(self.page_4)
+        self.stackedWidget_pedency.setObjectName(u"stackedWidget_pedency")
         self.page_5 = QWidget()
         self.page_5.setObjectName(u"page_5")
         self.verticalLayout_5 = QVBoxLayout(self.page_5)
@@ -230,7 +230,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_5.addWidget(self.tableWidget_pedency_show)
 
-        self.stackedWidget_3.addWidget(self.page_5)
+        self.stackedWidget_pedency.addWidget(self.page_5)
         self.page_6 = QWidget()
         self.page_6.setObjectName(u"page_6")
         self.gridLayout_5 = QGridLayout(self.page_6)
@@ -242,6 +242,14 @@ class Ui_MainWindow(object):
 
         self.label_2 = QLabel(self.page_6)
         self.label_2.setObjectName(u"label_2")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy4)
+        font4 = QFont()
+        font4.setPointSize(12)
+        self.label_2.setFont(font4)
 
         self.gridLayout_5.addWidget(self.label_2, 3, 0, 1, 1)
 
@@ -253,21 +261,33 @@ class Ui_MainWindow(object):
 
         self.label = QLabel(self.page_6)
         self.label.setObjectName(u"label")
+        sizePolicy4.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
+        self.label.setSizePolicy(sizePolicy4)
+        self.label.setFont(font4)
 
         self.gridLayout_5.addWidget(self.label, 4, 0, 1, 1)
 
         self.label_3 = QLabel(self.page_6)
         self.label_3.setObjectName(u"label_3")
+        sizePolicy4.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
+        self.label_3.setSizePolicy(sizePolicy4)
+        self.label_3.setFont(font4)
 
         self.gridLayout_5.addWidget(self.label_3, 1, 0, 1, 1)
 
         self.label_4 = QLabel(self.page_6)
         self.label_4.setObjectName(u"label_4")
+        sizePolicy4.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
+        self.label_4.setSizePolicy(sizePolicy4)
+        self.label_4.setFont(font4)
 
         self.gridLayout_5.addWidget(self.label_4, 0, 0, 1, 1)
 
         self.label_5 = QLabel(self.page_6)
         self.label_5.setObjectName(u"label_5")
+        sizePolicy4.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
+        self.label_5.setSizePolicy(sizePolicy4)
+        self.label_5.setFont(font4)
 
         self.gridLayout_5.addWidget(self.label_5, 2, 0, 1, 1)
 
@@ -284,11 +304,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.doubleSpinBox, 1, 1, 1, 1)
 
-        self.textEdit = QTextEdit(self.page_6)
-        self.textEdit.setObjectName(u"textEdit")
-
-        self.gridLayout_5.addWidget(self.textEdit, 5, 0, 1, 2)
-
         self.pushButton = QPushButton(self.page_6)
         self.pushButton.setObjectName(u"pushButton")
 
@@ -299,32 +314,40 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.pushButton_2, 6, 0, 1, 1)
 
-        self.stackedWidget_3.addWidget(self.page_6)
+        self.textEdit = QTextEdit(self.page_6)
+        self.textEdit.setObjectName(u"textEdit")
+        sizePolicy2.setHeightForWidth(self.textEdit.sizePolicy().hasHeightForWidth())
+        self.textEdit.setSizePolicy(sizePolicy2)
+        self.textEdit.setMaximumSize(QSize(16777215, 50))
 
-        self.verticalLayout_3.addWidget(self.stackedWidget_3)
+        self.gridLayout_5.addWidget(self.textEdit, 4, 1, 1, 1)
 
-        self.stackedWidget_2.addWidget(self.page_4)
+        self.stackedWidget_pedency.addWidget(self.page_6)
 
-        self.gridLayout.addWidget(self.stackedWidget_2, 0, 1, 3, 1)
+        self.verticalLayout_3.addWidget(self.stackedWidget_pedency)
+
+        self.stackedWidget_companie.addWidget(self.page_4)
+
+        self.gridLayout.addWidget(self.stackedWidget_companie, 0, 1, 3, 1)
 
         self.groupBox_email = QGroupBox(self.centralwidget)
         self.groupBox_email.setObjectName(u"groupBox_email")
         sizePolicy.setHeightForWidth(self.groupBox_email.sizePolicy().hasHeightForWidth())
         self.groupBox_email.setSizePolicy(sizePolicy)
-        font4 = QFont()
-        font4.setFamilies([u"Tw Cen MT"])
-        font4.setPointSize(16)
-        font4.setBold(False)
-        self.groupBox_email.setFont(font4)
+        font5 = QFont()
+        font5.setFamilies([u"Tw Cen MT"])
+        font5.setPointSize(16)
+        font5.setBold(False)
+        self.groupBox_email.setFont(font5)
         self.gridLayout_2 = QGridLayout(self.groupBox_email)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.stackedWidget = QStackedWidget(self.groupBox_email)
-        self.stackedWidget.setObjectName(u"stackedWidget")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.stackedWidget.sizePolicy().hasHeightForWidth())
-        self.stackedWidget.setSizePolicy(sizePolicy4)
+        self.stackedWidget_email = QStackedWidget(self.groupBox_email)
+        self.stackedWidget_email.setObjectName(u"stackedWidget_email")
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.stackedWidget_email.sizePolicy().hasHeightForWidth())
+        self.stackedWidget_email.setSizePolicy(sizePolicy5)
         self.page = QWidget()
         self.page.setObjectName(u"page")
         self.page.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
@@ -333,28 +356,29 @@ class Ui_MainWindow(object):
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.label_none_companie = QLabel(self.page)
         self.label_none_companie.setObjectName(u"label_none_companie")
-        sizePolicy4.setHeightForWidth(self.label_none_companie.sizePolicy().hasHeightForWidth())
-        self.label_none_companie.setSizePolicy(sizePolicy4)
-        font5 = QFont()
-        font5.setFamilies([u"Sitka"])
-        font5.setPointSize(18)
-        font5.setBold(False)
-        font5.setItalic(True)
-        self.label_none_companie.setFont(font5)
+        sizePolicy5.setHeightForWidth(self.label_none_companie.sizePolicy().hasHeightForWidth())
+        self.label_none_companie.setSizePolicy(sizePolicy5)
+        font6 = QFont()
+        font6.setFamilies([u"Sitka"])
+        font6.setPointSize(18)
+        font6.setBold(False)
+        font6.setItalic(True)
+        self.label_none_companie.setFont(font6)
         self.label_none_companie.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_3.addWidget(self.label_none_companie, 0, 0, 1, 1)
 
-        self.stackedWidget.addWidget(self.page)
+        self.stackedWidget_email.addWidget(self.page)
         self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
         self.verticalLayout_2 = QVBoxLayout(self.page_2)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.listWidget_email = QListWidget(self.page_2)
         self.listWidget_email.setObjectName(u"listWidget_email")
-        sizePolicy4.setHeightForWidth(self.listWidget_email.sizePolicy().hasHeightForWidth())
-        self.listWidget_email.setSizePolicy(sizePolicy4)
+        sizePolicy5.setHeightForWidth(self.listWidget_email.sizePolicy().hasHeightForWidth())
+        self.listWidget_email.setSizePolicy(sizePolicy5)
         self.listWidget_email.setMaximumSize(QSize(200, 16777215))
+        self.listWidget_email.setFont(font2)
 
         self.verticalLayout_2.addWidget(self.listWidget_email)
 
@@ -393,9 +417,9 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addWidget(self.pushButton_send_email)
 
-        self.stackedWidget.addWidget(self.page_2)
+        self.stackedWidget_email.addWidget(self.page_2)
 
-        self.gridLayout_2.addWidget(self.stackedWidget, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.stackedWidget_email, 0, 0, 1, 1)
 
 
         self.gridLayout.addWidget(self.groupBox_email, 2, 0, 1, 1)
@@ -411,9 +435,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(0)
-        self.stackedWidget_3.setCurrentIndex(0)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget_companie.setCurrentIndex(0)
+        self.stackedWidget_pedency.setCurrentIndex(0)
+        self.stackedWidget_email.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)

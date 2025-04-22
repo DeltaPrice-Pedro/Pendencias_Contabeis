@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>531</width>
-    <height>526</height>
+    <height>472</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -102,7 +102,7 @@
      </widget>
     </item>
     <item row="0" column="1" rowspan="3">
-     <widget class="QStackedWidget" name="stackedWidget_2">
+     <widget class="QStackedWidget" name="stackedWidget_companie">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -110,7 +110,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page_3">
        <layout class="QGridLayout" name="gridLayout_4">
@@ -254,7 +254,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QStackedWidget" name="stackedWidget_3">
+         <widget class="QStackedWidget" name="stackedWidget_pedency">
           <property name="currentIndex">
            <number>0</number>
           </property>
@@ -334,6 +334,17 @@
             </item>
             <item row="3" column="0">
              <widget class="QLabel" name="label_2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>Competência</string>
               </property>
@@ -348,6 +359,17 @@
             </item>
             <item row="4" column="0">
              <widget class="QLabel" name="label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>Observações</string>
               </property>
@@ -355,6 +377,17 @@
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_3">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>Valor</string>
               </property>
@@ -362,6 +395,17 @@
             </item>
             <item row="0" column="0">
              <widget class="QLabel" name="label_4">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>Tipo</string>
               </property>
@@ -369,6 +413,17 @@
             </item>
             <item row="2" column="0">
              <widget class="QLabel" name="label_5">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>Vencimento</string>
               </property>
@@ -397,9 +452,6 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="0" colspan="2">
-             <widget class="QTextEdit" name="textEdit"/>
-            </item>
             <item row="6" column="1">
              <widget class="QPushButton" name="pushButton">
               <property name="text">
@@ -411,6 +463,22 @@
              <widget class="QPushButton" name="pushButton_2">
               <property name="text">
                <string>Cancelar</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QTextEdit" name="textEdit">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>50</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -442,7 +510,7 @@
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
-        <widget class="QStackedWidget" name="stackedWidget">
+        <widget class="QStackedWidget" name="stackedWidget_email">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -450,7 +518,7 @@
           </sizepolicy>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="page">
           <property name="styleSheet">
