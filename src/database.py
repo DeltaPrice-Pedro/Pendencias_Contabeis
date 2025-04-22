@@ -146,13 +146,12 @@ class DataBase:
             cursor.execute(
                 self.query_pedency, (companie_id,)
             )
-            #dict[str,list]]
             data = {key: [] for key in self.columns_pending}
             for sub in cursor.fetchall():
                 for index, i in enumerate(sub):
                     data[self.columns_pending[index]].append(i)
             
-            return PedencyTable(self.columns_pending, data)
+            return PedencyTable(companie_id, data)
 
     def user_acessorias(self, nome_func: str):
         with self.connection.cursor() as cursor:

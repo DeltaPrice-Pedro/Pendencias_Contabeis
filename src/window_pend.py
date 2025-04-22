@@ -133,7 +133,6 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addWidget(self.frame_title_companie, 0, 0, 1, 1)
 
         self.listWidget_companie = QListWidget(self.page_3)
-        QListWidgetItem(self.listWidget_companie)
         self.listWidget_companie.setObjectName(u"listWidget_companie")
         sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicy2.setHorizontalStretch(0)
@@ -326,13 +325,6 @@ class Ui_MainWindow(object):
         self.pushButton_save_func.setText(QCoreApplication.translate("MainWindow", u"Salvar   ", None))
         self.label_companie_intro.setText(QCoreApplication.translate("MainWindow", u"Empresas Dispon\u00edveis", None))
         self.label_companie_subintro.setText(QCoreApplication.translate("MainWindow", u"Clique 2x para selecionar", None))
-
-        __sortingEnabled = self.listWidget_companie.isSortingEnabled()
-        self.listWidget_companie.setSortingEnabled(False)
-        ___qlistwidgetitem = self.listWidget_companie.item(0)
-        ___qlistwidgetitem.setText(QCoreApplication.translate("MainWindow", u"Empresa", None));
-        self.listWidget_companie.setSortingEnabled(__sortingEnabled)
-
         self.pushButton_exit_companie.setText("")
         self.label_current_companie.setText(QCoreApplication.translate("MainWindow", u"Nome Empresa", None))
         ___qtablewidgetitem = self.tableWidget_pedency_show.horizontalHeaderItem(0)

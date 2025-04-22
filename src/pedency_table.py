@@ -1,11 +1,11 @@
 from PySide6.QtWidgets import (
-    QMainWindow, QApplication, QCheckBox, QTreeWidgetItem, QListWidgetItem, QPushButton, QHBoxLayout, QFrame, QSizePolicy, QTableWidget, QTableWidgetItem
+  QTableWidget, QTableWidgetItem
 )
 
 class PedencyTable (QTableWidget):
-    def __init__(self, keys, data: dict[list]):
-        super().__init__(columnCount= len(keys))
-        self.setHorizontalHeaderLabels(keys)
+    def __init__(self, id_companie: str, data: dict[list] | None):
+        super().__init__(columnCount= len(data.keys()))
+        self.setHorizontalHeaderLabels(data.keys())
         # self.reference = {
         #     'type' : self.valid_type
         # }
@@ -21,5 +21,6 @@ class PedencyTable (QTableWidget):
                 self.setItem(row, column, item)
 
         pass
-
     def add(self):...
+    def updt(self):...
+    def remove(self):...
