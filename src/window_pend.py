@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(520, 526)
+        MainWindow.resize(531, 526)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -158,6 +158,22 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.pushButton_exit_companie)
 
+        self.line_2 = QFrame(self.frame_current_companie)
+        self.line_2.setObjectName(u"line_2")
+        self.line_2.setFrameShape(QFrame.Shape.VLine)
+        self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.horizontalLayout.addWidget(self.line_2)
+
+        self.pushButton_3 = QPushButton(self.frame_current_companie)
+        self.pushButton_3.setObjectName(u"pushButton_3")
+        sizePolicy3.setHeightForWidth(self.pushButton_3.sizePolicy().hasHeightForWidth())
+        self.pushButton_3.setSizePolicy(sizePolicy3)
+        icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.SyncSynchronizing))
+        self.pushButton_3.setIcon(icon4)
+
+        self.horizontalLayout.addWidget(self.pushButton_3)
+
         self.label_current_companie = QLabel(self.frame_current_companie)
         self.label_current_companie.setObjectName(u"label_current_companie")
         self.label_current_companie.setFont(font1)
@@ -174,6 +190,23 @@ class Ui_MainWindow(object):
         self.page_5.setObjectName(u"page_5")
         self.verticalLayout_5 = QVBoxLayout(self.page_5)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.tableWidget_pedency = QTableWidget(self.page_5)
+        if (self.tableWidget_pedency.columnCount() < 5):
+            self.tableWidget_pedency.setColumnCount(5)
+        __qtablewidgetitem = QTableWidgetItem()
+        self.tableWidget_pedency.setHorizontalHeaderItem(0, __qtablewidgetitem)
+        __qtablewidgetitem1 = QTableWidgetItem()
+        self.tableWidget_pedency.setHorizontalHeaderItem(1, __qtablewidgetitem1)
+        __qtablewidgetitem2 = QTableWidgetItem()
+        self.tableWidget_pedency.setHorizontalHeaderItem(2, __qtablewidgetitem2)
+        __qtablewidgetitem3 = QTableWidgetItem()
+        self.tableWidget_pedency.setHorizontalHeaderItem(3, __qtablewidgetitem3)
+        __qtablewidgetitem4 = QTableWidgetItem()
+        self.tableWidget_pedency.setHorizontalHeaderItem(4, __qtablewidgetitem4)
+        self.tableWidget_pedency.setObjectName(u"tableWidget_pedency")
+
+        self.verticalLayout_5.addWidget(self.tableWidget_pedency)
+
         self.line = QFrame(self.page_5)
         self.line.setObjectName(u"line")
         self.line.setFrameShape(QFrame.Shape.HLine)
@@ -184,19 +217,10 @@ class Ui_MainWindow(object):
         self.tableWidget_pedency_show = QTableWidget(self.page_5)
         if (self.tableWidget_pedency_show.columnCount() < 2):
             self.tableWidget_pedency_show.setColumnCount(2)
-        __qtablewidgetitem = QTableWidgetItem()
-        self.tableWidget_pedency_show.setHorizontalHeaderItem(0, __qtablewidgetitem)
-        __qtablewidgetitem1 = QTableWidgetItem()
-        self.tableWidget_pedency_show.setHorizontalHeaderItem(1, __qtablewidgetitem1)
-        if (self.tableWidget_pedency_show.rowCount() < 1):
-            self.tableWidget_pedency_show.setRowCount(1)
-        __qtablewidgetitem2 = QTableWidgetItem()
-        self.tableWidget_pedency_show.setVerticalHeaderItem(0, __qtablewidgetitem2)
-        brush = QBrush(QColor(0, 234, 255, 255))
-        brush.setStyle(Qt.BrushStyle.Dense1Pattern)
-        __qtablewidgetitem3 = QTableWidgetItem()
-        __qtablewidgetitem3.setBackground(brush);
-        self.tableWidget_pedency_show.setItem(0, 0, __qtablewidgetitem3)
+        __qtablewidgetitem5 = QTableWidgetItem()
+        self.tableWidget_pedency_show.setHorizontalHeaderItem(0, __qtablewidgetitem5)
+        __qtablewidgetitem6 = QTableWidgetItem()
+        self.tableWidget_pedency_show.setHorizontalHeaderItem(1, __qtablewidgetitem6)
         self.tableWidget_pedency_show.setObjectName(u"tableWidget_pedency_show")
         self.tableWidget_pedency_show.setShowGrid(True)
         self.tableWidget_pedency_show.horizontalHeader().setVisible(True)
@@ -342,22 +366,22 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.pushButton_add_email = QPushButton(self.frame_email_func)
         self.pushButton_add_email.setObjectName(u"pushButton_add_email")
-        icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListAdd))
-        self.pushButton_add_email.setIcon(icon4)
+        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListAdd))
+        self.pushButton_add_email.setIcon(icon5)
 
         self.horizontalLayout_3.addWidget(self.pushButton_add_email)
 
         self.pushButton_remove_email = QPushButton(self.frame_email_func)
         self.pushButton_remove_email.setObjectName(u"pushButton_remove_email")
-        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListRemove))
-        self.pushButton_remove_email.setIcon(icon5)
+        icon6 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListRemove))
+        self.pushButton_remove_email.setIcon(icon6)
 
         self.horizontalLayout_3.addWidget(self.pushButton_remove_email)
 
         self.pushButton_email_edit = QPushButton(self.frame_email_func)
         self.pushButton_email_edit.setObjectName(u"pushButton_email_edit")
-        icon6 = QIcon(QIcon.fromTheme(u"mail-message-new"))
-        self.pushButton_email_edit.setIcon(icon6)
+        icon7 = QIcon(QIcon.fromTheme(u"mail-message-new"))
+        self.pushButton_email_edit.setIcon(icon7)
 
         self.horizontalLayout_3.addWidget(self.pushButton_email_edit)
 
@@ -379,7 +403,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 520, 22))
+        self.menubar.setGeometry(QRect(0, 0, 531, 22))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -404,20 +428,22 @@ class Ui_MainWindow(object):
         self.label_companie_intro.setText(QCoreApplication.translate("MainWindow", u"Empresas Dispon\u00edveis", None))
         self.label_companie_subintro.setText(QCoreApplication.translate("MainWindow", u"Clique 2x para selecionar", None))
         self.pushButton_exit_companie.setText("")
+        self.pushButton_3.setText("")
         self.label_current_companie.setText(QCoreApplication.translate("MainWindow", u"Nome Empresa", None))
-        ___qtablewidgetitem = self.tableWidget_pedency_show.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"Tributo", None));
-        ___qtablewidgetitem1 = self.tableWidget_pedency_show.horizontalHeaderItem(1)
+        ___qtablewidgetitem = self.tableWidget_pedency.horizontalHeaderItem(0)
+        ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"Tipo", None));
+        ___qtablewidgetitem1 = self.tableWidget_pedency.horizontalHeaderItem(1)
         ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"Valor", None));
-        ___qtablewidgetitem2 = self.tableWidget_pedency_show.verticalHeaderItem(0)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"TESTE", None));
-
-        __sortingEnabled = self.tableWidget_pedency_show.isSortingEnabled()
-        self.tableWidget_pedency_show.setSortingEnabled(False)
-        ___qtablewidgetitem3 = self.tableWidget_pedency_show.item(0, 0)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"ASDASDA", None));
-        self.tableWidget_pedency_show.setSortingEnabled(__sortingEnabled)
-
+        ___qtablewidgetitem2 = self.tableWidget_pedency.horizontalHeaderItem(2)
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"Compet\u00eancia", None));
+        ___qtablewidgetitem3 = self.tableWidget_pedency.horizontalHeaderItem(3)
+        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Vencimento", None));
+        ___qtablewidgetitem4 = self.tableWidget_pedency.horizontalHeaderItem(4)
+        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Observa\u00e7\u00f5es", None));
+        ___qtablewidgetitem5 = self.tableWidget_pedency_show.horizontalHeaderItem(0)
+        ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"Tributo", None));
+        ___qtablewidgetitem6 = self.tableWidget_pedency_show.horizontalHeaderItem(1)
+        ___qtablewidgetitem6.setText(QCoreApplication.translate("MainWindow", u"Valor", None));
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Compet\u00eancia", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Observa\u00e7\u00f5es", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Valor", None))

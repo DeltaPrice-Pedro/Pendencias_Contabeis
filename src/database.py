@@ -2,15 +2,13 @@ from pymysql import err, connect
 from dotenv import load_dotenv
 from pathlib import Path
 from os import getenv
-from pedency_table import PedencyTable
 
 load_dotenv(Path(__file__).parent / 'env' / '.env')
 
 class DataBase:
     COMPANIES_TABLE = 'Companies'
     PENDING_TABLE = 'Pending'
-    TABELA_USUARIO = 'Usuario'
-    TABELA_EMAIL = 'Email'
+    EMAIL_TABLE = 'Emails'
 
     def __init__(self) -> None:
         self.connection = connect(
@@ -24,31 +22,31 @@ class DataBase:
         self.columns_pending = ['id_pending', 'type', 'value', 'competence', 'maturity', 'observations']
 
         self.query_endereco = (
-            f'SELECT endereco FROM {self.TABELA_EMAIL} '
+            f'SELECT endereco FROM {self.EMAIL_TABLE} '
             'WHERE id_emp IN '
             f'(SELECT id_emp FROM {self.COMPANIES_TABLE} '
             'WHERE nome = %s)'
         )
 
         self.update_endereco = (
-            f'UPDATE {self.TABELA_EMAIL} SET '
+            f'UPDATE {self.EMAIL_TABLE} SET '
             'endereco = %s '
             'WHERE endereco = %s AND  id_emp = %s'
         )
 
         self.insert_endereco = (
-            f'INSERT INTO {self.TABELA_EMAIL} '
+            f'INSERT INTO {self.EMAIL_TABLE} '
             '(endereco, id_emp)'
             ' VALUES (%s, %s) '
         )
 
         self.delete_endereco = (
-            f'DELETE FROM {self.TABELA_EMAIL} '
+            f'DELETE FROM {self.EMAIL_TABLE} '
             'WHERE id_emp = %s AND endereco = %s'
         )
 
         self.delete_enderecos = (
-            f'DELETE FROM {self.TABELA_EMAIL} '
+            f'DELETE FROM {self.EMAIL_TABLE} '
             'WHERE id_emp = %s'
         )
 
@@ -62,6 +60,12 @@ class DataBase:
             'WHERE id_companies = %s'
         )
 
+        self.query_emails = (
+            'SELECT id_emails, address '
+            f'FROM {self.EMAIL_TABLE} '
+            'WHERE id_companies = %s'
+        )
+
         self.insert_empresa = (
             f'INSERT INTO {self.COMPANIES_TABLE} '
             '(nome) VALUES (%s) '
@@ -70,17 +74,6 @@ class DataBase:
         self.delete_empresa = (
             f'DELETE FROM {self.COMPANIES_TABLE} '
             'WHERE id_emp = %s'
-        )
-        
-        self.query_ass = (
-            f'SELECT assinatura FROM {self.TABELA_USUARIO} '
-            'WHERE nome = %s'
-        )
-
-        self.query_acessorias = (
-            'SELECT email_acessorias, senha_acessorias'
-            f' FROM {self.TABELA_USUARIO} '
-            'WHERE nome = %s'
         )
         pass
 
@@ -151,11 +144,19 @@ class DataBase:
                 for index, i in enumerate(sub):
                     data[self.columns_pending[index]].append(i)
             
-            return PedencyTable(companie_id, data)
+            ids = data.pop('id_pending')
+            return ids, data
 
-    def user_acessorias(self, nome_func: str):
+    def emails(self, companie_id: str):
         with self.connection.cursor() as cursor:
             cursor.execute(
-                self.query_acessorias, (nome_func,)
+                self.query_emails, (companie_id,)
             )
-            return cursor.fetchone()
+
+            id = []
+            address = []
+            for sub in cursor.fetchall():
+                id.append(sub[0])
+                address.append(sub[1])
+            
+            return id, address

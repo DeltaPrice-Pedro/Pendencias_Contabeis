@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import (
-    QMainWindow, QApplication, QCheckBox, QTreeWidgetItem, QListWidgetItem, QPushButton, QHBoxLayout, QFrame, QSizePolicy
+    QMainWindow, QApplication, QCheckBox, QTreeWidgetItem, QListWidgetItem, QPushButton, QHBoxLayout, QFrame, QSizePolicy, QTableWidgetItem
 )
 from PySide6.QtGui import (
-    QIcon
+  QColor, QBrush, Qt, QIcon, 
 )
 
 from window_pend import Ui_MainWindow
@@ -45,26 +45,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def open_pedency(self):
         item = self.listWidget_companie.selectedItems()[0]
         id = item.__getattribute__('id')
-        #preencher Pedency
         self.__pedency_table(id)
-        #preencher listWidget emails
-        #mudar métodos email
+        self.__emails_list(id)
         self.stackedWidget_2.setCurrentIndex(1)
         self.stackedWidget.setCurrentIndex(1)
 
-    def __pedency_table(self, id):
-        pedencyTable = self.db.pedency(id)
-        self.verticalLayout_5.insertWidget(0, pedencyTable)
-        #mudar métodos func
-        self.pushButton_add_func.clicked.connect(
-            pedencyTable.add
-        )
-        # self.pushButton_edit_func.clicked.connect(
-        #     pedencyTable.updt
-        # )
-        self.pushButton_remove_func.clicked.connect(
-            pedencyTable.remove
-        )
+    def __pedency_table(self, companie_id):
+        ids, data = self.db.pedency(companie_id)
+        self.tableWidget_pedency.setColumnCount(len(data.keys()))
+        self.tableWidget_pedency.setHorizontalHeaderLabels(data.keys())
+        self.tableWidget_pedency.setRowCount(len(ids))
+
+        for column, column_data in enumerate(data.values()):
+            for row, value in enumerate(column_data):
+                item = QTableWidgetItem()
+                item.__setattr__('id', ids[row])
+                item.setText(str(value))
+                self.tableWidget_pedency.setItem(row, column, item)
+
+    def __emails_list(self, companie_id):
+        ids, data = self.db.emails(companie_id)
+        for row, value in enumerate(data):
+            item = QListWidgetItem()
+            item.__setattr__('id', ids[row])
+            item.setText(str(value))
+            self.listWidget_email.addItem(item)
 
 if __name__ == '__main__':
     app = QApplication()

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>520</width>
+    <width>531</width>
     <height>526</height>
    </rect>
   </property>
@@ -110,7 +110,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page_3">
        <layout class="QGridLayout" name="gridLayout_4">
@@ -211,6 +211,29 @@
             </widget>
            </item>
            <item>
+            <widget class="Line" name="line_2">
+             <property name="orientation">
+              <enum>Qt::Orientation::Vertical</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_3">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset theme="QIcon::ThemeIcon::SyncSynchronizing"/>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QLabel" name="label_current_companie">
              <property name="font">
               <font>
@@ -238,6 +261,35 @@
           <widget class="QWidget" name="page_5">
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <item>
+             <widget class="QTableWidget" name="tableWidget_pedency">
+              <column>
+               <property name="text">
+                <string>Tipo</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Valor</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Competência</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Vencimento</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Observações</string>
+               </property>
+              </column>
+             </widget>
+            </item>
+            <item>
              <widget class="Line" name="line">
               <property name="orientation">
                <enum>Qt::Orientation::Horizontal</enum>
@@ -261,11 +313,6 @@
               <attribute name="verticalHeaderHighlightSections">
                <bool>true</bool>
               </attribute>
-              <row>
-               <property name="text">
-                <string>TESTE</string>
-               </property>
-              </row>
               <column>
                <property name="text">
                 <string>Tributo</string>
@@ -276,20 +323,6 @@
                 <string>Valor</string>
                </property>
               </column>
-              <item row="0" column="0">
-               <property name="text">
-                <string>ASDASDA</string>
-               </property>
-               <property name="background">
-                <brush brushstyle="Dense1Pattern">
-                 <color alpha="255">
-                  <red>0</red>
-                  <green>234</green>
-                  <blue>255</blue>
-                 </color>
-                </brush>
-               </property>
-              </item>
              </widget>
             </item>
            </layout>
@@ -417,7 +450,7 @@
           </sizepolicy>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="page">
           <property name="styleSheet">
@@ -467,6 +500,13 @@ empresa</string>
                <width>200</width>
                <height>16777215</height>
               </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Tw Cen MT</family>
+               <pointsize>12</pointsize>
+               <bold>false</bold>
+              </font>
              </property>
             </widget>
            </item>
@@ -533,7 +573,7 @@ empresa</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>520</width>
+     <width>531</width>
      <height>22</height>
     </rect>
    </property>

@@ -10,10 +10,6 @@ class PedencyTable (QTableWidget):
     def __init__(self, id_companie: str, data: dict[list] | None):
         super().__init__(columnCount= len(data.keys()))
         self.setHorizontalHeaderLabels(data.keys())
-        # self.reference = {
-        #     'type' : self.valid_type
-        # }
-        
         ids = data.pop('id_pending')
         self.setRowCount(len(ids))
 
