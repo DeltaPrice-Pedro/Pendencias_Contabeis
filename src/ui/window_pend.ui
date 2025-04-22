@@ -80,29 +80,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_edit_func">
-         <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
-         </property>
-         <property name="text">
-          <string>Editar    </string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>../../../../../Downloads/edit_icon.png</normaloff>../../../../../Downloads/edit_icon.png</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>40</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="pushButton_save_func">
          <property name="text">
           <string>Salvar   </string>
@@ -254,39 +231,158 @@
          </widget>
         </item>
         <item>
-         <widget class="Line" name="line">
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
+         <widget class="QStackedWidget" name="stackedWidget_3">
+          <property name="currentIndex">
+           <number>0</number>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTableWidget" name="tableWidget_pedency_show">
-          <property name="showGrid">
-           <bool>true</bool>
-          </property>
-          <attribute name="horizontalHeaderVisible">
-           <bool>true</bool>
-          </attribute>
-          <attribute name="horizontalHeaderHighlightSections">
-           <bool>true</bool>
-          </attribute>
-          <attribute name="verticalHeaderVisible">
-           <bool>true</bool>
-          </attribute>
-          <attribute name="verticalHeaderHighlightSections">
-           <bool>true</bool>
-          </attribute>
-          <column>
-           <property name="text">
-            <string>Tributo</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Valor</string>
-           </property>
-          </column>
+          <widget class="QWidget" name="page_5">
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <widget class="Line" name="line">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="tableWidget_pedency_show">
+              <property name="showGrid">
+               <bool>true</bool>
+              </property>
+              <attribute name="horizontalHeaderVisible">
+               <bool>true</bool>
+              </attribute>
+              <attribute name="horizontalHeaderHighlightSections">
+               <bool>true</bool>
+              </attribute>
+              <attribute name="verticalHeaderVisible">
+               <bool>true</bool>
+              </attribute>
+              <attribute name="verticalHeaderHighlightSections">
+               <bool>true</bool>
+              </attribute>
+              <row>
+               <property name="text">
+                <string>TESTE</string>
+               </property>
+              </row>
+              <column>
+               <property name="text">
+                <string>Tributo</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Valor</string>
+               </property>
+              </column>
+              <item row="0" column="0">
+               <property name="text">
+                <string>ASDASDA</string>
+               </property>
+               <property name="background">
+                <brush brushstyle="Dense1Pattern">
+                 <color alpha="255">
+                  <red>0</red>
+                  <green>234</green>
+                  <blue>255</blue>
+                 </color>
+                </brush>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="page_6">
+           <layout class="QGridLayout" name="gridLayout_5">
+            <item row="0" column="1">
+             <widget class="QComboBox" name="comboBox"/>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Competência</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QDateEdit" name="dateEdit_2">
+              <property name="calendarPopup">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Observações</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Valor</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Tipo</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Vencimento</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QDateEdit" name="dateEdit">
+              <property name="displayFormat">
+               <string>MM/yyyy</string>
+              </property>
+              <property name="calendarPopup">
+               <bool>false</bool>
+              </property>
+              <property name="timeSpec">
+               <enum>Qt::TimeSpec::LocalTime</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox">
+              <property name="prefix">
+               <string>R$ </string>
+              </property>
+              <property name="singleStep">
+               <double>100.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0" colspan="2">
+             <widget class="QTextEdit" name="textEdit"/>
+            </item>
+            <item row="6" column="1">
+             <widget class="QPushButton" name="pushButton">
+              <property name="text">
+               <string>Confirmar</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QPushButton" name="pushButton_2">
+              <property name="text">
+               <string>Cancelar</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </widget>
         </item>
        </layout>

@@ -15,11 +15,12 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QGroupBox,
-    QHBoxLayout, QHeaderView, QLabel, QListWidget,
-    QListWidgetItem, QMainWindow, QMenuBar, QPushButton,
-    QSizePolicy, QStackedWidget, QStatusBar, QTableWidget,
-    QTableWidgetItem, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QDateEdit, QDoubleSpinBox,
+    QFrame, QGridLayout, QGroupBox, QHBoxLayout,
+    QHeaderView, QLabel, QListWidget, QListWidgetItem,
+    QMainWindow, QMenuBar, QPushButton, QSizePolicy,
+    QStackedWidget, QStatusBar, QTableWidget, QTableWidgetItem,
+    QTextEdit, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -65,21 +66,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.pushButton_remove_func)
 
-        self.pushButton_edit_func = QPushButton(self.groupBox_func)
-        self.pushButton_edit_func.setObjectName(u"pushButton_edit_func")
-        self.pushButton_edit_func.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        icon2 = QIcon()
-        icon2.addFile(u"../../../../../Downloads/edit_icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton_edit_func.setIcon(icon2)
-        self.pushButton_edit_func.setIconSize(QSize(40, 40))
-        self.pushButton_edit_func.setFlat(True)
-
-        self.verticalLayout.addWidget(self.pushButton_edit_func)
-
         self.pushButton_save_func = QPushButton(self.groupBox_func)
         self.pushButton_save_func.setObjectName(u"pushButton_save_func")
-        icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSave))
-        self.pushButton_save_func.setIcon(icon3)
+        icon2 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSave))
+        self.pushButton_save_func.setIcon(icon2)
         self.pushButton_save_func.setIconSize(QSize(30, 30))
         self.pushButton_save_func.setFlat(True)
 
@@ -163,8 +153,8 @@ class Ui_MainWindow(object):
         sizePolicy3.setVerticalStretch(0)
         sizePolicy3.setHeightForWidth(self.pushButton_exit_companie.sizePolicy().hasHeightForWidth())
         self.pushButton_exit_companie.setSizePolicy(sizePolicy3)
-        icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.SystemLogOut))
-        self.pushButton_exit_companie.setIcon(icon4)
+        icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.SystemLogOut))
+        self.pushButton_exit_companie.setIcon(icon3)
 
         self.horizontalLayout.addWidget(self.pushButton_exit_companie)
 
@@ -178,20 +168,35 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addWidget(self.frame_current_companie)
 
-        self.line = QFrame(self.page_4)
+        self.stackedWidget_3 = QStackedWidget(self.page_4)
+        self.stackedWidget_3.setObjectName(u"stackedWidget_3")
+        self.page_5 = QWidget()
+        self.page_5.setObjectName(u"page_5")
+        self.verticalLayout_5 = QVBoxLayout(self.page_5)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.line = QFrame(self.page_5)
         self.line.setObjectName(u"line")
         self.line.setFrameShape(QFrame.Shape.HLine)
         self.line.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.verticalLayout_3.addWidget(self.line)
+        self.verticalLayout_5.addWidget(self.line)
 
-        self.tableWidget_pedency_show = QTableWidget(self.page_4)
+        self.tableWidget_pedency_show = QTableWidget(self.page_5)
         if (self.tableWidget_pedency_show.columnCount() < 2):
             self.tableWidget_pedency_show.setColumnCount(2)
         __qtablewidgetitem = QTableWidgetItem()
         self.tableWidget_pedency_show.setHorizontalHeaderItem(0, __qtablewidgetitem)
         __qtablewidgetitem1 = QTableWidgetItem()
         self.tableWidget_pedency_show.setHorizontalHeaderItem(1, __qtablewidgetitem1)
+        if (self.tableWidget_pedency_show.rowCount() < 1):
+            self.tableWidget_pedency_show.setRowCount(1)
+        __qtablewidgetitem2 = QTableWidgetItem()
+        self.tableWidget_pedency_show.setVerticalHeaderItem(0, __qtablewidgetitem2)
+        brush = QBrush(QColor(0, 234, 255, 255))
+        brush.setStyle(Qt.BrushStyle.Dense1Pattern)
+        __qtablewidgetitem3 = QTableWidgetItem()
+        __qtablewidgetitem3.setBackground(brush);
+        self.tableWidget_pedency_show.setItem(0, 0, __qtablewidgetitem3)
         self.tableWidget_pedency_show.setObjectName(u"tableWidget_pedency_show")
         self.tableWidget_pedency_show.setShowGrid(True)
         self.tableWidget_pedency_show.horizontalHeader().setVisible(True)
@@ -199,7 +204,80 @@ class Ui_MainWindow(object):
         self.tableWidget_pedency_show.verticalHeader().setVisible(True)
         self.tableWidget_pedency_show.verticalHeader().setHighlightSections(True)
 
-        self.verticalLayout_3.addWidget(self.tableWidget_pedency_show)
+        self.verticalLayout_5.addWidget(self.tableWidget_pedency_show)
+
+        self.stackedWidget_3.addWidget(self.page_5)
+        self.page_6 = QWidget()
+        self.page_6.setObjectName(u"page_6")
+        self.gridLayout_5 = QGridLayout(self.page_6)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.comboBox = QComboBox(self.page_6)
+        self.comboBox.setObjectName(u"comboBox")
+
+        self.gridLayout_5.addWidget(self.comboBox, 0, 1, 1, 1)
+
+        self.label_2 = QLabel(self.page_6)
+        self.label_2.setObjectName(u"label_2")
+
+        self.gridLayout_5.addWidget(self.label_2, 3, 0, 1, 1)
+
+        self.dateEdit_2 = QDateEdit(self.page_6)
+        self.dateEdit_2.setObjectName(u"dateEdit_2")
+        self.dateEdit_2.setCalendarPopup(True)
+
+        self.gridLayout_5.addWidget(self.dateEdit_2, 2, 1, 1, 1)
+
+        self.label = QLabel(self.page_6)
+        self.label.setObjectName(u"label")
+
+        self.gridLayout_5.addWidget(self.label, 4, 0, 1, 1)
+
+        self.label_3 = QLabel(self.page_6)
+        self.label_3.setObjectName(u"label_3")
+
+        self.gridLayout_5.addWidget(self.label_3, 1, 0, 1, 1)
+
+        self.label_4 = QLabel(self.page_6)
+        self.label_4.setObjectName(u"label_4")
+
+        self.gridLayout_5.addWidget(self.label_4, 0, 0, 1, 1)
+
+        self.label_5 = QLabel(self.page_6)
+        self.label_5.setObjectName(u"label_5")
+
+        self.gridLayout_5.addWidget(self.label_5, 2, 0, 1, 1)
+
+        self.dateEdit = QDateEdit(self.page_6)
+        self.dateEdit.setObjectName(u"dateEdit")
+        self.dateEdit.setCalendarPopup(False)
+        self.dateEdit.setTimeSpec(Qt.TimeSpec.LocalTime)
+
+        self.gridLayout_5.addWidget(self.dateEdit, 3, 1, 1, 1)
+
+        self.doubleSpinBox = QDoubleSpinBox(self.page_6)
+        self.doubleSpinBox.setObjectName(u"doubleSpinBox")
+        self.doubleSpinBox.setSingleStep(100.000000000000000)
+
+        self.gridLayout_5.addWidget(self.doubleSpinBox, 1, 1, 1, 1)
+
+        self.textEdit = QTextEdit(self.page_6)
+        self.textEdit.setObjectName(u"textEdit")
+
+        self.gridLayout_5.addWidget(self.textEdit, 5, 0, 1, 2)
+
+        self.pushButton = QPushButton(self.page_6)
+        self.pushButton.setObjectName(u"pushButton")
+
+        self.gridLayout_5.addWidget(self.pushButton, 6, 1, 1, 1)
+
+        self.pushButton_2 = QPushButton(self.page_6)
+        self.pushButton_2.setObjectName(u"pushButton_2")
+
+        self.gridLayout_5.addWidget(self.pushButton_2, 6, 0, 1, 1)
+
+        self.stackedWidget_3.addWidget(self.page_6)
+
+        self.verticalLayout_3.addWidget(self.stackedWidget_3)
 
         self.stackedWidget_2.addWidget(self.page_4)
 
@@ -264,22 +342,22 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.pushButton_add_email = QPushButton(self.frame_email_func)
         self.pushButton_add_email.setObjectName(u"pushButton_add_email")
-        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListAdd))
-        self.pushButton_add_email.setIcon(icon5)
+        icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListAdd))
+        self.pushButton_add_email.setIcon(icon4)
 
         self.horizontalLayout_3.addWidget(self.pushButton_add_email)
 
         self.pushButton_remove_email = QPushButton(self.frame_email_func)
         self.pushButton_remove_email.setObjectName(u"pushButton_remove_email")
-        icon6 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListRemove))
-        self.pushButton_remove_email.setIcon(icon6)
+        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListRemove))
+        self.pushButton_remove_email.setIcon(icon5)
 
         self.horizontalLayout_3.addWidget(self.pushButton_remove_email)
 
         self.pushButton_email_edit = QPushButton(self.frame_email_func)
         self.pushButton_email_edit.setObjectName(u"pushButton_email_edit")
-        icon7 = QIcon(QIcon.fromTheme(u"mail-message-new"))
-        self.pushButton_email_edit.setIcon(icon7)
+        icon6 = QIcon(QIcon.fromTheme(u"mail-message-new"))
+        self.pushButton_email_edit.setIcon(icon6)
 
         self.horizontalLayout_3.addWidget(self.pushButton_email_edit)
 
@@ -310,6 +388,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.stackedWidget_2.setCurrentIndex(0)
+        self.stackedWidget_3.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(0)
 
 
@@ -321,7 +400,6 @@ class Ui_MainWindow(object):
         self.groupBox_func.setTitle(QCoreApplication.translate("MainWindow", u"Fun\u00e7\u00f5es", None))
         self.pushButton_add_func.setText(QCoreApplication.translate("MainWindow", u"Adcionar", None))
         self.pushButton_remove_func.setText(QCoreApplication.translate("MainWindow", u"Remover", None))
-        self.pushButton_edit_func.setText(QCoreApplication.translate("MainWindow", u"Editar    ", None))
         self.pushButton_save_func.setText(QCoreApplication.translate("MainWindow", u"Salvar   ", None))
         self.label_companie_intro.setText(QCoreApplication.translate("MainWindow", u"Empresas Dispon\u00edveis", None))
         self.label_companie_subintro.setText(QCoreApplication.translate("MainWindow", u"Clique 2x para selecionar", None))
@@ -331,6 +409,24 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"Tributo", None));
         ___qtablewidgetitem1 = self.tableWidget_pedency_show.horizontalHeaderItem(1)
         ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"Valor", None));
+        ___qtablewidgetitem2 = self.tableWidget_pedency_show.verticalHeaderItem(0)
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"TESTE", None));
+
+        __sortingEnabled = self.tableWidget_pedency_show.isSortingEnabled()
+        self.tableWidget_pedency_show.setSortingEnabled(False)
+        ___qtablewidgetitem3 = self.tableWidget_pedency_show.item(0, 0)
+        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"ASDASDA", None));
+        self.tableWidget_pedency_show.setSortingEnabled(__sortingEnabled)
+
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Compet\u00eancia", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Observa\u00e7\u00f5es", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Valor", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Tipo", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Vencimento", None))
+        self.dateEdit.setDisplayFormat(QCoreApplication.translate("MainWindow", u"MM/yyyy", None))
+        self.doubleSpinBox.setPrefix(QCoreApplication.translate("MainWindow", u"R$ ", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Confirmar", None))
+        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Cancelar", None))
         self.groupBox_email.setTitle(QCoreApplication.translate("MainWindow", u"Email", None))
         self.label_none_companie.setText(QCoreApplication.translate("MainWindow", u"Selecione uma \n"
 "empresa", None))

@@ -18,14 +18,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.db = DataBase()
 
-        self.fill_companies()
+        self.__fill_companies()
+        self.__init_icons()
         self.listWidget_companie.itemDoubleClicked.connect(
             self.open_pedency
         )
 
+    def __init_icons(self):
         icon_ref ={
             self.pushButton_add_func: 'add',
-            self.pushButton_edit_func: 'edit',
             self.pushButton_remove_func: 'remove'
         }
         for btn, icon_type in icon_ref.items():
@@ -33,7 +34,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             icon.addFile(str(self.icon_path).format(icon_type))
             btn.setIcon(icon)
 
-    def fill_companies(self):
+    def __fill_companies(self):
         data = self.db.companies()
         for id, name in data.items():
             item = QListWidgetItem()
@@ -53,14 +54,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def __pedency_table(self, id):
         pedencyTable = self.db.pedency(id)
-        self.verticalLayout_3.insertWidget(1, pedencyTable)
+        self.verticalLayout_5.insertWidget(0, pedencyTable)
         #mudar métodos func
         self.pushButton_add_func.clicked.connect(
             pedencyTable.add
         )
-        self.pushButton_edit_func.clicked.connect(
-            pedencyTable.updt
-        )
+        # self.pushButton_edit_func.clicked.connect(
+        #     pedencyTable.updt
+        # )
         self.pushButton_remove_func.clicked.connect(
             pedencyTable.remove
         )
