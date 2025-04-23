@@ -48,6 +48,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def open_pedency(self):
         item = self.listWidget_companie.selectedItems()[0]
         id = item.__getattribute__('id')
+        # self.verticalLayout_3.addWidget(stackedWidget_pedency)
         self.__pedency_table(id)
         self.__emails_list(id)
         self.stackedWidget_companie.setCurrentIndex(1)
