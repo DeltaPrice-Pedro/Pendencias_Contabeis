@@ -1,5 +1,6 @@
 from pymysql import err, connect
 from dotenv import load_dotenv
+from pendency import Pedency
 from pathlib import Path
 from os import getenv
 
@@ -145,7 +146,9 @@ class DataBase:
                     data[self.columns_pending[index]].append(i)
             
             ids = data.pop('id_pending')
-            return ids, data
+            pedency = Pedency()
+            pedency.fill(ids, data)
+            return pedency
 
     def emails(self, companie_id: str):
         with self.connection.cursor() as cursor:

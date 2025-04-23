@@ -1,10 +1,10 @@
 from ICRUD import ICRUD
 
 from PySide6.QtCore import (
-    QSize
+    QSize, Qt
 )
 from PySide6.QtGui import (
-    QFont
+    QFont, QBrush, QColor
 )
 from PySide6.QtWidgets import (QComboBox, QDateEdit, QDoubleSpinBox,
     QFrame, QGridLayout, QLabel, QPushButton, QSizePolicy,
@@ -23,20 +23,23 @@ class Pedency(ICRUD):
         self.font = QFont()
         self.font.setPointSize(12)
 
-        self.stackedWidget_pedency = QStackedWidget(self.page_4)
-        self.stackedWidget_pedency.addWidget(self.__page_1())
-        self.stackedWidget_pedency.addWidget(self.__page_2())
+        self.pedency_header = ['Tipo','Valor','Competência','Vencimento','Observações']
+        self.taxes_header = ['Tributo','Valor']
+
+        self.stacked_widget = QStackedWidget()
+        self.stacked_widget.addWidget(self.__page_1())
+        self.stacked_widget.addWidget(self.__page_2())
         pass
 
     def __call__(self, *args, **kwds):
-        return self.stackedWidget_pedency
+        return self.stacked_widget
 
     def __page_1(self) -> QWidget:
         page_1 = QWidget()
         verticalLayout = QVBoxLayout(page_1)
 
-        tableWidget_pedency = QTableWidget(page_1)
-        verticalLayout.addWidget(tableWidget_pedency)
+        self.table_pedency = QTableWidget(page_1)
+        verticalLayout.addWidget(self.table_pedency)
 
         line = QFrame(page_1)
         line.setFrameShape(QFrame.Shape.HLine)
@@ -44,8 +47,8 @@ class Pedency(ICRUD):
 
         verticalLayout.addWidget(line)
 
-        tableWidget_pedency_show = QTableWidget(page_1)
-        verticalLayout.addWidget(tableWidget_pedency_show)
+        self.table_taxes = QTableWidget(page_1)
+        verticalLayout.addWidget(self.table_taxes)
         return page_1
 
     def __page_2(self) -> QWidget:
@@ -56,7 +59,7 @@ class Pedency(ICRUD):
         gridLayout.addWidget(comboBox, 0, 1, 1, 1)
 
         for i in range(5):
-            label = self.label_factory(page_2)
+            label = self.__label_factory(page_2)
             gridLayout.addWidget(label, i, 0, 1, 1)
 
         dateEdit_1 = QDateEdit(page_2)
@@ -83,16 +86,36 @@ class Pedency(ICRUD):
         gridLayout.addWidget(textEdit, 4, 1, 1, 1)
         return page_2
 
-
-    def label_factory(self, page_2: QWidget) -> QLabel:
+    def __label_factory(self, page_2: QWidget) -> QLabel:
         label = QLabel(page_2)
         self.sizePolicy.setHeightForWidth(label.sizePolicy().hasHeightForWidth())
         label.setSizePolicy(self.sizePolicy)
         label.setFont(self.font)
         return label
+    
+    def fill(self, ids: list[str], data: dict[str,str]):
+        self.table_pedency.clear()
+        self.table_pedency.setColumnCount(len(data.keys()))
+        self.table_pedency.setHorizontalHeaderLabels(self.pedency_header)
+        self.table_pedency.setRowCount(len(ids))
+
+        for column, column_data in enumerate(data.values()):
+            for row, value in enumerate(column_data):
+                item = QTableWidgetItem()
+                item.__setattr__('id', ids[row])
+                item.setText(str(value))
+                self.table_pedency.setItem(row, column, item)
 
     def add(self):
-        ...
+        row_index = self.table_pedency.rowCount() + 1
+        brush = QBrush(QColor(0, 234, 255, 255))
+        brush.setStyle(Qt.BrushStyle.Dense1Pattern)
+        for column_index in range(self.table_pedency.columnCount()):
+            item = QTableWidgetItem()
+            item.setBackground(brush)
+            self.table_pedency.setItem(row_index, column_index, item)
+        self.table_pedency.setRowCount(row_index)
+        self.table_pedency.setCurrentCell(row_index, 0)
 
     def updt(self):...
 

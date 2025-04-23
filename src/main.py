@@ -48,25 +48,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def open_pedency(self):
         item = self.listWidget_companie.selectedItems()[0]
         id = item.__getattribute__('id')
-        # self.verticalLayout_3.addWidget(stackedWidget_pedency)
-        self.__pedency_table(id)
+        self.pedency = self.__pedency(id)
+
         self.__emails_list(id)
         self.stackedWidget_companie.setCurrentIndex(1)
         self.stackedWidget_email.setCurrentIndex(1)
 
-    def __pedency_table(self, companie_id):
-        self.tableWidget_pedency.clear()
-        ids, data = self.db.pedency(companie_id)
-        self.tableWidget_pedency.setColumnCount(len(data.keys()))
-        self.tableWidget_pedency.setHorizontalHeaderLabels(data.keys())
-        self.tableWidget_pedency.setRowCount(len(ids))
+    def __pedency(self, id):
+        pedency = self.db.pedency(id)
+        self.pushButton_add_func.clicked.connect(
+            pedency.add
+        )
+        self.pushButton_remove_func.clicked.connect(
+            pedency.remove
+        )
 
-        for column, column_data in enumerate(data.values()):
-            for row, value in enumerate(column_data):
-                item = QTableWidgetItem()
-                item.__setattr__('id', ids[row])
-                item.setText(str(value))
-                self.tableWidget_pedency.setItem(row, column, item)
+        stacked_widget = pedency()
+        stacked_widget.setParent(self.page_4)
+        self.verticalLayout_3.addWidget(stacked_widget)
 
     def __emails_list(self, companie_id):
         self.listWidget_email.clear()
@@ -76,17 +75,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             item.__setattr__('id', ids[row])
             item.setText(str(value))
             self.listWidget_email.addItem(item)
-
-    def add_pedency(self):
-        row_index = self.tableWidget_pedency.rowCount() + 1
-        brush = QBrush(QColor(0, 234, 255, 255))
-        brush.setStyle(Qt.BrushStyle.Dense1Pattern)
-        for column_index in range(self.tableWidget_pedency.columnCount()):
-            item = QTableWidgetItem()
-            item.setBackground(brush)
-            self.tableWidget_pedency.setItem(row_index, column_index, item)
-        self.tableWidget_pedency.setRowCount(row_index)
-        self.tableWidget_pedency.setCurrentCell(row_index, 0)
 
     def edit_pedency(self):
         self.stackedWidget_pedency.setCurrentIndex(1)
