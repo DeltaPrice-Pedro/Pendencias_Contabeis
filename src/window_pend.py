@@ -15,12 +15,12 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QDateEdit, QDoubleSpinBox,
-    QFrame, QGridLayout, QGroupBox, QHBoxLayout,
-    QHeaderView, QLabel, QListWidget, QListWidgetItem,
-    QMainWindow, QMenuBar, QPushButton, QSizePolicy,
-    QStackedWidget, QStatusBar, QTableWidget, QTableWidgetItem,
-    QTextEdit, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QDateEdit,
+    QDoubleSpinBox, QFrame, QGridLayout, QGroupBox,
+    QHBoxLayout, QHeaderView, QLabel, QListWidget,
+    QListWidgetItem, QMainWindow, QMenuBar, QPushButton,
+    QSizePolicy, QStackedWidget, QStatusBar, QTableWidget,
+    QTableWidgetItem, QTextEdit, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -204,6 +204,7 @@ class Ui_MainWindow(object):
         __qtablewidgetitem4 = QTableWidgetItem()
         self.tableWidget_pedency.setHorizontalHeaderItem(4, __qtablewidgetitem4)
         self.tableWidget_pedency.setObjectName(u"tableWidget_pedency")
+        self.tableWidget_pedency.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
 
         self.verticalLayout_5.addWidget(self.tableWidget_pedency)
 
@@ -235,62 +236,6 @@ class Ui_MainWindow(object):
         self.page_6.setObjectName(u"page_6")
         self.gridLayout_5 = QGridLayout(self.page_6)
         self.gridLayout_5.setObjectName(u"gridLayout_5")
-        self.comboBox = QComboBox(self.page_6)
-        self.comboBox.setObjectName(u"comboBox")
-
-        self.gridLayout_5.addWidget(self.comboBox, 0, 1, 1, 1)
-
-        self.label_2 = QLabel(self.page_6)
-        self.label_2.setObjectName(u"label_2")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
-        self.label_2.setSizePolicy(sizePolicy4)
-        font4 = QFont()
-        font4.setPointSize(12)
-        self.label_2.setFont(font4)
-
-        self.gridLayout_5.addWidget(self.label_2, 3, 0, 1, 1)
-
-        self.dateEdit_2 = QDateEdit(self.page_6)
-        self.dateEdit_2.setObjectName(u"dateEdit_2")
-        self.dateEdit_2.setCalendarPopup(True)
-
-        self.gridLayout_5.addWidget(self.dateEdit_2, 2, 1, 1, 1)
-
-        self.label = QLabel(self.page_6)
-        self.label.setObjectName(u"label")
-        sizePolicy4.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
-        self.label.setSizePolicy(sizePolicy4)
-        self.label.setFont(font4)
-
-        self.gridLayout_5.addWidget(self.label, 4, 0, 1, 1)
-
-        self.label_3 = QLabel(self.page_6)
-        self.label_3.setObjectName(u"label_3")
-        sizePolicy4.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
-        self.label_3.setSizePolicy(sizePolicy4)
-        self.label_3.setFont(font4)
-
-        self.gridLayout_5.addWidget(self.label_3, 1, 0, 1, 1)
-
-        self.label_4 = QLabel(self.page_6)
-        self.label_4.setObjectName(u"label_4")
-        sizePolicy4.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
-        self.label_4.setSizePolicy(sizePolicy4)
-        self.label_4.setFont(font4)
-
-        self.gridLayout_5.addWidget(self.label_4, 0, 0, 1, 1)
-
-        self.label_5 = QLabel(self.page_6)
-        self.label_5.setObjectName(u"label_5")
-        sizePolicy4.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
-        self.label_5.setSizePolicy(sizePolicy4)
-        self.label_5.setFont(font4)
-
-        self.gridLayout_5.addWidget(self.label_5, 2, 0, 1, 1)
-
         self.dateEdit = QDateEdit(self.page_6)
         self.dateEdit.setObjectName(u"dateEdit")
         self.dateEdit.setCalendarPopup(False)
@@ -304,15 +249,58 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.doubleSpinBox, 1, 1, 1, 1)
 
-        self.pushButton = QPushButton(self.page_6)
-        self.pushButton.setObjectName(u"pushButton")
+        self.dateEdit_2 = QDateEdit(self.page_6)
+        self.dateEdit_2.setObjectName(u"dateEdit_2")
+        self.dateEdit_2.setCalendarPopup(True)
 
-        self.gridLayout_5.addWidget(self.pushButton, 6, 1, 1, 1)
+        self.gridLayout_5.addWidget(self.dateEdit_2, 2, 1, 1, 1)
 
-        self.pushButton_2 = QPushButton(self.page_6)
+        self.label_4 = QLabel(self.page_6)
+        self.label_4.setObjectName(u"label_4")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
+        self.label_4.setSizePolicy(sizePolicy4)
+        font4 = QFont()
+        font4.setPointSize(12)
+        self.label_4.setFont(font4)
+
+        self.gridLayout_5.addWidget(self.label_4, 0, 0, 1, 1)
+
+        self.frame = QFrame(self.page_6)
+        self.frame.setObjectName(u"frame")
+        sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
+        self.frame.setSizePolicy(sizePolicy)
+        self.frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_2 = QHBoxLayout(self.frame)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.pushButton_2 = QPushButton(self.frame)
         self.pushButton_2.setObjectName(u"pushButton_2")
 
-        self.gridLayout_5.addWidget(self.pushButton_2, 6, 0, 1, 1)
+        self.horizontalLayout_2.addWidget(self.pushButton_2)
+
+        self.pushButton = QPushButton(self.frame)
+        self.pushButton.setObjectName(u"pushButton")
+
+        self.horizontalLayout_2.addWidget(self.pushButton)
+
+
+        self.gridLayout_5.addWidget(self.frame, 5, 0, 1, 2)
+
+        self.comboBox = QComboBox(self.page_6)
+        self.comboBox.setObjectName(u"comboBox")
+
+        self.gridLayout_5.addWidget(self.comboBox, 0, 1, 1, 1)
+
+        self.label_5 = QLabel(self.page_6)
+        self.label_5.setObjectName(u"label_5")
+        sizePolicy4.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
+        self.label_5.setSizePolicy(sizePolicy4)
+        self.label_5.setFont(font4)
+
+        self.gridLayout_5.addWidget(self.label_5, 2, 0, 1, 1)
 
         self.textEdit = QTextEdit(self.page_6)
         self.textEdit.setObjectName(u"textEdit")
@@ -321,6 +309,30 @@ class Ui_MainWindow(object):
         self.textEdit.setMaximumSize(QSize(16777215, 50))
 
         self.gridLayout_5.addWidget(self.textEdit, 4, 1, 1, 1)
+
+        self.label_3 = QLabel(self.page_6)
+        self.label_3.setObjectName(u"label_3")
+        sizePolicy4.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
+        self.label_3.setSizePolicy(sizePolicy4)
+        self.label_3.setFont(font4)
+
+        self.gridLayout_5.addWidget(self.label_3, 1, 0, 1, 1)
+
+        self.label_2 = QLabel(self.page_6)
+        self.label_2.setObjectName(u"label_2")
+        sizePolicy4.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy4)
+        self.label_2.setFont(font4)
+
+        self.gridLayout_5.addWidget(self.label_2, 3, 0, 1, 1)
+
+        self.label = QLabel(self.page_6)
+        self.label.setObjectName(u"label")
+        sizePolicy4.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
+        self.label.setSizePolicy(sizePolicy4)
+        self.label.setFont(font4)
+
+        self.gridLayout_5.addWidget(self.label, 4, 0, 1, 1)
 
         self.stackedWidget_pedency.addWidget(self.page_6)
 
@@ -468,15 +480,15 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"Tributo", None));
         ___qtablewidgetitem6 = self.tableWidget_pedency_show.horizontalHeaderItem(1)
         ___qtablewidgetitem6.setText(QCoreApplication.translate("MainWindow", u"Valor", None));
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Compet\u00eancia", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Observa\u00e7\u00f5es", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Valor", None))
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Tipo", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Vencimento", None))
         self.dateEdit.setDisplayFormat(QCoreApplication.translate("MainWindow", u"MM/yyyy", None))
         self.doubleSpinBox.setPrefix(QCoreApplication.translate("MainWindow", u"R$ ", None))
-        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Confirmar", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Tipo", None))
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Cancelar", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Confirmar", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Vencimento", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Valor", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Compet\u00eancia", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Observa\u00e7\u00f5es", None))
         self.groupBox_email.setTitle(QCoreApplication.translate("MainWindow", u"Email", None))
         self.label_none_companie.setText(QCoreApplication.translate("MainWindow", u"Selecione uma \n"
 "empresa", None))

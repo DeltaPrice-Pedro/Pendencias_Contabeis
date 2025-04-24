@@ -60,7 +60,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             lambda: pedency.add()
         )
         self.pushButton_remove_func.clicked.connect(
-            pedency.remove
+            lambda: pedency.remove()
         )
 
         stacked_widget = pedency()
