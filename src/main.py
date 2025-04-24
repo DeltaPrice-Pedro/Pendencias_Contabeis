@@ -57,7 +57,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __pedency(self, id):
         pedency = self.db.pedency(id)
         self.pushButton_add_func.clicked.connect(
-            pedency.add
+            lambda: pedency.add()
         )
         self.pushButton_remove_func.clicked.connect(
             pedency.remove

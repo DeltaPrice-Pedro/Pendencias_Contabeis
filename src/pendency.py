@@ -1,7 +1,7 @@
 from ICRUD import ICRUD
 
 from PySide6.QtCore import (
-    QSize, Qt
+    QSize, Qt, QDate
 )
 from PySide6.QtGui import (
     QFont, QBrush, QColor
@@ -11,6 +11,8 @@ from PySide6.QtWidgets import (QComboBox, QDateEdit, QDoubleSpinBox,
     QStackedWidget, QTableWidget, QTableWidgetItem,
     QTextEdit, QVBoxLayout, QWidget
 )
+
+from re import findall
 
 class Pedency(ICRUD):
     def __init__(self):
@@ -23,8 +25,21 @@ class Pedency(ICRUD):
         self.font = QFont()
         self.font.setPointSize(12)
 
-        self.pedency_header = ['Tipo','Valor','Competência','Vencimento','Observações']
+        self.add_brush = QBrush(QColor(0, 234, 255, 255))
+        self.add_brush.setStyle(Qt.BrushStyle.Dense1Pattern)
+
+        self.pedency_header = [
+            'Tipo','Valor','Competência','Vencimento','Observações'
+        ]
         self.taxes_header = ['Tributo','Valor']
+        self.inputs = []
+        self.types_options = ['IRPF']
+        self.ref_input = {
+            QComboBox : lambda value, widget: self.__set_combo(value, widget),
+            QDateEdit : lambda value, widget: self.__set_date(value, widget),
+            QDoubleSpinBox : lambda value, widget: widget.setValue(value),
+            QTextEdit : lambda value, widget: widget.setText(value)
+        }
 
         self.stacked_widget = QStackedWidget()
         self.stacked_widget.addWidget(self.__page_1())
@@ -55,35 +70,40 @@ class Pedency(ICRUD):
         page_2 = QWidget()
         gridLayout = QGridLayout(page_2)
 
-        comboBox = QComboBox(page_2)
-        gridLayout.addWidget(comboBox, 0, 1, 1, 1)
-
         for i in range(5):
             label = self.__label_factory(page_2)
             gridLayout.addWidget(label, i, 0, 1, 1)
 
+        comboBox = QComboBox(page_2)
+        self.inputs.append(comboBox)
+        gridLayout.addWidget(comboBox, 0, 1, 1, 1)
+
+        doubleSpinBox = QDoubleSpinBox(page_2)
+        doubleSpinBox.setSingleStep(100.000000000000000)
+        self.inputs.append(doubleSpinBox)
+        gridLayout.addWidget(doubleSpinBox, 1, 1, 1, 1)
+        
         dateEdit_1 = QDateEdit(page_2)
+        self.inputs.append(dateEdit_1)
         gridLayout.addWidget(dateEdit_1, 3, 1, 1, 1)
 
         dateEdit_2 = QDateEdit(page_2)
         dateEdit_2.setCalendarPopup(True)
+        self.inputs.append(dateEdit_2)
         gridLayout.addWidget(dateEdit_2, 2, 1, 1, 1)
-
-        doubleSpinBox = QDoubleSpinBox(page_2)
-        doubleSpinBox.setSingleStep(100.000000000000000)
-        gridLayout.addWidget(doubleSpinBox, 1, 1, 1, 1)
-
-        pushButton = QPushButton(page_2)
-        gridLayout.addWidget(pushButton, 6, 1, 1, 1)
-
-        pushButton_2 = QPushButton(page_2)
-        gridLayout.addWidget(pushButton_2, 6, 0, 1, 1)
 
         textEdit = QTextEdit(page_2)
         self.sizePolicy.setHeightForWidth(textEdit.sizePolicy().hasHeightForWidth())
         textEdit.setSizePolicy(self.sizePolicy)
         textEdit.setMaximumSize(QSize(16777215, 50))
+        self.inputs.append(textEdit)
         gridLayout.addWidget(textEdit, 4, 1, 1, 1)
+       
+        pushButton = QPushButton(page_2)
+        gridLayout.addWidget(pushButton, 6, 1, 1, 1)
+
+        pushButton_2 = QPushButton(page_2)
+        gridLayout.addWidget(pushButton_2, 6, 0, 1, 1)
         return page_2
 
     def __label_factory(self, page_2: QWidget) -> QLabel:
@@ -108,15 +128,37 @@ class Pedency(ICRUD):
 
     def add(self):
         row_index = self.table_pedency.rowCount() + 1
-        brush = QBrush(QColor(0, 234, 255, 255))
-        brush.setStyle(Qt.BrushStyle.Dense1Pattern)
         for column_index in range(self.table_pedency.columnCount()):
             item = QTableWidgetItem()
-            item.setBackground(brush)
+            item.setBackground(self.add_brush)
             self.table_pedency.setItem(row_index, column_index, item)
         self.table_pedency.setRowCount(row_index)
         self.table_pedency.setCurrentCell(row_index, 0)
 
-    def updt(self):...
+    def updt(self):
+        item = self.table_pedency.selectedItems()[0]
+        row = item.row()
+        for column in range(self.table_pedency.columnCount()):
+            item = self.table_pedency.item(row, column)
+            input = self.inputs[column]
+            self.ref_input[type(input)](item.text(), input)
+        self.stacked_widget.setCurrentIndex(1)
+
+    def __set_combo(self, value, widget):
+        if value in self.types_options:
+            index = self.types_options.index(value)
+            widget.setCurrentIndex(index)
+        else:
+            widget.setEditText('')
+
+    def __set_date(self, value, widget):
+            list_date = findall(r'[0-9]+', value)
+            if len(list_date) == 2:
+                m, y = list_date
+                d = 1
+            else:
+                d, m, y = list_date
+            date = QDate(y, m, d)
+            widget.setDate(date)
 
     def remove(self):...
