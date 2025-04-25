@@ -1,8 +1,8 @@
 from PySide6.QtCore import (
-    QSize, 
+    QSize, Qt
 )
 from PySide6.QtGui import (
-    QFont, QIcon,
+    QFont, QIcon, QColor, QBrush
 )
 from PySide6.QtWidgets import (
     QFrame,QHBoxLayout, QListWidget,
@@ -39,21 +39,27 @@ class Address:
         frame_email_func.setFrameShadow(QFrame.Shadow.Raised)
         horizontalLayout = QHBoxLayout(frame_email_func)
 
-        pushButton_add_email = QPushButton(frame_email_func)
-        icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListAdd))
-        pushButton_add_email.setIcon(icon)
-        horizontalLayout.addWidget(pushButton_add_email)
-
-        pushButton_remove_email = QPushButton(frame_email_func)
-        icon_2 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListRemove))
-        pushButton_remove_email.setIcon(icon_2)
-        horizontalLayout.addWidget(pushButton_remove_email)
+        pushButton_add, pushButton_remove = self.__buttons(frame_email_func)
+        horizontalLayout.addWidget(pushButton_add)
+        horizontalLayout.addWidget(pushButton_remove)
 
         verticalLayout.addWidget(frame_email_func)
 
         pushButton_send_email = QPushButton(page_2)
         verticalLayout.addWidget(pushButton_send_email)
         return page_2
+
+    def __buttons(self, frame_email_func):
+        pushButton_add = QPushButton(frame_email_func)
+        icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListAdd))
+        pushButton_add.setIcon(icon)
+        pushButton_add.clicked.connect(self.add)
+
+        pushButton_remove = QPushButton(frame_email_func)
+        icon_2 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListRemove))
+        pushButton_remove.setIcon(icon_2)
+        pushButton_remove.clicked.connect(self.remove)
+        return pushButton_add, pushButton_remove
 
     def __list(self, page_2):
         listWidget_email = QListWidget(page_2)
@@ -70,6 +76,25 @@ class Address:
     def __fill(self, ids, data):
         for row, value in enumerate(data):
             item = QListWidgetItem()
+            item.setFlags(Qt.ItemIsSelectable |Qt.ItemIsEditable |Qt.ItemIsEnabled)
             item.__setattr__('id', ids[row])
             item.setText(str(value))
             self.listWidget_email.addItem(item)
+
+    def add(self):
+        item = QListWidgetItem()
+        item.setFlags(Qt.ItemIsSelectable |Qt.ItemIsEditable |Qt.ItemIsEnabled)
+        item.__setattr__('id', None)
+
+        brush = QBrush(QColor(0, 234, 255, 255))
+        brush.setStyle(Qt.BrushStyle.Dense1Pattern)
+        item.setBackground(brush)
+
+        self.listWidget_email.addItem(item)
+        # self.table_pedency.setCurrentCell(row_index, 0)
+        # item.setSelected(True)
+        # self.updt()
+
+    def updt():...
+
+    def remove():...

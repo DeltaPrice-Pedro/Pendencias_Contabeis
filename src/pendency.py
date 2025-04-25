@@ -56,13 +56,14 @@ class Pedency(ICRUD):
 
         self.table_pedency = QTableWidget(page_1)
         self.table_pedency.itemDoubleClicked.connect(self.updt)
-        self.table_pedency.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.table_pedency.setEditTriggers(
+            QAbstractItemView.EditTrigger.NoEditTriggers
+        )
         verticalLayout.addWidget(self.table_pedency)
 
         line = QFrame(page_1)
         line.setFrameShape(QFrame.Shape.HLine)
         line.setFrameShadow(QFrame.Shadow.Sunken)
-
         verticalLayout.addWidget(line)
 
         self.table_taxes = QTableWidget(page_1)
