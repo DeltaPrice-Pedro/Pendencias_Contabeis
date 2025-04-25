@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (
-    QMainWindow, QApplication, QCheckBox, QTreeWidgetItem, QListWidgetItem, QPushButton, QHBoxLayout, QFrame, QSizePolicy, QTableWidgetItem, QComboBox
+    QMainWindow, QApplication, QCheckBox, QTreeWidgetItem, QListWidgetItem, QPushButton, QHBoxLayout, QFrame, QSizePolicy, QTableWidgetItem, QComboBox, QDateEdit, QTextEdit, QDoubleSpinBox
 )
 from PySide6.QtGui import (
   QColor, QBrush, Qt, QIcon
@@ -31,6 +31,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.edit_pedency
         )
 
+        self.ref_input = {
+            QComboBox : lambda value, widget: self.__set_combo(value, widget),
+            QDateEdit : lambda value, widget: self.__set_date(value, widget),
+            QDoubleSpinBox : lambda value, widget: widget.setValue(float(value)),
+            QTextEdit : lambda value, widget: widget.setText(value)
+        }
+        self.tableWidget_pedency.itemDoubleClicked.connect(self.updt_pedency)
+
+
     def __init_icons(self):
         icon_ref ={
             self.pushButton_add_func: 'add',
@@ -52,8 +61,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def open_pedency(self):
         item = self.listWidget_companie.selectedItems()[0]
         id = item.__getattribute__('id')
+
         self.__pedency_table(id)
         self.__emails_list(id)
+
+        self.pushButton_add_func.clicked.connect(self.add_pedency)
+        # self.pushButton_remove_func.clicked.connect(self.add_pedency)
+
         self.stackedWidget_companie.setCurrentIndex(1)
         self.stackedWidget_email.setCurrentIndex(1)
 
@@ -91,14 +105,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tableWidget_pedency.setRowCount(row_index)
         self.tableWidget_pedency.setCurrentCell(row_index, 0)
 
-    def updt(self):
-        item = self.table_pedency.selectedItems()[0]
+    def updt_pedency(self):
+        item = self.tableWidget_pedency.selectedItems()[0]
         row = item.row()
-        for column in range(self.table_pedency.columnCount()):
-            item = self.table_pedency.item(row, column)
+        for column in range(self.tableWidget_pedency.columnCount()):
+            item = self.tableWidget_pedency.item(row, column)
             input = self.inputs[column]
             self.ref_input[type(input)](item.text(), input)
-        self.stacked_widget.setCurrentIndex(1)
+        self.stackedWidget_pedency.setCurrentIndex(1)
 
     def __set_combo(self, value, widget):
         if value in self.types_options:
@@ -117,9 +131,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 d, m, y = list_date
             date = QDate(int(y), int(m), int(d))
             widget.setDate(date)
-
-    def edit_pedency(self):
-        self.stackedWidget_pedency.setCurrentIndex(1)
 
 if __name__ == '__main__':
     app = QApplication()
