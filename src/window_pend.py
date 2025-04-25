@@ -15,12 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QDateEdit,
-    QDoubleSpinBox, QFrame, QGridLayout, QGroupBox,
-    QHBoxLayout, QHeaderView, QLabel, QListWidget,
-    QListWidgetItem, QMainWindow, QMenuBar, QPushButton,
-    QSizePolicy, QStackedWidget, QStatusBar, QTableWidget,
-    QTableWidgetItem, QTextEdit, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QGroupBox,
+    QHBoxLayout, QLabel, QListWidget, QListWidgetItem,
+    QMainWindow, QMenuBar, QPushButton, QSizePolicy,
+    QStackedWidget, QStatusBar, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -184,160 +182,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addWidget(self.frame_current_companie)
 
-        self.stackedWidget_pedency = QStackedWidget(self.page_4)
-        self.stackedWidget_pedency.setObjectName(u"stackedWidget_pedency")
-        self.page_5 = QWidget()
-        self.page_5.setObjectName(u"page_5")
-        self.verticalLayout_5 = QVBoxLayout(self.page_5)
-        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-        self.tableWidget_pedency = QTableWidget(self.page_5)
-        if (self.tableWidget_pedency.columnCount() < 5):
-            self.tableWidget_pedency.setColumnCount(5)
-        __qtablewidgetitem = QTableWidgetItem()
-        self.tableWidget_pedency.setHorizontalHeaderItem(0, __qtablewidgetitem)
-        __qtablewidgetitem1 = QTableWidgetItem()
-        self.tableWidget_pedency.setHorizontalHeaderItem(1, __qtablewidgetitem1)
-        __qtablewidgetitem2 = QTableWidgetItem()
-        self.tableWidget_pedency.setHorizontalHeaderItem(2, __qtablewidgetitem2)
-        __qtablewidgetitem3 = QTableWidgetItem()
-        self.tableWidget_pedency.setHorizontalHeaderItem(3, __qtablewidgetitem3)
-        __qtablewidgetitem4 = QTableWidgetItem()
-        self.tableWidget_pedency.setHorizontalHeaderItem(4, __qtablewidgetitem4)
-        self.tableWidget_pedency.setObjectName(u"tableWidget_pedency")
-        self.tableWidget_pedency.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-
-        self.verticalLayout_5.addWidget(self.tableWidget_pedency)
-
-        self.line = QFrame(self.page_5)
-        self.line.setObjectName(u"line")
-        self.line.setFrameShape(QFrame.Shape.HLine)
-        self.line.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_5.addWidget(self.line)
-
-        self.tableWidget_pedency_show = QTableWidget(self.page_5)
-        if (self.tableWidget_pedency_show.columnCount() < 2):
-            self.tableWidget_pedency_show.setColumnCount(2)
-        __qtablewidgetitem5 = QTableWidgetItem()
-        self.tableWidget_pedency_show.setHorizontalHeaderItem(0, __qtablewidgetitem5)
-        __qtablewidgetitem6 = QTableWidgetItem()
-        self.tableWidget_pedency_show.setHorizontalHeaderItem(1, __qtablewidgetitem6)
-        self.tableWidget_pedency_show.setObjectName(u"tableWidget_pedency_show")
-        self.tableWidget_pedency_show.setShowGrid(True)
-        self.tableWidget_pedency_show.horizontalHeader().setVisible(True)
-        self.tableWidget_pedency_show.horizontalHeader().setHighlightSections(True)
-        self.tableWidget_pedency_show.verticalHeader().setVisible(True)
-        self.tableWidget_pedency_show.verticalHeader().setHighlightSections(True)
-
-        self.verticalLayout_5.addWidget(self.tableWidget_pedency_show)
-
-        self.stackedWidget_pedency.addWidget(self.page_5)
-        self.page_6 = QWidget()
-        self.page_6.setObjectName(u"page_6")
-        self.gridLayout_5 = QGridLayout(self.page_6)
-        self.gridLayout_5.setObjectName(u"gridLayout_5")
-        self.dateEdit = QDateEdit(self.page_6)
-        self.dateEdit.setObjectName(u"dateEdit")
-        self.dateEdit.setCalendarPopup(False)
-        self.dateEdit.setTimeSpec(Qt.TimeSpec.LocalTime)
-
-        self.gridLayout_5.addWidget(self.dateEdit, 3, 1, 1, 1)
-
-        self.doubleSpinBox = QDoubleSpinBox(self.page_6)
-        self.doubleSpinBox.setObjectName(u"doubleSpinBox")
-        self.doubleSpinBox.setSingleStep(100.000000000000000)
-
-        self.gridLayout_5.addWidget(self.doubleSpinBox, 1, 1, 1, 1)
-
-        self.dateEdit_2 = QDateEdit(self.page_6)
-        self.dateEdit_2.setObjectName(u"dateEdit_2")
-        self.dateEdit_2.setCalendarPopup(True)
-
-        self.gridLayout_5.addWidget(self.dateEdit_2, 2, 1, 1, 1)
-
-        self.label_4 = QLabel(self.page_6)
-        self.label_4.setObjectName(u"label_4")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
-        self.label_4.setSizePolicy(sizePolicy4)
-        font4 = QFont()
-        font4.setPointSize(12)
-        self.label_4.setFont(font4)
-
-        self.gridLayout_5.addWidget(self.label_4, 0, 0, 1, 1)
-
-        self.frame = QFrame(self.page_6)
-        self.frame.setObjectName(u"frame")
-        sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
-        self.frame.setSizePolicy(sizePolicy)
-        self.frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_2 = QHBoxLayout(self.frame)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.pushButton_2 = QPushButton(self.frame)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-
-        self.horizontalLayout_2.addWidget(self.pushButton_2)
-
-        self.pushButton = QPushButton(self.frame)
-        self.pushButton.setObjectName(u"pushButton")
-
-        self.horizontalLayout_2.addWidget(self.pushButton)
-
-
-        self.gridLayout_5.addWidget(self.frame, 5, 0, 1, 2)
-
-        self.comboBox = QComboBox(self.page_6)
-        self.comboBox.setObjectName(u"comboBox")
-
-        self.gridLayout_5.addWidget(self.comboBox, 0, 1, 1, 1)
-
-        self.label_5 = QLabel(self.page_6)
-        self.label_5.setObjectName(u"label_5")
-        sizePolicy4.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
-        self.label_5.setSizePolicy(sizePolicy4)
-        self.label_5.setFont(font4)
-
-        self.gridLayout_5.addWidget(self.label_5, 2, 0, 1, 1)
-
-        self.textEdit = QTextEdit(self.page_6)
-        self.textEdit.setObjectName(u"textEdit")
-        sizePolicy2.setHeightForWidth(self.textEdit.sizePolicy().hasHeightForWidth())
-        self.textEdit.setSizePolicy(sizePolicy2)
-        self.textEdit.setMaximumSize(QSize(16777215, 50))
-
-        self.gridLayout_5.addWidget(self.textEdit, 4, 1, 1, 1)
-
-        self.label_3 = QLabel(self.page_6)
-        self.label_3.setObjectName(u"label_3")
-        sizePolicy4.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
-        self.label_3.setSizePolicy(sizePolicy4)
-        self.label_3.setFont(font4)
-
-        self.gridLayout_5.addWidget(self.label_3, 1, 0, 1, 1)
-
-        self.label_2 = QLabel(self.page_6)
-        self.label_2.setObjectName(u"label_2")
-        sizePolicy4.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
-        self.label_2.setSizePolicy(sizePolicy4)
-        self.label_2.setFont(font4)
-
-        self.gridLayout_5.addWidget(self.label_2, 3, 0, 1, 1)
-
-        self.label = QLabel(self.page_6)
-        self.label.setObjectName(u"label")
-        sizePolicy4.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
-        self.label.setSizePolicy(sizePolicy4)
-        self.label.setFont(font4)
-
-        self.gridLayout_5.addWidget(self.label, 4, 0, 1, 1)
-
-        self.stackedWidget_pedency.addWidget(self.page_6)
-
-        self.verticalLayout_3.addWidget(self.stackedWidget_pedency)
-
         self.stackedWidget_companie.addWidget(self.page_4)
 
         self.gridLayout.addWidget(self.stackedWidget_companie, 0, 1, 3, 1)
@@ -346,20 +190,20 @@ class Ui_MainWindow(object):
         self.groupBox_email.setObjectName(u"groupBox_email")
         sizePolicy.setHeightForWidth(self.groupBox_email.sizePolicy().hasHeightForWidth())
         self.groupBox_email.setSizePolicy(sizePolicy)
-        font5 = QFont()
-        font5.setFamilies([u"Tw Cen MT"])
-        font5.setPointSize(16)
-        font5.setBold(False)
-        self.groupBox_email.setFont(font5)
+        font4 = QFont()
+        font4.setFamilies([u"Tw Cen MT"])
+        font4.setPointSize(16)
+        font4.setBold(False)
+        self.groupBox_email.setFont(font4)
         self.gridLayout_2 = QGridLayout(self.groupBox_email)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.stackedWidget_email = QStackedWidget(self.groupBox_email)
         self.stackedWidget_email.setObjectName(u"stackedWidget_email")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(self.stackedWidget_email.sizePolicy().hasHeightForWidth())
-        self.stackedWidget_email.setSizePolicy(sizePolicy5)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.stackedWidget_email.sizePolicy().hasHeightForWidth())
+        self.stackedWidget_email.setSizePolicy(sizePolicy4)
         self.page = QWidget()
         self.page.setObjectName(u"page")
         self.page.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
@@ -368,68 +212,19 @@ class Ui_MainWindow(object):
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.label_none_companie = QLabel(self.page)
         self.label_none_companie.setObjectName(u"label_none_companie")
-        sizePolicy5.setHeightForWidth(self.label_none_companie.sizePolicy().hasHeightForWidth())
-        self.label_none_companie.setSizePolicy(sizePolicy5)
-        font6 = QFont()
-        font6.setFamilies([u"Sitka"])
-        font6.setPointSize(18)
-        font6.setBold(False)
-        font6.setItalic(True)
-        self.label_none_companie.setFont(font6)
+        sizePolicy4.setHeightForWidth(self.label_none_companie.sizePolicy().hasHeightForWidth())
+        self.label_none_companie.setSizePolicy(sizePolicy4)
+        font5 = QFont()
+        font5.setFamilies([u"Sitka"])
+        font5.setPointSize(18)
+        font5.setBold(False)
+        font5.setItalic(True)
+        self.label_none_companie.setFont(font5)
         self.label_none_companie.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_3.addWidget(self.label_none_companie, 0, 0, 1, 1)
 
         self.stackedWidget_email.addWidget(self.page)
-        self.page_2 = QWidget()
-        self.page_2.setObjectName(u"page_2")
-        self.verticalLayout_2 = QVBoxLayout(self.page_2)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.listWidget_email = QListWidget(self.page_2)
-        self.listWidget_email.setObjectName(u"listWidget_email")
-        sizePolicy5.setHeightForWidth(self.listWidget_email.sizePolicy().hasHeightForWidth())
-        self.listWidget_email.setSizePolicy(sizePolicy5)
-        self.listWidget_email.setMaximumSize(QSize(200, 16777215))
-        self.listWidget_email.setFont(font2)
-
-        self.verticalLayout_2.addWidget(self.listWidget_email)
-
-        self.frame_email_func = QFrame(self.page_2)
-        self.frame_email_func.setObjectName(u"frame_email_func")
-        self.frame_email_func.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_email_func.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_3 = QHBoxLayout(self.frame_email_func)
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.pushButton_add_email = QPushButton(self.frame_email_func)
-        self.pushButton_add_email.setObjectName(u"pushButton_add_email")
-        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListAdd))
-        self.pushButton_add_email.setIcon(icon5)
-
-        self.horizontalLayout_3.addWidget(self.pushButton_add_email)
-
-        self.pushButton_remove_email = QPushButton(self.frame_email_func)
-        self.pushButton_remove_email.setObjectName(u"pushButton_remove_email")
-        icon6 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListRemove))
-        self.pushButton_remove_email.setIcon(icon6)
-
-        self.horizontalLayout_3.addWidget(self.pushButton_remove_email)
-
-        self.pushButton_email_edit = QPushButton(self.frame_email_func)
-        self.pushButton_email_edit.setObjectName(u"pushButton_email_edit")
-        icon7 = QIcon(QIcon.fromTheme(u"mail-message-new"))
-        self.pushButton_email_edit.setIcon(icon7)
-
-        self.horizontalLayout_3.addWidget(self.pushButton_email_edit)
-
-
-        self.verticalLayout_2.addWidget(self.frame_email_func)
-
-        self.pushButton_send_email = QPushButton(self.page_2)
-        self.pushButton_send_email.setObjectName(u"pushButton_send_email")
-
-        self.verticalLayout_2.addWidget(self.pushButton_send_email)
-
-        self.stackedWidget_email.addWidget(self.page_2)
 
         self.gridLayout_2.addWidget(self.stackedWidget_email, 0, 0, 1, 1)
 
@@ -448,7 +243,6 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.stackedWidget_companie.setCurrentIndex(0)
-        self.stackedWidget_pedency.setCurrentIndex(0)
         self.stackedWidget_email.setCurrentIndex(0)
 
 
@@ -466,35 +260,8 @@ class Ui_MainWindow(object):
         self.pushButton_exit_companie.setText("")
         self.pushButton_3.setText("")
         self.label_current_companie.setText(QCoreApplication.translate("MainWindow", u"Nome Empresa", None))
-        ___qtablewidgetitem = self.tableWidget_pedency.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"Tipo", None));
-        ___qtablewidgetitem1 = self.tableWidget_pedency.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"Valor", None));
-        ___qtablewidgetitem2 = self.tableWidget_pedency.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"Compet\u00eancia", None));
-        ___qtablewidgetitem3 = self.tableWidget_pedency.horizontalHeaderItem(3)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Vencimento", None));
-        ___qtablewidgetitem4 = self.tableWidget_pedency.horizontalHeaderItem(4)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Observa\u00e7\u00f5es", None));
-        ___qtablewidgetitem5 = self.tableWidget_pedency_show.horizontalHeaderItem(0)
-        ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"Tributo", None));
-        ___qtablewidgetitem6 = self.tableWidget_pedency_show.horizontalHeaderItem(1)
-        ___qtablewidgetitem6.setText(QCoreApplication.translate("MainWindow", u"Valor", None));
-        self.dateEdit.setDisplayFormat(QCoreApplication.translate("MainWindow", u"MM/yyyy", None))
-        self.doubleSpinBox.setPrefix(QCoreApplication.translate("MainWindow", u"R$ ", None))
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Tipo", None))
-        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Cancelar", None))
-        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Confirmar", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Vencimento", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Valor", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Compet\u00eancia", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Observa\u00e7\u00f5es", None))
         self.groupBox_email.setTitle(QCoreApplication.translate("MainWindow", u"Email", None))
         self.label_none_companie.setText(QCoreApplication.translate("MainWindow", u"Selecione uma \n"
 "empresa", None))
-        self.pushButton_add_email.setText("")
-        self.pushButton_remove_email.setText("")
-        self.pushButton_email_edit.setText("")
-        self.pushButton_send_email.setText(QCoreApplication.translate("MainWindow", u"Enviar", None))
     # retranslateUi
 

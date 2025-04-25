@@ -15,7 +15,7 @@ from PySide6.QtWidgets import (QComboBox, QDateEdit, QDoubleSpinBox,
 from re import findall
 
 class Pedency(ICRUD):
-    def __init__(self):
+    def __init__(self, ids, data):
         self.sizePolicy = QSizePolicy(
             QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum
         )
@@ -44,6 +44,7 @@ class Pedency(ICRUD):
         self.stacked_widget = QStackedWidget()
         self.stacked_widget.addWidget(self.__page_1())
         self.stacked_widget.addWidget(self.__page_2())
+        self.__fill(ids, data)
         pass
 
     def __call__(self, *args, **kwds):
@@ -138,7 +139,7 @@ class Pedency(ICRUD):
         label.setFont(self.font)
         return label
     
-    def fill(self, ids: list[str], data: dict[str,str]):
+    def __fill(self, ids: list[str], data: dict[str,str]):
         self.table_pedency.clear()
         self.table_pedency.setColumnCount(len(data.keys()))
         self.table_pedency.setHorizontalHeaderLabels(self.pedency_header)
