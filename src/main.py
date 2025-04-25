@@ -1,13 +1,17 @@
 from PySide6.QtWidgets import (
-    QMainWindow, QApplication, QCheckBox, QTreeWidgetItem, QListWidgetItem, QPushButton, QHBoxLayout, QFrame, QSizePolicy, QTableWidgetItem
+    QMainWindow, QApplication, QCheckBox, QTreeWidgetItem, QListWidgetItem, QPushButton, QHBoxLayout, QFrame, QSizePolicy, QTableWidgetItem, QComboBox
 )
 from PySide6.QtGui import (
-  QColor, QBrush, Qt, QIcon, 
+  QColor, QBrush, Qt, QIcon
+)
+from PySide6.QtCore import (
+  QDate
 )
 
 from window_pend import Ui_MainWindow
 from database import DataBase
 from pathlib import Path
+from re import findall
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     
@@ -86,6 +90,33 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.tableWidget_pedency.setItem(row_index, column_index, item)
         self.tableWidget_pedency.setRowCount(row_index)
         self.tableWidget_pedency.setCurrentCell(row_index, 0)
+
+    def updt(self):
+        item = self.table_pedency.selectedItems()[0]
+        row = item.row()
+        for column in range(self.table_pedency.columnCount()):
+            item = self.table_pedency.item(row, column)
+            input = self.inputs[column]
+            self.ref_input[type(input)](item.text(), input)
+        self.stacked_widget.setCurrentIndex(1)
+
+    def __set_combo(self, value, widget):
+        if value in self.types_options:
+            index = self.types_options.index(value)
+            widget.setCurrentIndex(index)
+        else:
+            QComboBox.setCurrentIndex
+            widget.setCurrentIndex(0)
+
+    def __set_date(self, value, widget):
+            list_date = findall(r'[0-9]+', value)
+            if len(list_date) == 2:
+                m, y = list_date
+                d = 1
+            else:
+                d, m, y = list_date
+            date = QDate(int(y), int(m), int(d))
+            widget.setDate(date)
 
     def edit_pedency(self):
         self.stackedWidget_pedency.setCurrentIndex(1)
