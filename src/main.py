@@ -20,9 +20,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.__fill_companies()
         self.__init_icons()
+
         self.listWidget_companie.itemDoubleClicked.connect(
             self.open_pedency
         )
+
+        self.pushButton_save_func.clicked.connect(self.save)
 
     def __init_icons(self):
         icon_ref ={
@@ -66,6 +69,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         stacked_widget.setParent(self.page_4)
         self.verticalLayout_3.addWidget(stacked_widget)
         return pedency
+    
+    def save(self):
+        address_change = self.address.change()
+        address_change.data()
 
 if __name__ == '__main__':
     app = QApplication()

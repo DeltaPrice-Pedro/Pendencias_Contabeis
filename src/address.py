@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
 
 from change import Change
 from tkinter import messagebox
+from re import findall
 
 class Address:
     def __init__(self, id, address):
@@ -114,26 +115,43 @@ class Address:
         try:
             item = self.listWidget_email.selectedItems()[0]
             item.setBackground(self.remove_brush)
+            if item.text() == '':
+                self.listWidget_email.takeItem(
+                    self.listWidget_email.row(item)
+                )
         except IndexError:
             messagebox.showerror('Aviso', 'Primeiro, selecione o e-mail que deseja remover')
 
     def change(self):
-        changes = Change()
-        # ref_change = {
-        #     self.add_brush : changes.to_add,
-        #     self.updt_brush : changes.to_updt,
-        #     self.remove_brush : changes.to_remove
-        # }
-        for row in range(self.listWidget_email.count()):
-            item = self.listWidget_email.item(row)
-            # func = ref_change.get(item.background())
-            # if func != None:
-            #     func(item.text())
-            brush = item.background()
-            if brush == self.add_brush:
-                changes.to_add(item.text())
-            elif brush == self.updt_brush:
-                changes.to_updt(item.text())
-            elif brush == self.remove_brush:
-                changes.to_remove(item.text())
-        return changes
+        try:
+            changes = Change()
+            for row in range(self.listWidget_email.count()):
+                item = self.listWidget_email.item(row)
+                brush = item.background()
+                if brush == self.add_brush:
+                    text = item.text()
+                    self.__valid_add(text)
+                    changes.to_add(text)
+
+                elif brush == self.updt_brush:
+                    changes.to_updt(
+                        item.__getattribute__('id'), 
+                        item.text()
+                    )
+
+                elif brush == self.remove_brush:
+                    changes.to_remove(item.__getattribute__('id'))
+            return changes
+        except Exception as err:
+            messagebox.showerror('Aviso', '')
+
+    def __valid_add(self, text):
+        if text == '':
+            raise Exception(
+                    'Defina um endereço de e-mail para o espaço adcionado, caso contrário, o remova'
+            )
+                    
+        if len(findall(r'@|\.com'), text) != 2:
+            raise Exception(
+                    'Defina um endereço de e-mail válido'
+            )
