@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (QComboBox, QDateEdit, QDoubleSpinBox,
 )
 
 from re import findall
+from tkinter import messagebox
 
 class Pedency(ICRUD):
     def __init__(self, ids, data):
@@ -25,8 +26,16 @@ class Pedency(ICRUD):
         self.font = QFont()
         self.font.setPointSize(12)
 
-        self.add_brush = QBrush(QColor(0, 234, 255, 255))
+        self.add_brush = QBrush(QColor(179, 255, 178, 255))
         self.add_brush.setStyle(Qt.BrushStyle.Dense1Pattern)
+
+        self.updt_brush = QBrush(QColor(189, 253, 254, 255))
+        self.updt_brush.setStyle(Qt.BrushStyle.Dense1Pattern)
+
+        self.remove_brush = QBrush(QColor(254, 139, 139, 255))
+        self.remove_brush.setStyle(Qt.BrushStyle.Dense1Pattern)
+
+        self.no_brush = QBrush(Qt.BrushStyle.NoBrush)
 
         self.pedency_header = [
             'Tipo','Valor','Competência','Vencimento','Observações'
@@ -150,6 +159,7 @@ class Pedency(ICRUD):
             for row, value in enumerate(column_data):
                 item = QTableWidgetItem()
                 item.__setattr__('id', ids[row])
+                item.__setattr__('edited', False)
                 item.setText(str(value))
                 self.table_pedency.setItem(row, column, item)
 
@@ -159,6 +169,7 @@ class Pedency(ICRUD):
         for column_index in range(self.table_pedency.columnCount()):
             item = QTableWidgetItem()
             item.__setattr__('id', None)
+            item.__setattr__('edited', False)
             item.setBackground(self.add_brush)
             self.table_pedency.setItem(row_index, column_index, item)
         # self.table_pedency.setCurrentCell(row_index, 0)
@@ -192,6 +203,26 @@ class Pedency(ICRUD):
             date = QDate(int(y), int(m), int(d))
             widget.setDate(date)
 
-    def remove(self):...
+    def confirm_updt(self):...
+        # item.__setattr__('edited', False)
+
+    def remove(self):
+        try:
+            item = self.table_pedency.selectedItems()[0]
+            bush = self.remove_brush
+            if item.background() == self.remove_brush:
+                if None == item.__getattribute__('id'):
+                    bush = self.add_brush
+                elif True == item.__getattribute__('edited'):
+                    bush = self.updt_brush
+                else:
+                    bush = self.no_brush
+            
+            row = item.row()
+            for column in range(self.table_pedency.columnCount()):
+                item = self.table_pedency.item(row, column)
+                item.setBackground(bush)
+        except IndexError:
+            messagebox.showerror('Aviso', 'Primeiro, selecione a pendência que deseja remover')
 
     def save(self):...
