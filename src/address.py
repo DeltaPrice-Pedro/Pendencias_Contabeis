@@ -9,10 +9,16 @@ from PySide6.QtWidgets import (
     QListWidgetItem, QPushButton,
     QSizePolicy, QVBoxLayout, QWidget)
 
+from change import Change
+from tkinter import messagebox
+
 class Address:
     def __init__(self, id, address):
         self.sizePolicy = QSizePolicy(
             QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum
+        )
+        self.sizePolicy_2 = QSizePolicy(
+            QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Expanding
         )
         self.sizePolicy.setHorizontalStretch(0)
         self.sizePolicy.setVerticalStretch(0)
@@ -20,6 +26,16 @@ class Address:
         self.font = QFont()
         self.font.setFamilies([u"Tw Cen MT"])
         self.font.setPointSize(12)
+
+        self.add_brush = QBrush(QColor(179, 255, 178, 255))
+        self.add_brush.setStyle(Qt.BrushStyle.Dense1Pattern)
+
+        self.updt_brush = QBrush(QColor(189, 253, 254, 255))
+        self.updt_brush.setStyle(Qt.BrushStyle.Dense1Pattern)
+
+        self.remove_brush = QBrush(QColor(254, 139, 139, 255))
+        self.remove_brush.setStyle(Qt.BrushStyle.Dense1Pattern)
+
         self.page = self.__page()
         self.__fill(id, address)
         pass
@@ -63,14 +79,15 @@ class Address:
 
     def __list(self, page_2):
         listWidget_email = QListWidget(page_2)
-        listWidget_email.setMaximumSize(QSize(200, 16777215))
         
-        self.sizePolicy.setHeightForWidth(
+        self.sizePolicy_2.setHeightForWidth(
             listWidget_email.sizePolicy().hasHeightForWidth()
         )
-        listWidget_email.setSizePolicy(self.sizePolicy)
+        listWidget_email.setSizePolicy(self.sizePolicy_2)
         
         listWidget_email.setFont(self.font)
+
+        # listWidget_email.itemChanged.connect(self.updt)
         return listWidget_email
 
     def __fill(self, ids, data):
@@ -85,16 +102,38 @@ class Address:
         item = QListWidgetItem()
         item.setFlags(Qt.ItemIsSelectable |Qt.ItemIsEditable |Qt.ItemIsEnabled)
         item.__setattr__('id', None)
-
-        brush = QBrush(QColor(0, 234, 255, 255))
-        brush.setStyle(Qt.BrushStyle.Dense1Pattern)
-        item.setBackground(brush)
+        item.setBackground(self.add_brush)
 
         self.listWidget_email.addItem(item)
-        # self.table_pedency.setCurrentCell(row_index, 0)
-        # item.setSelected(True)
-        # self.updt()
 
-    def updt():...
+    def updt(self):
+        item = self.listWidget_email.selectedItems()[0]
+        item.setBackground(self.updt_brush)
 
-    def remove():...
+    def remove(self):
+        try:
+            item = self.listWidget_email.selectedItems()[0]
+            item.setBackground(self.remove_brush)
+        except IndexError:
+            messagebox.showerror('Aviso', 'Primeiro, selecione o e-mail que deseja remover')
+
+    def change(self):
+        changes = Change()
+        # ref_change = {
+        #     self.add_brush : changes.to_add,
+        #     self.updt_brush : changes.to_updt,
+        #     self.remove_brush : changes.to_remove
+        # }
+        for row in range(self.listWidget_email.count()):
+            item = self.listWidget_email.item(row)
+            # func = ref_change.get(item.background())
+            # if func != None:
+            #     func(item.text())
+            brush = item.background()
+            if brush == self.add_brush:
+                changes.to_add(item.text())
+            elif brush == self.updt_brush:
+                changes.to_updt(item.text())
+            elif brush == self.remove_brush:
+                changes.to_remove(item.text())
+        return changes
