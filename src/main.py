@@ -31,13 +31,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.edit_pedency
         )
 
+        self.inputs = [
+            self.comboBox,
+            self.doubleSpinBox,
+            self.dateEdit,
+            self.dateEdit_2,
+            self.textEdit
+        ]
+        self.types_options = ['', 'IRPF']
+
         self.ref_input = {
             QComboBox : lambda value, widget: self.__set_combo(value, widget),
             QDateEdit : lambda value, widget: self.__set_date(value, widget),
             QDoubleSpinBox : lambda value, widget: widget.setValue(float(value)),
             QTextEdit : lambda value, widget: widget.setText(value)
         }
-        self.tableWidget_pedency.itemDoubleClicked.connect(self.updt_pedency)
 
 
     def __init_icons(self):
@@ -100,12 +108,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         brush.setStyle(Qt.BrushStyle.Dense1Pattern)
         for column_index in range(self.tableWidget_pedency.columnCount()):
             item = QTableWidgetItem()
+            item.setText('teste')
             item.setBackground(brush)
             self.tableWidget_pedency.setItem(row_index, column_index, item)
         self.tableWidget_pedency.setRowCount(row_index)
         self.tableWidget_pedency.setCurrentCell(row_index, 0)
 
-    def updt_pedency(self):
+    def edit_pedency(self):
         item = self.tableWidget_pedency.selectedItems()[0]
         row = item.row()
         for column in range(self.tableWidget_pedency.columnCount()):
