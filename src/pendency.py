@@ -156,10 +156,11 @@ class Pedency(ICRUD):
         self.table_pedency.setRowCount(row_index)
         for column_index in range(self.table_pedency.columnCount()):
             item = QTableWidgetItem()
-            item.setBackground(self.add_brush)
+            item.__setattr__('id', None)
+            # item.setBackground(self.add_brush)
             self.table_pedency.setItem(row_index, column_index, item)
-        self.table_pedency.setCurrentCell(row_index, 0)
-        item.setSelected(True)
+        # self.table_pedency.setCurrentCell(row_index, 0)
+        # item.setSelected(True)
         # self.updt()
 
     def updt(self):

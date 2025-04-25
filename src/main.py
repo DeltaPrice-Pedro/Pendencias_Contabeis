@@ -57,15 +57,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __pedency(self, id):
         pedency = self.db.pedency(id)
         self.pushButton_add_func.clicked.connect(
-            lambda: pedency.add()
+            pedency.add
         )
-        self.pushButton_remove_func.clicked.connect(
-            lambda: pedency.remove()
-        )
+        # self.pushButton_remove_func.clicked.connect(
+        #     lambda: pedency.remove()
+        # )
 
         stacked_widget = pedency()
         stacked_widget.setParent(self.page_4)
         self.verticalLayout_3.addWidget(stacked_widget)
+        return pedency
 
     def __emails_list(self, companie_id):
         self.listWidget_email.clear()
