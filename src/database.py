@@ -223,21 +223,22 @@ class DataBase:
     def changes_address(self, id_companie: str, change: Change):
         #add: list[str], updt: dict[str], remove: list[int]
         add, updt, remove = change.data()
+        ...
 
-        with self.connection.cursor() as cursor:
-            cursor.executemany(
-                self.insert_email, 
-                ([address] for address in add)
-            )
-            self.connection.commit()
+        # with self.connection.cursor() as cursor:
+        #     cursor.executemany(
+        #         self.insert_email, 
+        #         ([address] for address in add)
+        #     )
+        #     self.connection.commit()
 
-        with self.connection.cursor() as cursor:
-            cursor.executemany(
-                self.update_emails, 
-                ([adderss, id_companie, id_address] \
-                    for id_address, adderss in updt.items())
-            )
-            self.connection.commit()
+        # with self.connection.cursor() as cursor:
+        #     cursor.executemany(
+        #         self.update_emails, 
+        #         ([adderss, id_companie, id_address] \
+        #             for id_address, adderss in updt.items())
+        #     )
+        #     self.connection.commit()
 
         self.__remove_change(id_companie, self.delete_email, remove)
 

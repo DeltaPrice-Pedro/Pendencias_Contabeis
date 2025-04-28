@@ -122,20 +122,17 @@ class Address:
     def remove(self):
         try:
             item = self.listWidget_email.selectedItems()[0]
-            if item.text() == '':
+            if item.text() == '' or item.__getattribute__('id') == None:
                     self.listWidget_email.takeItem(
                         self.listWidget_email.row(item)
                     )
-            elif item.background() == self.remove_brush:
-                if None == item.__getattribute__('id'):
-                    bush = self.add_brush
-                elif True == item.__getattribute__('edited'):
-                    bush = self.updt_brush
-                else:
-                    bush = self.no_brush
             else:
                 bush = self.remove_brush
-            item.setBackground(bush)
+                if item.background() == self.remove_brush:
+                    bush = self.updt_brush\
+                        if True == item.__getattribute__('edited')\
+                            else self.no_brush
+                item.setBackground(bush)
         except IndexError:
             messagebox.showerror('Aviso', 'Primeiro, selecione o e-mail que deseja remover')
 

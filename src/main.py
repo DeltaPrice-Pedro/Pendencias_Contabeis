@@ -13,6 +13,7 @@ from tkinter import messagebox
 class MainWindow(QMainWindow, Ui_MainWindow):
     
     icon_path = Path(__file__).parent / 'imgs' / '{0}_icon.png'
+    current_companie_id = ''
 
     def __init__(self, parent = None) -> None:
         super().__init__(parent)
@@ -48,10 +49,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def open_pedency(self):
         item = self.listWidget_companie.selectedItems()[0]
-        id = item.__getattribute__('id')
+        self.current_companie_id = item.__getattribute__('id')
 
-        self.pedency = self.__pedency(id)
-        self.address = self.db.emails(id)
+        self.pedency = self.__pedency(self.current_companie_id)
+        self.address = self.db.emails(self.current_companie_id)
         self.stackedWidget_email.addWidget(self.address())
 
         self.stackedWidget_companie.setCurrentIndex(1)
@@ -73,13 +74,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     def save(self):
         self.ref_change = {
-            self.pedency: self.db.changes_pedency,
+            # self.pedency: self.db.changes_pedency,
             self.address: self.db.changes_address
         }
         try:
             for widget, func in self.ref_change.items():
                 widget_change = widget.change()
-                func(widget_change)
+                func(self.current_companie_id, widget_change)
                 widget_change.save()
         except Exception as err:
             messagebox.showerror('Aviso', err)

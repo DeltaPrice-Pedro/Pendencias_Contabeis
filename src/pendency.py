@@ -239,19 +239,19 @@ class Pedency(ICRUD):
     def remove(self):
         try:
             item = self.table_pedency.selectedItems()[0]
-            bush = self.remove_brush
-            if item.background() == self.remove_brush:
-                if None == item.__getattribute__('id'):
-                    bush = self.add_brush
-                elif True == item.__getattribute__('edited'):
-                    bush = self.updt_brush
-                else:
-                    bush = self.no_brush
-            
             row = item.row()
-            for column in range(self.table_pedency.columnCount()):
-                item = self.table_pedency.item(row, column)
-                item.setBackground(bush)
+            if item.background() == self.add_brush:
+                self.table_pedency.removeRow(row)
+            else:
+                bush = self.remove_brush
+                if item.background() == self.remove_brush:
+                    bush = self.updt_brush\
+                        if True == item.__getattribute__('edited')\
+                            else self.no_brush
+            
+                for column in range(self.table_pedency.columnCount()):
+                    item = self.table_pedency.item(row, column)
+                    item.setBackground(bush)
         except IndexError:
             messagebox.showerror('Aviso', 'Primeiro, selecione a pendência que deseja remover')
 
