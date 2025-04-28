@@ -4,6 +4,7 @@ from pendency import Pedency
 from address import Address
 from pathlib import Path
 from os import getenv
+from change import Change
 
 load_dotenv(Path(__file__).parent / 'env' / '.env')
 
@@ -76,6 +77,40 @@ class DataBase:
         self.delete_empresa = (
             f'DELETE FROM {self.COMPANIES_TABLE} '
             'WHERE id_emp = %s'
+        )
+
+        self.insert_pedency = (
+            f'INSERT INTO {self.PENDING_TABLE} '
+            '(value, competence, maturity, type, observations)'
+            ' VALUES (%s, %s, %s, %s, %s) '
+        )
+
+        self.insert_email = (
+            f'INSERT INTO {self.EMAIL_TABLE} '
+            '(address) VALUES (%s)'
+        )
+
+        self.update_pedency = (
+            f'UPDATE {self.PENDING_TABLE} SET '
+            'value = %s, competence = %s, maturity = %s, '
+            'type = %s, observations = %s '
+            'WHERE id_companies = %s AND id_pending = %s'
+        )
+
+        self.update_emails = (
+            f'UPDATE {self.EMAIL_TABLE} SET '
+            'address = %s '
+            'WHERE id_companies = %s AND id_emails = %s'
+        )
+
+        self.delete_pedency = (
+            f'DELETE FROM {self.PENDING_TABLE} '
+            'WHERE id_companies = %s AND id_pending = %s'
+        )
+
+        self.delete_email = (
+            f'DELETE FROM {self.EMAIL_TABLE} '
+            'WHERE id_companies = %s AND id_emails = %s'
         )
         pass
 
@@ -163,6 +198,53 @@ class DataBase:
             
             return Address(id, address)
         
-    def changes_pedency(self):...
+    def changes_pedency(self, id_companie: str, change: Change):
+        #add:list, updt: dict[tuple[dict]], remove: list[int]
+        add, updt, remove = change.data()
 
-    def changes_address(self):...
+        with self.connection.cursor() as cursor:
+            for id_data, data in updt.items():
+                #Somando tuplas, caso dê errado, enviar dict com keys certas
+                infos = data + (id_companie, id_data)
+                cursor.execute(
+                    self.update_pedency,
+                    infos
+                )
+
+            # cursor.executemany(
+            #     self.update_pedency, 
+            #     ([data, id_companie, id_data]\
+            #      for id_data, data in updt.items())
+            # )
+            self.connection.commit()
+
+        self.__remove_change(id_companie, self.delete_pedency, remove)
+
+    def changes_address(self, id_companie: str, change: Change):
+        #add: list[str], updt: dict[str], remove: list[int]
+        add, updt, remove = change.data()
+
+        with self.connection.cursor() as cursor:
+            cursor.executemany(
+                self.insert_email, 
+                ([address] for address in add)
+            )
+            self.connection.commit()
+
+        with self.connection.cursor() as cursor:
+            cursor.executemany(
+                self.update_emails, 
+                ([adderss, id_companie, id_address] \
+                    for id_address, adderss in updt.items())
+            )
+            self.connection.commit()
+
+        self.__remove_change(id_companie, self.delete_email, remove)
+
+    def __remove_change(self, id_companie: str, query: str, data: list[str]):
+        with self.connection.cursor() as cursor:
+            cursor.executemany(
+                query, 
+                ([id_companie, id_data] for id_data in data)
+            )
+            self.connection.commit()
