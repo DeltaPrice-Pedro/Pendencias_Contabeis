@@ -37,6 +37,8 @@ class Address:
         self.remove_brush = QBrush(QColor(254, 139, 139, 255))
         self.remove_brush.setStyle(Qt.BrushStyle.Dense1Pattern)
 
+        self.no_brush = QBrush(Qt.BrushStyle.NoBrush)
+
         self.page = self.__page()
         self.__fill(id, address)
         pass
@@ -96,6 +98,7 @@ class Address:
             item = QListWidgetItem()
             item.setFlags(Qt.ItemIsSelectable |Qt.ItemIsEditable |Qt.ItemIsEnabled)
             item.__setattr__('id', ids[row])
+            item.__setattr__('edited', False)
             item.setText(str(value))
             self.listWidget_email.addItem(item)
 
@@ -103,6 +106,7 @@ class Address:
         item = QListWidgetItem()
         item.setFlags(Qt.ItemIsSelectable |Qt.ItemIsEditable |Qt.ItemIsEnabled)
         item.__setattr__('id', None)
+        item.__setattr__('edited', False)
         item.setBackground(self.add_brush)
 
         self.listWidget_email.addItem(item)
@@ -112,19 +116,26 @@ class Address:
         bush = self.add_brush\
                  if None == item.__getattribute__('id')\
                     else self.updt_brush
+        item.__setattr__('edited', True)
         item.setBackground(bush)
 
     def remove(self):
         try:
             item = self.listWidget_email.selectedItems()[0]
-            if item.background() == self.remove_brush:
-                self.updt()
-            else:
-                item.setBackground(self.remove_brush)
-                if item.text() == '':
+            if item.text() == '':
                     self.listWidget_email.takeItem(
                         self.listWidget_email.row(item)
                     )
+            elif item.background() == self.remove_brush:
+                if None == item.__getattribute__('id'):
+                    bush = self.add_brush
+                elif True == item.__getattribute__('edited'):
+                    bush = self.updt_brush
+                else:
+                    bush = self.no_brush
+            else:
+                bush = self.remove_brush
+            item.setBackground(bush)
         except IndexError:
             messagebox.showerror('Aviso', 'Primeiro, selecione o e-mail que deseja remover')
 

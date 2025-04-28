@@ -50,6 +50,13 @@ class Pedency(ICRUD):
             QTextEdit : lambda value, widget: widget.setText(value)
         }
 
+        self.ref_input_text = {
+            QComboBox : lambda widget: widget.currentText(),
+            QTextEdit : lambda widget: widget.toPlainText(),
+            QDateEdit : lambda widget: widget.text(),
+            QDoubleSpinBox : lambda widget: widget.text(),
+        }
+
         self.stacked_widget = QStackedWidget()
         self.stacked_widget.addWidget(self.__page_1())
         self.stacked_widget.addWidget(self.__page_2())
@@ -134,7 +141,7 @@ class Pedency(ICRUD):
         pushButton_2 = QPushButton(frame)
         pushButton_2.setText('Confirmar')
         pushButton_2.clicked.connect( 
-            self.save
+            self.confirm_updt
         )
         horizontalLayout.addWidget(pushButton_2)
 
@@ -203,9 +210,22 @@ class Pedency(ICRUD):
             date = QDate(int(y), int(m), int(d))
             widget.setDate(date)
 
-    def confirm_updt(self):...
-        # item.__setattr__('edited', False)
+    def confirm_updt(self):
+        resp = []
+        text = ''
+        for input in self.inputs:
+            text = self.ref_input_text[type(input)](input)
+            resp.append(text)
 
+        item = self.table_pedency.selectedItems()[0]
+        row = item.row()
+        for column in range(self.table_pedency.columnCount()):
+            item = self.table_pedency.item(row, column)
+            item.__setattr__('edited', True)
+            item.setText(resp[column])
+
+        self.stacked_widget.setCurrentIndex(0)
+        
     def remove(self):
         try:
             item = self.table_pedency.selectedItems()[0]
