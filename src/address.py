@@ -140,27 +140,24 @@ class Address:
             messagebox.showerror('Aviso', 'Primeiro, selecione o e-mail que deseja remover')
 
     def change(self):
-        try:
-            changes = Change()
-            for row in range(self.listWidget_email.count()):
-                item = self.listWidget_email.item(row)
-                brush = item.background()
-                if brush == self.add_brush:
-                    text = item.text()
-                    self.__valid_add(text)
-                    changes.to_add(text)
+        changes = Change()
+        for row in range(self.listWidget_email.count()):
+            item = self.listWidget_email.item(row)
+            brush = item.background()
+            if brush == self.add_brush:
+                text = item.text()
+                self.__valid_add(text)
+                changes.to_add(text)
 
-                elif brush == self.updt_brush:
-                    changes.to_updt(
-                        item.__getattribute__('id'), 
-                        item.text()
-                    )
+            elif brush == self.updt_brush:
+                changes.to_updt(
+                    item.__getattribute__('id'), 
+                    item.text()
+                )
 
-                elif brush == self.remove_brush:
-                    changes.to_remove(item.__getattribute__('id'))
-            return changes
-        except Exception as err:
-            messagebox.showerror('Aviso', '')
+            elif brush == self.remove_brush:
+                changes.to_remove(item.__getattribute__('id'))
+        return changes
 
     def __valid_add(self, text):
         if text == '':
@@ -168,7 +165,7 @@ class Address:
                     'Defina um endereço de e-mail para o espaço adcionado, caso contrário, o remova'
             )
                     
-        if len(findall(r'@|\.com'), text) != 2:
+        if len(findall(r'@|\.com', text)) != 2:
             raise Exception(
                     'Defina um endereço de e-mail válido'
             )

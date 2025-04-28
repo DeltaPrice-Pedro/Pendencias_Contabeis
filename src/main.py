@@ -8,6 +8,7 @@ from PySide6.QtGui import (
 from window_pend import Ui_MainWindow
 from database import DataBase
 from pathlib import Path
+from tkinter import messagebox
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     
@@ -71,8 +72,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return pedency
     
     def save(self):
-        address_change = self.address.change()
-        address_change.data()
+        self.ref_change = {
+            self.pedency: self.db.changes_pedency,
+            self.address: self.db.changes_address
+        }
+        try:
+            for widget, func in self.ref_change.items():
+                widget_change = widget.change()
+                func(widget_change)
+                widget_change.save()
+        except Exception as err:
+            messagebox.showerror('Aviso', err)
 
 if __name__ == '__main__':
     app = QApplication()

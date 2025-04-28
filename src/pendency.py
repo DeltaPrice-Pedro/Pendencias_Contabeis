@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (QComboBox, QDateEdit, QDoubleSpinBox,
 
 from re import findall
 from tkinter import messagebox
+from change import Change
 
 class Pedency(ICRUD):
     def __init__(self, ids, data):
@@ -101,7 +102,8 @@ class Pedency(ICRUD):
         gridLayout.addWidget(comboBox, 0, 1, 1, 1)
 
         doubleSpinBox = QDoubleSpinBox(page_2)
-        doubleSpinBox.setSingleStep(100.000000000000000)
+        doubleSpinBox.setSingleStep(100.00)
+        doubleSpinBox.setMaximum(999999.99)
         self.inputs.append(doubleSpinBox)
         gridLayout.addWidget(doubleSpinBox, 1, 1, 1, 1)
         
@@ -217,11 +219,19 @@ class Pedency(ICRUD):
             text = self.ref_input_text[type(input)](input)
             resp.append(text)
 
+        bush = ''
         item = self.table_pedency.selectedItems()[0]
         row = item.row()
+        if None == item.__getattribute__('id'):
+            bush = self.add_brush
+        #elif teve alguma alteração == True: bush = self.updt_bush\ else: no_bush
+        else:
+            bush = self.updt_brush
+
         for column in range(self.table_pedency.columnCount()):
             item = self.table_pedency.item(row, column)
             item.__setattr__('edited', True)
+            item.setBackground(bush)
             item.setText(resp[column])
 
         self.stacked_widget.setCurrentIndex(0)
@@ -244,5 +254,40 @@ class Pedency(ICRUD):
                 item.setBackground(bush)
         except IndexError:
             messagebox.showerror('Aviso', 'Primeiro, selecione a pendência que deseja remover')
+
+    def change(self):
+        changes = Change()
+        for row in range(self.table_pedency.rowCount()):
+            item = self.table_pedency.item(row, 0)
+            brush = item.background()
+            if brush == self.no_brush:
+                continue
+
+            elif brush == self.add_brush:
+                data = self.__data(row)
+                changes.to_add(data)
+
+            elif brush == self.updt_brush:
+                data = self.__data(row)
+                changes.to_updt(
+                    self.table_pedency.item(row, 0)\
+                        .__getattribute__('id'), 
+                    data
+                )
+
+            elif brush == self.remove_brush:
+                changes.to_remove(
+                    self.table_pedency.item(row, 0)\
+                        .__getattribute__('id')
+                )
+        return changes
+
+    def __data(self, row):
+        data = {}
+        for column in range(self.table_pedency.columnCount()):
+            item = self.table_pedency.item(row, column)
+            key = self.table_pedency.horizontalHeaderItem(column)
+            data[key.text()] = item.text()
+        return data
 
     def save(self):...

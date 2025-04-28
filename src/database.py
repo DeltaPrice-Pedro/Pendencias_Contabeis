@@ -162,3 +162,7 @@ class DataBase:
                 address.append(sub[1])
             
             return Address(id, address)
+        
+    def changes_pedency(self):...
+
+    def changes_address(self):...
