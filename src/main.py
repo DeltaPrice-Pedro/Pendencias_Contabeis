@@ -74,14 +74,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     def save(self):
         self.ref_change = {
-            # self.pedency: self.db.changes_pedency,
+            self.pedency: self.db.changes_pedency,
             self.address: self.db.changes_address
         }
         try:
             for widget, func in self.ref_change.items():
                 widget_change = widget.change()
                 func(self.current_companie_id, widget_change)
-                widget_change.save()
+                widget.save()
         except Exception as err:
             messagebox.showerror('Aviso', err)
 

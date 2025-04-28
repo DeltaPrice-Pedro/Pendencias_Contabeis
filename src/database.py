@@ -201,7 +201,11 @@ class DataBase:
     def changes_pedency(self, id_companie: str, change: Change):
         #add:list, updt: dict[tuple[dict]], remove: list[int]
         add, updt, remove = change.data()
+        
+        #ADD
 
+
+        #UPDATE
         with self.connection.cursor() as cursor:
             for id_data, data in updt.items():
                 #Somando tuplas, caso dê errado, enviar dict com keys certas
@@ -211,20 +215,23 @@ class DataBase:
                     infos
                 )
 
+            # --------------------------
             # cursor.executemany(
             #     self.update_pedency, 
             #     ([data, id_companie, id_data]\
             #      for id_data, data in updt.items())
             # )
+            # --------------------------
+
             self.connection.commit()
 
-        self.__remove_change(id_companie, self.delete_pedency, remove)
+        # self.__remove_change(id_companie, self.delete_pedency, remove)
 
     def changes_address(self, id_companie: str, change: Change):
         #add: list[str], updt: dict[str], remove: list[int]
         add, updt, remove = change.data()
-        ...
 
+        #ADD
         # with self.connection.cursor() as cursor:
         #     cursor.executemany(
         #         self.insert_email, 
@@ -232,15 +239,16 @@ class DataBase:
         #     )
         #     self.connection.commit()
 
-        # with self.connection.cursor() as cursor:
-        #     cursor.executemany(
-        #         self.update_emails, 
-        #         ([adderss, id_companie, id_address] \
-        #             for id_address, adderss in updt.items())
-        #     )
-        #     self.connection.commit()
+        #UPDATE
+        with self.connection.cursor() as cursor:
+            cursor.executemany(
+                self.update_emails, 
+                ([adderss, id_companie, id_address] \
+                    for id_address, adderss in updt.items())
+            )
+            self.connection.commit()
 
-        self.__remove_change(id_companie, self.delete_email, remove)
+        # self.__remove_change(id_companie, self.delete_email, remove)
 
     def __remove_change(self, id_companie: str, query: str, data: list[str]):
         with self.connection.cursor() as cursor:

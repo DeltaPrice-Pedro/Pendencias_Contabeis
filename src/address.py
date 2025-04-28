@@ -166,3 +166,15 @@ class Address:
             raise Exception(
                     'Defina um endereço de e-mail válido'
             )
+        
+    def save(self):
+        remove_count = 0
+        for row in range(self.listWidget_email.count()):
+            current_row = row - remove_count
+            item = self.listWidget_email.item(current_row)
+            brush = item.background()
+            if brush == self.remove_brush:
+                self.listWidget_email.takeItem(current_row)
+                remove_count = remove_count + 1
+            elif brush in [self.add_brush, self.updt_brush]:
+                item.setBackground(self.no_brush)

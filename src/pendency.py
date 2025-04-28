@@ -290,4 +290,16 @@ class Pedency(ICRUD):
             data[key.text()] = item.text()
         return data
 
-    def save(self):...
+    def save(self):
+        remove_count = 0
+        for row in range(self.table_pedency.rowCount()):
+            current_row = row - remove_count
+            item = self.table_pedency.item(current_row, 0)
+            brush = item.background()
+            if brush == self.remove_brush:
+                self.table_pedency.removeRow(current_row)
+                remove_count = remove_count + 1
+            elif brush in [self.add_brush, self.updt_brush]:
+                for column in range(self.table_pedency.columnCount()):
+                    item = self.table_pedency.item(current_row, column)
+                    item.setBackground(self.no_brush)
