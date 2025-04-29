@@ -28,7 +28,7 @@ class DataBase:
 
         self.ref_key_pedency = {
                 'Valor': lambda value: float(value.replace(',','.')),
-                'Competência': self.__tranform_comp,
+                'Competência': self.__tranform_competence,
                 'Vencimento': self.__transform_maturity,
         }
 
@@ -95,7 +95,7 @@ class DataBase:
 
         self.insert_email = (
             f'INSERT INTO {self.EMAIL_TABLE} '
-            '(address) VALUES (%s)'
+            '(address, id_companies) VALUES (%s, %s)'
         )
 
         self.update_pedency = (
@@ -216,26 +216,31 @@ class DataBase:
 
 
         #UPDATE
-        with self.connection.cursor() as cursor:
-            infos = ()
-            for id_data, data in updt.items():
-                #Somando tuplas, caso dê errado, enviar dict com keys certas
-                data = data[0]
-                for key, func in self.ref_key_pedency.items():
-                    data[key] = func(data[key])
-
-                data['id_pending'] = id_data
-                data['id_companies'] = id_companie
-                infos = infos + (data,)
-            cursor.executemany(
-                self.update_pedency,
-                infos
-            )
-            self.connection.commit()
-
+        # with self.connection.cursor() as cursor:
+        #     infos = self.__transform_pedency(id_companie, updt)
+        #     cursor.executemany(
+        #         self.update_pedency,
+        #         infos
+        #     )
+        #     self.connection.commit()
+        
+        #REMOVE
         # self.__remove_change(id_companie, self.delete_pedency, remove)
 
-    def __tranform_comp(self, value):
+    def __transform_pedency(self, id_companie, updt):
+        infos = ()
+        for id_data, data in updt.items():
+                #Somando tuplas, caso dê errado, enviar dict com keys certas
+            data = data[0]
+            for key, func in self.ref_key_pedency.items():
+                data[key] = func(data[key])
+
+            data['id_pending'] = id_data
+            data['id_companies'] = id_companie
+            infos = infos + (data,)
+        return infos
+
+    def __tranform_competence(self, value):
         comp = [int(value) for value in value.split('/')]
         comp.reverse()
         comp.append(1)
@@ -251,12 +256,12 @@ class DataBase:
         add, updt, remove = change.data()
 
         #ADD
-        # with self.connection.cursor() as cursor:
-        #     cursor.executemany(
-        #         self.insert_email, 
-        #         ([address] for address in add)
-        #     )
-        #     self.connection.commit()
+        with self.connection.cursor() as cursor:
+            cursor.executemany(
+                self.insert_email, 
+                ([address, id_companie] for address in add)
+            )
+            self.connection.commit()
 
         #UPDATE - Falta azul no Main
         # with self.connection.cursor() as cursor:
@@ -267,7 +272,7 @@ class DataBase:
         #     )
         #     self.connection.commit()
 
-        #REMOVER
+        #REMOVE
         # self.__remove_change(id_companie, self.delete_email, remove)
 
     def __remove_change(self, id_companie: str, query: str, data: list[str]):
