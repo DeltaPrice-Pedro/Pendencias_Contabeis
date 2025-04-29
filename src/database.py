@@ -264,16 +264,16 @@ class DataBase:
             self.connection.commit()
 
         #UPDATE - Falta azul no Main
-        # with self.connection.cursor() as cursor:
-        #     cursor.executemany(
-        #         self.update_emails, 
-        #         ([adderss, id_companie, id_address] \
-        #             for id_address, adderss in updt.items())
-        #     )
-        #     self.connection.commit()
+        with self.connection.cursor() as cursor:
+            cursor.executemany(
+                self.update_emails, 
+                ([adderss, id_companie, id_address] \
+                    for id_address, adderss in updt.items())
+            )
+            self.connection.commit()
 
         #REMOVE
-        # self.__remove_change(id_companie, self.delete_email, remove)
+        self.__remove_change(id_companie, self.delete_email, remove)
 
     def __remove_change(self, id_companie: str, query: str, data: list[str]):
         with self.connection.cursor() as cursor:

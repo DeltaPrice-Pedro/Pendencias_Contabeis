@@ -24,7 +24,7 @@ class DeltaMail:
     #     }
 
     def send(self):
-        ...
-        # response = self.client.send(**self.payload)
-        # if response.success == False:
-            # raise Exception('Endereço de email inválido')
+        # ...
+        response = self.client.send(**self.payload)
+        if response.success == False:
+            raise Exception('Endereço de email inválido')

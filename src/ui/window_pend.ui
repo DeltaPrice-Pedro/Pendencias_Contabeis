@@ -385,7 +385,7 @@ empresa</string>
             </spacer>
            </item>
            <item>
-            <widget class="QLabel" name="label">
+            <widget class="QLabel" name="label_load_gif">
              <property name="minimumSize">
               <size>
                <width>200</width>

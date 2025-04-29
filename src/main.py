@@ -2,7 +2,7 @@ from PySide6.QtWidgets import (
     QMainWindow, QApplication, QCheckBox, QTreeWidgetItem, QListWidgetItem, QPushButton, QHBoxLayout, QFrame, QSizePolicy, QTableWidgetItem
 )
 from PySide6.QtGui import (
-  QColor, QBrush, Qt, QIcon
+  QColor, QBrush, Qt, QIcon, QMovie
 )
 
 from PySide6.QtCore import (
@@ -24,6 +24,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super().__init__(parent)
         self.setupUi(self)
         self.db = DataBase()
+
+        self.movie = QMovie(
+            (Path(__file__).parent / 'imgs' / 'load.gif').__str__()
+        )
+        self.label_load_gif.setMovie(self.movie)
 
         self.__fill_companies()
         self.__init_icons()
@@ -99,7 +104,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             address = self.address.data()
             pedency = self.pedency.data()
 
-            self._postman = Postman(address, pedency)
+            self._postman = Postman(
+                self.label_current_companie.text(),
+                address, 
+                pedency
+            )
             self._thread = QThread()
 
             self._postman.moveToThread(self._thread)
@@ -118,13 +127,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.exec_load(False)
         messagebox.showinfo(title='Aviso', message= result)
 
-    def exec_load(self, action: bool, to = 0):
+    def exec_load(self, action: bool):
         if action == True:
             self.movie.start()
             self.stackedWidget_body.setCurrentIndex(1)
         else:
             self.movie.stop()
-            self.stackedWidget_body.setCurrentIndex(to)
+            self.stackedWidget_body.setCurrentIndex(0)
 
 if __name__ == '__main__':
     app = QApplication()

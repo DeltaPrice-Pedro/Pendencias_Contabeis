@@ -1,10 +1,10 @@
 from pathlib import Path
-import datetime
+from datetime import datetime
 import pandas as pd
 
 class Content:
     def __init__(self):
-        self.CONTENT_BASE = Path(__file__).parent / 'src' / 'html' / 'content_email.html'
+        self.CONTENT_BASE = Path(__file__).parent / 'html' / 'content_email.html'
         with open (self.CONTENT_BASE, 'r', encoding='utf-8') as file:
             self.body = file.read()
 

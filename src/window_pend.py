@@ -264,13 +264,13 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer_2)
 
-        self.label = QLabel(self.frame)
-        self.label.setObjectName(u"label")
-        self.label.setMinimumSize(QSize(200, 200))
-        self.label.setPixmap(QPixmap(u"../imgs/load.gif"))
-        self.label.setScaledContents(True)
+        self.label_load_gif = QLabel(self.frame)
+        self.label_load_gif.setObjectName(u"label_load_gif")
+        self.label_load_gif.setMinimumSize(QSize(200, 200))
+        self.label_load_gif.setPixmap(QPixmap(u"../imgs/load.gif"))
+        self.label_load_gif.setScaledContents(True)
 
-        self.horizontalLayout_2.addWidget(self.label)
+        self.horizontalLayout_2.addWidget(self.label_load_gif)
 
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -335,7 +335,7 @@ class Ui_MainWindow(object):
         self.pushButton_exit_companie.setText("")
         self.pushButton_reload_companie.setText("")
         self.label_current_companie.setText(QCoreApplication.translate("MainWindow", u"Nome Empresa", None))
-        self.label.setText("")
+        self.label_load_gif.setText("")
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Enviando Email...", None))
     # retranslateUi
 
