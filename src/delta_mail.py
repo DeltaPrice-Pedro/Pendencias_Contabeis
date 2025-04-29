@@ -14,15 +14,6 @@ class DeltaMail:
             'html': content,
         }
 
-    # def create(self, destinatarios: list[str], nome_empresa: str, conteudo: str):
-    #     destinatarios.append(self.sender)
-    #     self.payload = {
-    #         'sender': self.sender,
-    #         'recipients': destinatarios,
-    #         'subject': nome_empresa  + self.base_titulo,
-    #         'html': conteudo,
-    #     }
-
     def send(self):
         # ...
         response = self.client.send(**self.payload)

@@ -172,6 +172,24 @@ class Pedency(ICRUD):
                 item.setText(str(value))
                 self.table_pedency.setItem(row, column, item)
 
+    def __add_taxes(self, pedency_type: str, value: float):
+        row = self.__taxes_find(pedency_type)
+        if row != None:
+            value_item = self.table_taxes.item(row, 1)
+            value_item.setText(value_item.text() + value)
+        else:
+            row = self.table_taxes.rowCount() + 1
+            self.table_taxes.setRowCount(row)
+            for index, data in enumerate([pedency_type, value]):
+                self.table_taxes.setItem(row, index, QTableWidgetItem(data))
+
+    def __taxes_find(self, type):
+        for row in range(self.table_taxes.rowCount()):
+            item = self.table_taxes.item(row, 0)
+            if item.text() == type:
+                return row
+        return None
+
     def add(self):
         row_index = self.table_pedency.rowCount() + 1
         self.table_pedency.setRowCount(row_index)
@@ -181,6 +199,7 @@ class Pedency(ICRUD):
             item.__setattr__('edited', False)
             item.setBackground(self.add_brush)
             self.table_pedency.setItem(row_index, column_index, item)
+
         # self.table_pedency.setCurrentCell(row_index, 0)
         # item.setSelected(True)
         # self.updt()
@@ -234,6 +253,7 @@ class Pedency(ICRUD):
             item.setBackground(bush)
             item.setText(resp[column])
 
+        # self.__add_taxes(resp[0], resp[1])
         self.stacked_widget.setCurrentIndex(0)
         
     def remove(self):
@@ -252,6 +272,7 @@ class Pedency(ICRUD):
                 for column in range(self.table_pedency.columnCount()):
                     item = self.table_pedency.item(row, column)
                     item.setBackground(bush)
+            
         except IndexError:
             messagebox.showerror('Aviso', 'Primeiro, selecione a pendência que deseja remover')
 
@@ -305,12 +326,17 @@ class Pedency(ICRUD):
                     item.setBackground(self.no_brush)
 
     def data(self) -> dict[list]:
+        data_pedency = self.__data_column(self.table_pedency)
+        data_taxes = self.__data_column(self.table_taxes)
+        return data_pedency, data_taxes
+
+    def __data_column(self, table):
         data_column = {}
-        for column in range(self.table_pedency.columnCount()):
-            key = self.table_pedency.horizontalHeaderItem(column)
+        for column in range(table.columnCount()):
+            key = table.horizontalHeaderItem(column)
             data_row = []
-            for row in range(self.table_pedency.rowCount()):
-                item = self.table_pedency.item(row, column)
+            for row in range(table.rowCount()):
+                item = table.item(row, column)
                 data_row.append(item.text())
             data_column[key.text()] = data_row
         return data_column

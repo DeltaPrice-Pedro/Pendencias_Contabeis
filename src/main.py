@@ -102,12 +102,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         try:
             self.exec_load(True)
             address = self.address.data()
-            pedency = self.pedency.data()
+            pedency, taxes = self.pedency.data()
 
             self._postman = Postman(
                 self.label_current_companie.text(),
                 address, 
-                pedency
+                pedency,
+                taxes
             )
             self._thread = QThread()
 
