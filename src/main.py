@@ -75,7 +75,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def save(self):
         self.ref_change = {
             self.pedency: self.db.changes_pedency,
-            self.address: self.db.changes_address
+            # self.address: self.db.changes_address
         }
         try:
             for widget, func in self.ref_change.items():

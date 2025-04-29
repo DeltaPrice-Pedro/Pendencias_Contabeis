@@ -5,6 +5,8 @@ from address import Address
 from pathlib import Path
 from os import getenv
 from change import Change
+from datetime import date
+from copy import deepcopy
 
 load_dotenv(Path(__file__).parent / 'env' / '.env')
 
@@ -23,6 +25,12 @@ class DataBase:
             )
         
         self.columns_pending = ['id_pending', 'type', 'value', 'competence', 'maturity', 'observations']
+
+        self.ref_key_pedency = {
+                'Valor': lambda value: float(value.replace(',','.')),
+                'Competência': self.__tranform_comp,
+                'Vencimento': self.__transform_maturity,
+        }
 
         self.query_endereco = (
             f'SELECT endereco FROM {self.EMAIL_TABLE} '
@@ -92,9 +100,11 @@ class DataBase:
 
         self.update_pedency = (
             f'UPDATE {self.PENDING_TABLE} SET '
-            'value = %s, competence = %s, maturity = %s, '
-            'type = %s, observations = %s '
-            'WHERE id_companies = %s AND id_pending = %s'
+            'value = %(Valor)s, competence = %(Competência)s, '
+            'maturity = %(Vencimento)s, type = %(Tipo)s, '
+            'observations = %(Observações)s '
+            'WHERE id_companies = %(id_companies)s AND '
+            'id_pending = %(id_pending)s'
         )
 
         self.update_emails = (
@@ -207,25 +217,34 @@ class DataBase:
 
         #UPDATE
         with self.connection.cursor() as cursor:
+            infos = ()
             for id_data, data in updt.items():
                 #Somando tuplas, caso dê errado, enviar dict com keys certas
-                infos = data + (id_companie, id_data)
-                cursor.execute(
-                    self.update_pedency,
-                    infos
-                )
+                data = data[0]
+                for key, func in self.ref_key_pedency.items():
+                    data[key] = func(data[key])
 
-            # --------------------------
-            # cursor.executemany(
-            #     self.update_pedency, 
-            #     ([data, id_companie, id_data]\
-            #      for id_data, data in updt.items())
-            # )
-            # --------------------------
-
+                data['id_pending'] = id_data
+                data['id_companies'] = id_companie
+                infos = infos + (data,)
+            cursor.executemany(
+                self.update_pedency,
+                infos
+            )
             self.connection.commit()
 
         # self.__remove_change(id_companie, self.delete_pedency, remove)
+
+    def __tranform_comp(self, value):
+        comp = [int(value) for value in value.split('/')]
+        comp.reverse()
+        comp.append(1)
+        return date(*comp)
+    
+    def __transform_maturity(self, value):
+        comp = [int(value) for value in value.split('/')]
+        comp.reverse()
+        return date(*comp)
 
     def changes_address(self, id_companie: str, change: Change):
         #add: list[str], updt: dict[str], remove: list[int]
@@ -239,15 +258,16 @@ class DataBase:
         #     )
         #     self.connection.commit()
 
-        #UPDATE
-        with self.connection.cursor() as cursor:
-            cursor.executemany(
-                self.update_emails, 
-                ([adderss, id_companie, id_address] \
-                    for id_address, adderss in updt.items())
-            )
-            self.connection.commit()
+        #UPDATE - Falta azul no Main
+        # with self.connection.cursor() as cursor:
+        #     cursor.executemany(
+        #         self.update_emails, 
+        #         ([adderss, id_companie, id_address] \
+        #             for id_address, adderss in updt.items())
+        #     )
+        #     self.connection.commit()
 
+        #REMOVER
         # self.__remove_change(id_companie, self.delete_email, remove)
 
     def __remove_change(self, id_companie: str, query: str, data: list[str]):
