@@ -65,6 +65,7 @@ class Address:
         verticalLayout.addWidget(frame_email_func)
 
         pushButton_send_email = QPushButton(page_2)
+        pushButton_send_email.setText('Enviar')
         verticalLayout.addWidget(pushButton_send_email)
         return pushButton_send_email, page_2
 
