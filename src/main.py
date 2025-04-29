@@ -2,13 +2,18 @@ from PySide6.QtWidgets import (
     QMainWindow, QApplication, QCheckBox, QTreeWidgetItem, QListWidgetItem, QPushButton, QHBoxLayout, QFrame, QSizePolicy, QTableWidgetItem
 )
 from PySide6.QtGui import (
-  QColor, QBrush, Qt, QIcon, 
+  QColor, QBrush, Qt, QIcon
+)
+
+from PySide6.QtCore import (
+  QThread
 )
 
 from window_pend import Ui_MainWindow
 from database import DataBase
 from pathlib import Path
 from tkinter import messagebox
+from postman import Postman
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     
@@ -53,7 +58,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.pedency = self.__pedency(self.current_companie_id)
         self.address = self.db.emails(self.current_companie_id)
-        self.stackedWidget_email.addWidget(self.address())
+
+        send_btn, page = self.address()
+        send_btn.clicked.connect(self.send_email)
+        self.stackedWidget_email.addWidget(page)
 
         self.stackedWidget_companie.setCurrentIndex(1)
         self.stackedWidget_email.setCurrentIndex(1)
@@ -84,6 +92,39 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 widget.save()
         except Exception as err:
             messagebox.showerror('Aviso', err)
+
+    def send_email(self):
+        try:
+            self.exec_load(True)
+            address = self.address.data()
+            pedency = self.pedency.data()
+
+            self._postman = Postman(address, pedency)
+            self._thread = QThread()
+
+            self._postman.moveToThread(self._thread)
+            self._thread.started.connect(self._postman.execute)
+            self._postman.end.connect(self._thread.quit)
+            self._postman.end.connect(self._thread.deleteLater)
+            self._postman.result.connect(self.conclusion)
+            self._thread.finished.connect(self._postman.deleteLater)
+            self._thread.start()
+
+        except Exception as error:
+            self.exec_load(False)
+            messagebox.showwarning(title='Aviso', message= error)
+
+    def conclusion(self, result: str):
+        self.exec_load(False)
+        messagebox.showinfo(title='Aviso', message= result)
+
+    def exec_load(self, action: bool, to = 0):
+        if action == True:
+            self.movie.start()
+            self.stackedWidget_body.setCurrentIndex(1)
+        else:
+            self.movie.stop()
+            self.stackedWidget_body.setCurrentIndex(to)
 
 if __name__ == '__main__':
     app = QApplication()

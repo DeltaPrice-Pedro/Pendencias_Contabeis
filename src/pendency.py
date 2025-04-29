@@ -264,11 +264,11 @@ class Pedency(ICRUD):
                 continue
 
             elif brush == self.add_brush:
-                data = self.__data(row)
+                data = self.__data_row(row)
                 changes.to_add(data)
 
             elif brush == self.updt_brush:
-                data = self.__data(row)
+                data = self.__data_row(row)
                 changes.to_updt(
                     self.table_pedency.item(row, 0)\
                         .__getattribute__('id'), 
@@ -282,14 +282,14 @@ class Pedency(ICRUD):
                 )
         return changes
 
-    def __data(self, row):
+    def __data_row(self, row) -> dict[str]:
         data = {}
         for column in range(self.table_pedency.columnCount()):
             item = self.table_pedency.item(row, column)
             key = self.table_pedency.horizontalHeaderItem(column)
             data[key.text()] = item.text()
         return data
-
+    
     def save(self):
         remove_count = 0
         for row in range(self.table_pedency.rowCount()):
@@ -303,3 +303,14 @@ class Pedency(ICRUD):
                 for column in range(self.table_pedency.columnCount()):
                     item = self.table_pedency.item(current_row, column)
                     item.setBackground(self.no_brush)
+
+    def data(self) -> dict[list]:
+        data_column = {}
+        for column in range(self.table_pedency.columnCount()):
+            key = self.table_pedency.horizontalHeaderItem(column)
+            data_row = []
+            for row in range(self.table_pedency.rowCount()):
+                item = self.table_pedency.item(row, column)
+                data_row.append(item.text())
+            data_column[key.text()] = data_row
+        return data_column

@@ -39,12 +39,12 @@ class Address:
 
         self.no_brush = QBrush(Qt.BrushStyle.NoBrush)
 
-        self.page = self.__page()
+        self.send_btn, self.page = self.__page()
         self.__fill(id, address)
         pass
 
     def __call__(self, *args, **kwds):
-        return self.page
+        return self.send_btn, self.page
 
     def __page(self):
         page_2 = QWidget()
@@ -66,7 +66,7 @@ class Address:
 
         pushButton_send_email = QPushButton(page_2)
         verticalLayout.addWidget(pushButton_send_email)
-        return page_2
+        return pushButton_send_email, page_2
 
     def __buttons(self, frame_email_func):
         pushButton_add = QPushButton(frame_email_func)
@@ -114,7 +114,7 @@ class Address:
     def updt(self):
         item = self.listWidget_email.selectedItems()[0]
         bush = self.add_brush\
-                 if None == item.__getattribute__('id')\
+                if None == item.__getattribute__('id')\
                     else self.updt_brush
         item.__setattr__('edited', True)
         item.setBackground(bush)
@@ -178,3 +178,10 @@ class Address:
                 remove_count = remove_count + 1
             elif brush in [self.add_brush, self.updt_brush]:
                 item.setBackground(self.no_brush)
+
+    def data(self) -> list[str]:
+        data_row = []
+        for row in range(self.listWidget_email.count()):
+            item = self.listWidget_email.item(row)
+            data_row.append(item.text())
+        return data_row
