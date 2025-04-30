@@ -1,14 +1,140 @@
 from PySide6.QtWidgets import (
-    QMainWindow, QApplication, QCheckBox, QTreeWidgetItem, QPushButton, QHBoxLayout, QFrame, QSizePolicy
+    QMainWindow, QApplication, QCheckBox, QTreeWidgetItem, QListWidgetItem, QPushButton, QHBoxLayout, QFrame, QSizePolicy, QTableWidgetItem
+)
+from PySide6.QtGui import (
+  QColor, QBrush, Qt, QIcon, QMovie
+)
+
+from PySide6.QtCore import (
+  QThread
 )
 
 from window_pend import Ui_MainWindow
+from database import DataBase
+from pathlib import Path
+from tkinter import messagebox
+from postman import Postman
 
 class MainWindow(QMainWindow, Ui_MainWindow):
+    
+    icon_path = Path(__file__).parent / 'imgs' / '{0}_icon.png'
+    current_companie_id = ''
+
     def __init__(self, parent = None) -> None:
         super().__init__(parent)
         self.setupUi(self)
+        self.db = DataBase()
 
+        self.movie = QMovie(
+            (Path(__file__).parent / 'imgs' / 'load.gif').__str__()
+        )
+        self.label_load_gif.setMovie(self.movie)
+
+        self.__fill_companies()
+        self.__init_icons()
+
+        self.listWidget_companie.itemDoubleClicked.connect(
+            self.open_pedency
+        )
+
+        self.pushButton_save_func.clicked.connect(self.save)
+
+    def __init_icons(self):
+        icon_ref ={
+            self.pushButton_add_func: 'add',
+            self.pushButton_remove_func: 'remove'
+        }
+        for btn, icon_type in icon_ref.items():
+            icon = QIcon()
+            icon.addFile(str(self.icon_path).format(icon_type))
+            btn.setIcon(icon)
+
+    def __fill_companies(self):
+        data = self.db.companies()
+        for id, name in data.items():
+            item = QListWidgetItem()
+            item.setText(name)
+            item.__setattr__('id', id)
+            self.listWidget_companie.addItem(item)
+
+    def open_pedency(self):
+        item = self.listWidget_companie.selectedItems()[0]
+        self.current_companie_id = item.__getattribute__('id')
+
+        self.pedency = self.__pedency(self.current_companie_id)
+        self.address = self.db.emails(self.current_companie_id)
+
+        send_btn, page = self.address()
+        send_btn.clicked.connect(self.send_email)
+        self.stackedWidget_email.addWidget(page)
+
+        self.stackedWidget_companie.setCurrentIndex(1)
+        self.stackedWidget_email.setCurrentIndex(1)
+
+    def __pedency(self, id):
+        pedency = self.db.pedency(id)
+        self.pushButton_add_func.clicked.connect(
+            lambda: pedency.add()
+        )
+        self.pushButton_remove_func.clicked.connect(
+            lambda: pedency.remove()
+        )
+
+        stacked_widget = pedency()
+        stacked_widget.setParent(self.page_4)
+        self.verticalLayout_3.addWidget(stacked_widget)
+        return pedency
+    
+    def save(self):
+        self.ref_change = {
+            # self.pedency: self.db.changes_pedency,
+            self.address: self.db.changes_address
+        }
+        try:
+            for widget, func in self.ref_change.items():
+                widget_change = widget.change()
+                func(self.current_companie_id, widget_change)
+                widget.save()
+        except Exception as err:
+            messagebox.showerror('Aviso', err)
+
+    def send_email(self):
+        try:
+            self.exec_load(True)
+            address = self.address.data()
+            pedency, taxes = self.pedency.data()
+
+            self._postman = Postman(
+                self.label_current_companie.text(),
+                address, 
+                pedency,
+                taxes
+            )
+            self._thread = QThread()
+
+            self._postman.moveToThread(self._thread)
+            self._thread.started.connect(self._postman.execute)
+            self._postman.end.connect(self._thread.quit)
+            self._postman.end.connect(self._thread.deleteLater)
+            self._postman.result.connect(self.conclusion)
+            self._thread.finished.connect(self._postman.deleteLater)
+            self._thread.start()
+
+        except Exception as error:
+            self.exec_load(False)
+            messagebox.showwarning(title='Aviso', message= error)
+
+    def conclusion(self, result: str):
+        self.exec_load(False)
+        messagebox.showinfo(title='Aviso', message= result)
+
+    def exec_load(self, action: bool):
+        if action == True:
+            self.movie.start()
+            self.stackedWidget_body.setCurrentIndex(1)
+        else:
+            self.movie.stop()
+            self.stackedWidget_body.setCurrentIndex(0)
 
 if __name__ == '__main__':
     app = QApplication()

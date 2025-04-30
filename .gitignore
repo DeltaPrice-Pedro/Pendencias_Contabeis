@@ -2,4 +2,5 @@
 /buid
 *.env
 /src/__pycache__
-*dia~
+*.dia~
+*.autosave
