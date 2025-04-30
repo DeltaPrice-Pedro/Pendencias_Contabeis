@@ -38,8 +38,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.listWidget_companie.itemDoubleClicked.connect(
             self.open_pedency
         )
-
         self.pushButton_save_func.clicked.connect(self.save)
+        self.pushButton_exit_companie.clicked.connect(self.exit)
+        self.pushButton_save_func.setHidden(True)
 
     def __init_icons(self):
         icon_ref ={
@@ -70,6 +71,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         send_btn.clicked.connect(self.send_email)
         self.stackedWidget_email.addWidget(page)
 
+        self.pushButton_save_func.setHidden(False)
         self.stackedWidget_companie.setCurrentIndex(1)
         self.stackedWidget_email.setCurrentIndex(1)
 
@@ -103,6 +105,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 widget.save()
         except Exception as err:
             messagebox.showerror('Aviso', err)
+
+    def exit(self):
+        self.pushButton_save_func.setHidden(True)
+        self.stackedWidget_companie.setCurrentIndex(0)
+        self.stackedWidget_email.setCurrentIndex(0)
+        
+        send_btn, page = self.address()
+        page.deleteLater()
+        self.stackedWidget_email.removeWidget(page)
+
+        stacked_widget = self.pedency()
+        stacked_widget.deleteLater()
+        self.verticalLayout_3.removeWidget(stacked_widget)
 
     def send_email(self):
         try:
