@@ -84,6 +84,9 @@ class Pedency(ICRUD):
         verticalLayout.addWidget(line)
 
         self.table_taxes = QTableWidget(page_1)
+        self.table_taxes.setEditTriggers(
+            QAbstractItemView.EditTrigger.NoEditTriggers
+        )
         verticalLayout.addWidget(self.table_taxes)
         return page_1
 
@@ -172,16 +175,23 @@ class Pedency(ICRUD):
                 item.setText(str(value))
                 self.table_pedency.setItem(row, column, item)
 
-    def __add_taxes(self, pedency_type: str, value: float):
-        row = self.__taxes_find(pedency_type)
+        self.table_taxes.setColumnCount(len(self.taxes_header))
+        self.table_taxes.setHorizontalHeaderLabels(self.taxes_header)
+        self.__fill_taxes()
+
+    def __taxes(self, type: str, value: str):
+        row = self.__taxes_find(type)
         if row != None:
             value_item = self.table_taxes.item(row, 1)
-            value_item.setText(value_item.text() + value)
+            current_value = value_item.text()
+            value_item.setText(str(float(current_value) + float(value)))
         else:
-            row = self.table_taxes.rowCount() + 1
-            self.table_taxes.setRowCount(row)
-            for index, data in enumerate([pedency_type, value]):
-                self.table_taxes.setItem(row, index, QTableWidgetItem(data))
+            row = self.table_taxes.rowCount()
+            self.table_taxes.setRowCount(row + 1)
+            for column, data in enumerate([type, value]):
+                item = QTableWidgetItem()
+                item.setText(data)
+                self.table_taxes.setItem(row, column, item)
 
     def __taxes_find(self, type):
         for row in range(self.table_taxes.rowCount()):
@@ -189,6 +199,12 @@ class Pedency(ICRUD):
             if item.text() == type:
                 return row
         return None
+    
+    def __fill_taxes(self):
+        for row in range(self.table_pedency.rowCount()):
+            pen_type = self.table_pedency.item(row, 0).text()
+            value = self.table_pedency.item(row, 1).text()
+            self.__taxes(pen_type, value)
 
     def add(self):
         row_index = self.table_pedency.rowCount() + 1
@@ -241,6 +257,7 @@ class Pedency(ICRUD):
         bush = ''
         item = self.table_pedency.selectedItems()[0]
         row = item.row()
+        old_value = self.table_pedency.item(row, 1).text()
         if None == item.__getattribute__('id'):
             bush = self.add_brush
         #elif teve alguma alteração == True: bush = self.updt_bush\ else: no_bush
@@ -253,7 +270,7 @@ class Pedency(ICRUD):
             item.setBackground(bush)
             item.setText(resp[column])
 
-        # self.__add_taxes(resp[0], resp[1])
+        self.__taxes(resp[0], (resp[1] - old_value))
         self.stacked_widget.setCurrentIndex(0)
         
     def remove(self):
@@ -272,7 +289,10 @@ class Pedency(ICRUD):
                 for column in range(self.table_pedency.columnCount()):
                     item = self.table_pedency.item(row, column)
                     item.setBackground(bush)
-            
+
+            pen_type = self.table_pedency.item(row, 0).text()
+            value = self.table_pedency.item(row, 1).text()
+            self.__taxes(pen_type, f'-{value}')
         except IndexError:
             messagebox.showerror('Aviso', 'Primeiro, selecione a pendência que deseja remover')
 
