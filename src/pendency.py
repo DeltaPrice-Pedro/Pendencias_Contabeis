@@ -280,19 +280,20 @@ class Pedency(ICRUD):
             if item.background() == self.add_brush:
                 self.table_pedency.removeRow(row)
             else:
+                pen_type = self.table_pedency.item(row, 0).text()
+                value = self.table_pedency.item(row, 1).text()
                 bush = self.remove_brush
                 if item.background() == self.remove_brush:
                     bush = self.updt_brush\
                         if True == item.__getattribute__('edited')\
                             else self.no_brush
-            
+                    self.__taxes(pen_type, value)
+                else:
+                    self.__taxes(pen_type, f'-{value}')
+
                 for column in range(self.table_pedency.columnCount()):
                     item = self.table_pedency.item(row, column)
                     item.setBackground(bush)
-
-            pen_type = self.table_pedency.item(row, 0).text()
-            value = self.table_pedency.item(row, 1).text()
-            self.__taxes(pen_type, f'-{value}')
         except IndexError:
             messagebox.showerror('Aviso', 'Primeiro, selecione a pendência que deseja remover')
 
