@@ -2,3 +2,4 @@
 /buid
 *.env
 /src/__pycache__
+*dia~
