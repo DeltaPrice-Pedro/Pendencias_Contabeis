@@ -30,14 +30,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.label_load_gif.setMovie(self.movie)
 
+        self.message_save = 'Tem certeza que deseja salvar estas alterações?'
+
         self.__fill_companies()
         self.__init_icons()
 
         self.listWidget_companie.itemDoubleClicked.connect(
             self.open_pedency
         )
-
         self.pushButton_save_func.clicked.connect(self.save)
+        self.pushButton_exit_companie.clicked.connect(self.exit)
+        self.pushButton_save_func.setHidden(True)
 
     def __init_icons(self):
         icon_ref ={
@@ -68,6 +71,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         send_btn.clicked.connect(self.send_email)
         self.stackedWidget_email.addWidget(page)
 
+        self.pushButton_save_func.setHidden(False)
         self.stackedWidget_companie.setCurrentIndex(1)
         self.stackedWidget_email.setCurrentIndex(1)
 
@@ -86,17 +90,34 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return pedency
     
     def save(self):
-        self.ref_change = {
-            # self.pedency: self.db.changes_pedency,
-            self.address: self.db.changes_address
-        }
         try:
-            for widget, func in self.ref_change.items():
+            if messagebox.askyesno('Aviso', self.message_save) == False:
+                return None
+            
+            ref_change = {
+                self.pedency: self.db.changes_pedency,
+                self.address: self.db.changes_address
+            }
+
+            for widget, func in ref_change.items():
                 widget_change = widget.change()
                 func(self.current_companie_id, widget_change)
                 widget.save()
         except Exception as err:
             messagebox.showerror('Aviso', err)
+
+    def exit(self):
+        self.pushButton_save_func.setHidden(True)
+        self.stackedWidget_companie.setCurrentIndex(0)
+        self.stackedWidget_email.setCurrentIndex(0)
+        
+        send_btn, page = self.address()
+        page.deleteLater()
+        self.stackedWidget_email.removeWidget(page)
+
+        stacked_widget = self.pedency()
+        stacked_widget.deleteLater()
+        self.verticalLayout_3.removeWidget(stacked_widget)
 
     def send_email(self):
         try:

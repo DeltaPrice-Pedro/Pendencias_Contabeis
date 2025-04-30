@@ -6,7 +6,7 @@ class DeltaMail:
         self.client = Smtp2goClient(api_key= getenv('API_SMTP'))
         self.sender = getenv('SENDER_EMAIL')
 
-        address.append(self.sender)
+        # address.append(self.sender)
         self.payload = {
             'sender': self.sender,
             'recipients': address,

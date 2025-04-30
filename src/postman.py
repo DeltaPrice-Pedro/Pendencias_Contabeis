@@ -24,7 +24,7 @@ class Postman(QObject):
             df_taxes = pd.DataFrame(self.taxes)
 
             content = Content()
-            html = content.create(df_pedency, df_taxes)
+            html = content.html(df_pedency, df_taxes)
 
             delta_mail = DeltaMail(self.companie, self.address, html)
             delta_mail.send()
