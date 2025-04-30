@@ -110,6 +110,7 @@ class Pedency(ICRUD):
         doubleSpinBox = QDoubleSpinBox(page_2)
         doubleSpinBox.setSingleStep(100.00)
         doubleSpinBox.setMaximum(999999.99)
+        doubleSpinBox.setGroupSeparatorShown(True)
         self.inputs.append(doubleSpinBox)
         gridLayout.addWidget(doubleSpinBox, 1, 1, 1, 1)
         
@@ -270,19 +271,16 @@ class Pedency(ICRUD):
             widget.setDate(date)
 
     def confirm_updt(self):
-        resp = []
-        text = ''
-        for input in self.inputs:
-            text = self.ref_input_text[type(input)](input)
-            resp.append(text)
-
-        bush = ''
+        resp = self.__inputs_response()
         item = self.table_pedency.selectedItems()[0]
         row = item.row()
+        if self.__check_updt(resp, row) == False:
+            return self.stacked_widget.setCurrentIndex(0)
+
+        bush = ''
         old_value = self.table_pedency.item(row, 1).text()
         if None == item.__getattribute__('id'):
             bush = self.add_brush
-        #elif teve alguma alteração == True: bush = self.updt_bush\ else: no_bush
         else:
             bush = self.updt_brush
 
@@ -292,11 +290,27 @@ class Pedency(ICRUD):
             item.setBackground(bush)
             item.setText(resp[column])
 
-        self.__taxes(resp[0], self.value_str(
-            self.value_float(resp[1]) - self.value_float(old_value)
+        self.__taxes(
+            resp[0], 
+            self.value_str(
+                self.value_float(resp[1]) - self.value_float(old_value)
             )
         )
         self.stacked_widget.setCurrentIndex(0)
+
+    def __inputs_response(self):
+        resp = []
+        for input in self.inputs:
+            text = self.ref_input_text[type(input)](input)
+            resp.append(text)
+        return resp
+
+    def __check_updt(self, resp, row):
+        for column in range(self.table_pedency.columnCount()):
+            item = self.table_pedency.item(row, column)
+            if item.text() != resp[column]:
+                return True
+        return False
         
     def remove(self):
         try:
