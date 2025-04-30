@@ -30,6 +30,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.label_load_gif.setMovie(self.movie)
 
+        self.message_save = 'Tem certeza que deseja salvar estas alterações?'
+
         self.__fill_companies()
         self.__init_icons()
 
@@ -86,12 +88,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return pedency
     
     def save(self):
-        self.ref_change = {
-            # self.pedency: self.db.changes_pedency,
-            self.address: self.db.changes_address
-        }
         try:
-            for widget, func in self.ref_change.items():
+            if messagebox.askyesno('Aviso', self.message_save) == False:
+                return None
+            
+            ref_change = {
+                self.pedency: self.db.changes_pedency,
+                self.address: self.db.changes_address
+            }
+
+            for widget, func in ref_change.items():
                 widget_change = widget.change()
                 func(self.current_companie_id, widget_change)
                 widget.save()

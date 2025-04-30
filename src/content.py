@@ -9,12 +9,20 @@ class Content:
             self.body = file.read()
 
     def create(self, df_pedency: pd.DataFrame, df_taxes: pd.DataFrame) -> str:
-        return self.body\
-                .replace('$table_pedency', df_pedency.to_html())\
-                    .replace('$table_taxes', df_taxes.to_html())\
-                        .replace('$greeting', self.cumprimento())
+        html_pedency = df_pedency.to_html(
+            col_space= 120, index= False, 
+        )
 
-    def cumprimento(self):
+        html_taxes = df_taxes.to_html(
+            col_space= 80, index= False,
+        )
+
+        return self.body\
+                .replace('$table_pedency', html_pedency)\
+                        .replace('$table_taxes', html_taxes)\
+                                .replace('$greeting', self.greeting())
+
+    def greeting(self):
         hora_atual = datetime.now().hour
         if hora_atual < 12:
             return 'bom dia!'

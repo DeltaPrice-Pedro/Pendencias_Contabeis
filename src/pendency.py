@@ -1,4 +1,5 @@
 from ICRUD import ICRUD
+from locale import setlocale, currency, LC_MONETARY
 
 from PySide6.QtCore import (
     QSize, Qt, QDate, QCoreApplication, 
@@ -15,6 +16,8 @@ from PySide6.QtWidgets import (QComboBox, QDateEdit, QDoubleSpinBox,
 from re import findall
 from tkinter import messagebox
 from change import Change
+
+setlocale(LC_MONETARY, 'pt_BR.UTF-8')
 
 class Pedency(ICRUD):
     def __init__(self, ids, data):
@@ -47,7 +50,7 @@ class Pedency(ICRUD):
         self.ref_input = {
             QComboBox : lambda value, widget: self.__set_combo(value, widget),
             QDateEdit : lambda value, widget: self.__set_date(value, widget),
-            QDoubleSpinBox : lambda value, widget: widget.setValue(float(value)),
+            QDoubleSpinBox : lambda value, widget: widget.setValue(self.value_float(value)),
             QTextEdit : lambda value, widget: widget.setText(value)
         }
 
@@ -167,6 +170,15 @@ class Pedency(ICRUD):
         self.table_pedency.setHorizontalHeaderLabels(self.pedency_header)
         self.table_pedency.setRowCount(len(ids))
 
+        ref = {
+            'value': self.value_str,
+            'competence': lambda value: value.strftime('%m/%Y'),
+            'maturity': lambda value: value.strftime('%d/%m/%Y'),
+        }
+
+        for key, func in ref.items():
+            data[key] = map(func, data[key])
+
         for column, column_data in enumerate(data.values()):
             for row, value in enumerate(column_data):
                 item = QTableWidgetItem()
@@ -179,12 +191,22 @@ class Pedency(ICRUD):
         self.table_taxes.setHorizontalHeaderLabels(self.taxes_header)
         self.__fill_taxes()
 
+    def value_float(self, value):
+        return float(value.replace('.','').replace(',','.'))
+    
+    def value_str(self, value):
+        return currency(value, symbol= False, grouping= True)
+
     def __taxes(self, type: str, value: str):
         row = self.__taxes_find(type)
         if row != None:
             value_item = self.table_taxes.item(row, 1)
             current_value = value_item.text()
-            value_item.setText(str(float(current_value) + float(value)))
+            value_item.setText(
+                self.value_str(
+                    self.value_float(current_value) + self.value_float(value)
+                )
+            )
         else:
             row = self.table_taxes.rowCount()
             self.table_taxes.setRowCount(row + 1)
@@ -270,7 +292,10 @@ class Pedency(ICRUD):
             item.setBackground(bush)
             item.setText(resp[column])
 
-        self.__taxes(resp[0], (resp[1] - old_value))
+        self.__taxes(resp[0], self.value_str(
+            self.value_float(resp[1]) - self.value_float(old_value)
+            )
+        )
         self.stacked_widget.setCurrentIndex(0)
         
     def remove(self):
