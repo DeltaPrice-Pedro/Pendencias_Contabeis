@@ -18,7 +18,6 @@ from pendency import Pedency
 from address import Address
 
 class MainWindow(QMainWindow, Ui_MainWindow):
-    
     icon_path = Path(__file__).parent / 'imgs' / '{0}_icon.png'
     current_companie_id = ''
 
@@ -27,11 +26,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.db = DataBase()
 
-        self.movie = QMovie(
-            (Path(__file__).parent / 'imgs' / 'load.gif').__str__()
-        )
-        self.label_load_gif.setMovie(self.movie)
         self.message_save = 'Tem certeza que deseja salvar estas alterações?'
+        self.message_pending_save = 'Antes de recarregar os dados, faça ou cancele o salvamento das alterações pendentes'
+        self.message_no_save = 'Não há alterações a serem salvas'
         self.connections = {}
 
         self.ref_connection_companie = {
@@ -43,6 +40,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ref_connection_pedency = {
             self.pushButton_reload_companie: self.reload_pedency
         }
+
+        self.movie = QMovie(
+            (Path(__file__).parent / 'imgs' / 'load.gif').__str__()
+        )
+        self.label_load_gif.setMovie(self.movie)
 
         self.__fill_companies()
         self.__init_icons()
@@ -114,6 +116,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return pedency
     
     def reload_pedency(self):
+        if any([self.pedency.has_change(), self.address.has_change()]):
+            messagebox.showwarning('Aviso', self.message_pending_save)
+            
         self.pedency.fill(*self.db.pedency(self.current_companie_id))
         self.address.fill(*self.db.emails(self.current_companie_id))
     
@@ -121,8 +126,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         try:
             stats_pedenc = self.pedency.has_change()
             stats_address = self.address.has_change()
-
-            self.message_no_save = 'Não há alterações a serem salvas'
 
             if any([stats_pedenc, stats_address]) == False:
                 messagebox.showwarning('Aviso', self.message_no_save)
