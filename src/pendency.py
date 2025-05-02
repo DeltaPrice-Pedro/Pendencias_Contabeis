@@ -46,7 +46,14 @@ class Pedency(ICRUD):
         ]
         self.taxes_header = ['Tributo','Valor']
         self.inputs = []
-        self.types_options = ['', 'IRPF']
+        self.types_options = ['IRPF']
+
+        self.ref_fill = {
+            'value': self.value_str,
+            'competence': lambda value: value.strftime('%m/%Y'),
+            'maturity': lambda value: value.strftime('%d/%m/%Y'),
+        }
+
         self.ref_input = {
             QComboBox : lambda value, widget: self.__set_combo(value, widget),
             QDateEdit : lambda value, widget: self.__set_date(value, widget),
@@ -64,7 +71,7 @@ class Pedency(ICRUD):
         self.stacked_widget = QStackedWidget()
         self.stacked_widget.addWidget(self.__page_1())
         self.stacked_widget.addWidget(self.__page_2())
-        self.__fill(ids, data)
+        self.fill(ids, data)
         pass
 
     def __call__(self, *args, **kwds):
@@ -165,19 +172,13 @@ class Pedency(ICRUD):
         label.setFont(self.font)
         return label
     
-    def __fill(self, ids: list[str], data: dict[str,str]):
+    def fill(self, ids: list[str], data: dict[str,str]):
         self.table_pedency.clear()
         self.table_pedency.setColumnCount(len(data.keys()))
         self.table_pedency.setHorizontalHeaderLabels(self.pedency_header)
         self.table_pedency.setRowCount(len(ids))
 
-        ref = {
-            'value': self.value_str,
-            'competence': lambda value: value.strftime('%m/%Y'),
-            'maturity': lambda value: value.strftime('%d/%m/%Y'),
-        }
-
-        for key, func in ref.items():
+        for key, func in self.ref_fill.items():
             data[key] = map(func, data[key])
 
         for column, column_data in enumerate(data.values()):
@@ -187,10 +188,17 @@ class Pedency(ICRUD):
                 item.__setattr__('edited', False)
                 item.setText(str(value))
                 self.table_pedency.setItem(row, column, item)
+        
+        self.__fill_taxes()
 
+    def __fill_taxes(self):
+        # self.table_taxes.clearContents()
         self.table_taxes.setColumnCount(len(self.taxes_header))
         self.table_taxes.setHorizontalHeaderLabels(self.taxes_header)
-        self.__fill_taxes()
+        for row in range(self.table_pedency.rowCount()):
+            pen_type = self.table_pedency.item(row, 0).text()
+            value = self.table_pedency.item(row, 1).text()
+            self.__taxes(pen_type, value)
 
     def value_float(self, value):
         return float(value.replace('.','').replace(',','.'))
@@ -223,12 +231,6 @@ class Pedency(ICRUD):
                 return row
         return None
     
-    def __fill_taxes(self):
-        for row in range(self.table_pedency.rowCount()):
-            pen_type = self.table_pedency.item(row, 0).text()
-            value = self.table_pedency.item(row, 1).text()
-            self.__taxes(pen_type, value)
-
     def add(self):
         row_index = self.table_pedency.rowCount() + 1
         self.table_pedency.setRowCount(row_index)
@@ -257,7 +259,6 @@ class Pedency(ICRUD):
             index = self.types_options.index(value)
             widget.setCurrentIndex(index)
         else:
-            QComboBox.setCurrentIndex
             widget.setCurrentIndex(0)
 
     def __set_date(self, value, widget):
@@ -336,7 +337,7 @@ class Pedency(ICRUD):
         except IndexError:
             messagebox.showerror('Aviso', 'Primeiro, selecione a pendência que deseja remover')
 
-    def change(self):
+    def change(self) -> Change | None:
         changes = Change()
         for row in range(self.table_pedency.rowCount()):
             item = self.table_pedency.item(row, 0)
@@ -362,6 +363,13 @@ class Pedency(ICRUD):
                         .__getattribute__('id')
                 )
         return changes
+    
+    def has_change(self)-> bool:
+        for row in range(self.table_pedency.rowCount()):
+            item = self.table_pedency.item(row, 0)
+            if item.background() != self.no_brush:
+                return True
+        return False
 
     def __data_row(self, row) -> dict[str]:
         data = {}

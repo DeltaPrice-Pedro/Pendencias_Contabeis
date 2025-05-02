@@ -6,7 +6,7 @@ from PySide6.QtGui import (
 )
 
 from PySide6.QtCore import (
-  QThread
+  QThread,
 )
 
 from window_pend import Ui_MainWindow
@@ -14,9 +14,10 @@ from database import DataBase
 from pathlib import Path
 from tkinter import messagebox
 from postman import Postman
+from pendency import Pedency
+from address import Address
 
 class MainWindow(QMainWindow, Ui_MainWindow):
-    
     icon_path = Path(__file__).parent / 'imgs' / '{0}_icon.png'
     current_companie_id = ''
 
@@ -25,12 +26,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.db = DataBase()
 
+        self.message_select = 'Primeiro, clique 1 vez na empresa que deseja {0}'
+        self.message_remove = 'Confirma a remoção desta empresa?\nTodas suas pendências e emails cadastrados também serão excluídos'
+        self.message_save = 'Tem certeza que deseja salvar estas alterações?'
+        self.message_pending_save = 'Antes de recarregar os dados, faça ou cancele o salvamento das alterações pendentes'
+        self.message_no_save = 'Não há alterações a serem salvas'
+        self.message_exit_save = 'Tem certeza que deseja sair da empresa SEM SALVAR as mudanças feitas nela?\n\nCaso não queira PERDER as alterações, selecione "não" e as salve'
+        self.connections = {}
+
+        self.ref_connection_companie = {
+            self.pushButton_reload_companie: self.__fill_companies,
+            self.pushButton_add_func: self.add_companie,
+            self.pushButton_remove_func: self.remove_companie
+        }    
+
+        self.ref_connection_pedency = {
+            self.pushButton_reload_companie: self.reload_pedency
+        }
+
         self.movie = QMovie(
             (Path(__file__).parent / 'imgs' / 'load.gif').__str__()
         )
         self.label_load_gif.setMovie(self.movie)
-
-        self.message_save = 'Tem certeza que deseja salvar estas alterações?'
 
         self.__fill_companies()
         self.__init_icons()
@@ -38,6 +55,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.listWidget_companie.itemDoubleClicked.connect(
             self.open_pedency
         )
+        self.listWidget_companie.itemChanged.connect(self.confirm_companie)
+
+        self.pushButton_edit_func.clicked.connect(self.edit_companie)
         self.pushButton_save_func.clicked.connect(self.save)
         self.pushButton_exit_companie.clicked.connect(self.exit)
         self.pushButton_save_func.setHidden(True)
@@ -54,51 +74,126 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def __fill_companies(self):
         data = self.db.companies()
+        self.listWidget_companie.clear()
         for id, name in data.items():
             item = QListWidgetItem()
             item.setText(name)
             item.__setattr__('id', id)
             self.listWidget_companie.addItem(item)
 
+        self.re_connection(0)
+
+    def add_companie(self):
+        item = QListWidgetItem()
+        item.setText('Nome da empresa')
+        item.__setattr__('id', None)
+
+        self.listWidget_companie.addItem(item)
+        self.listWidget_companie.openPersistentEditor(item)
+        self.listWidget_companie.editItem(item)
+
+    def edit_companie(self):
+        items = self.listWidget_companie.selectedItems()
+        if len(items) == 0:
+            messagebox.showwarning('Aviso', self.message_select.format('editar'))
+            return None
+
+        item = items[0]
+        self.listWidget_companie.openPersistentEditor(item)
+        self.listWidget_companie.editItem(item)
+
+    def confirm_companie(self, item: QListWidgetItem):
+        name = item.text()
+        if name == '':
+            messagebox.showerror('Aviso', 'Nome de empresa inválida')
+            return None
+        
+        self.listWidget_companie.closePersistentEditor(item)
+
+        id = item.__getattribute__('id')
+        if id == None:
+            id = self.db.add_companie(name)
+            item.__setattr__('id', id)
+        else:
+            self.db.edit_companie(id, name)
+
+    def remove_companie(self):
+        items = self.listWidget_companie.selectedItems()
+        if len(items) == 0:
+            messagebox.showwarning('Aviso', self.message_select.format('remover'))
+            return None
+        
+        if messagebox.askyesno('Aviso', self.message_remove) == False:
+            return None
+        
+        item = items[0]
+        self.db.remove_companie(item.__getattribute__('id'))
+        self.listWidget_companie.takeItem(
+            self.listWidget_companie.row(item)
+        )
+
     def open_pedency(self):
+        self.re_connection(1)
         item = self.listWidget_companie.selectedItems()[0]
+        self.label_current_companie.setText(item.text())
         self.current_companie_id = item.__getattribute__('id')
 
         self.pedency = self.__pedency(self.current_companie_id)
-        self.address = self.db.emails(self.current_companie_id)
+        self.address = Address(*self.db.emails(self.current_companie_id))
 
         send_btn, page = self.address()
         send_btn.clicked.connect(self.send_email)
         self.stackedWidget_email.addWidget(page)
 
         self.pushButton_save_func.setHidden(False)
+        self.pushButton_edit_func.setHidden(True)
         self.stackedWidget_companie.setCurrentIndex(1)
         self.stackedWidget_email.setCurrentIndex(1)
 
     def __pedency(self, id):
-        pedency = self.db.pedency(id)
-        self.pushButton_add_func.clicked.connect(
-            lambda: pedency.add()
-        )
-        self.pushButton_remove_func.clicked.connect(
-            lambda: pedency.remove()
-        )
+        pedency = Pedency(*self.db.pedency(id))
+
+        self.connections[self.pushButton_add_func] =\
+            self.pushButton_add_func.clicked.connect(
+                lambda: pedency.add()
+            )
+
+        self.connections[self.pushButton_remove_func] =\
+            self.pushButton_remove_func.clicked.connect(
+                lambda: pedency.remove()
+            )
 
         stacked_widget = pedency()
         stacked_widget.setParent(self.page_4)
         self.verticalLayout_3.addWidget(stacked_widget)
         return pedency
     
+    def reload_pedency(self):
+        if any([self.pedency.has_change(), self.address.has_change()]):
+            messagebox.showwarning('Aviso', self.message_pending_save)
+            
+        self.pedency.fill(*self.db.pedency(self.current_companie_id))
+        self.address.fill(*self.db.emails(self.current_companie_id))
+    
     def save(self):
         try:
+            stats_pedenc = self.pedency.has_change()
+            stats_address = self.address.has_change()
+
+            if any([stats_pedenc, stats_address]) == False:
+                messagebox.showwarning('Aviso', self.message_no_save)
+                return None
+            
             if messagebox.askyesno('Aviso', self.message_save) == False:
                 return None
             
-            ref_change = {
-                self.pedency: self.db.changes_pedency,
-                self.address: self.db.changes_address
-            }
-
+            ref_change = {}
+            if stats_pedenc == True:
+                ref_change[self.pedency] = self.db.changes_pedency
+            
+            if stats_address == True:
+                ref_change[self.address] = self.db.changes_address
+            
             for widget, func in ref_change.items():
                 widget_change = widget.change()
                 func(self.current_companie_id, widget_change)
@@ -107,9 +202,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showerror('Aviso', err)
 
     def exit(self):
+        if any([self.pedency.has_change(), self.address.has_change()]):
+            if messagebox.askyesno('Aviso', self.message_exit_save) == False:
+                return None
+
+        self.pushButton_edit_func.setHidden(False)
         self.pushButton_save_func.setHidden(True)
         self.stackedWidget_companie.setCurrentIndex(0)
         self.stackedWidget_email.setCurrentIndex(0)
+        self.re_connection(0)
         
         send_btn, page = self.address()
         page.deleteLater()
@@ -118,6 +219,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         stacked_widget = self.pedency()
         stacked_widget.deleteLater()
         self.verticalLayout_3.removeWidget(stacked_widget)
+
+    def re_connection(self, current_index: int):
+        ref = self.ref_connection_companie if current_index == 0\
+                    else self.ref_connection_pedency
+
+        for widget, connection in self.connections.items():
+            widget.disconnect(connection)
+        self.connections.clear()
+
+        for widget, func in ref.items():
+            self.connections[widget] = widget.clicked.connect(func)
 
     def send_email(self):
         try:
