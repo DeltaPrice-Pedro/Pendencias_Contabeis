@@ -74,6 +74,15 @@ class DataBase:
             'WHERE id_companies = %s'
         )
 
+        self.delete_companie = (
+            f'DELETE FROM {self.COMPANIES_TABLE} '
+            'WHERE id_companies = %s ; '
+            # f'DELETE FROM {self.PENDING_TABLE} '
+            # 'WHERE id_companies = %s ; '
+            # f'DELETE FROM {self.EMAIL_TABLE} '
+            # 'WHERE id_companies = %s ; '
+        )
+
         self.query_pedency = (
             f'SELECT {', '.join(self.columns_pending) } '
             f'FROM {self.PENDING_TABLE} '
@@ -208,6 +217,13 @@ class DataBase:
                 (name, id) 
             )
             self.connection.commit()
+
+    def remove_companie(self, id: str):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                self.delete_companie, (id, )
+            )
+        self.connection.commit()
         
     def pedency(self, companie_id: str):
         with self.connection.cursor() as cursor:

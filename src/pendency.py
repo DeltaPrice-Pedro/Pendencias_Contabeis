@@ -259,7 +259,6 @@ class Pedency(ICRUD):
             index = self.types_options.index(value)
             widget.setCurrentIndex(index)
         else:
-            QComboBox.setCurrentIndex
             widget.setCurrentIndex(0)
 
     def __set_date(self, value, widget):

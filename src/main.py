@@ -26,7 +26,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.db = DataBase()
 
-        self.message_edit = 'Primeiro, clique 1 vez na empresa que deseja editar'
+        self.message_select = 'Primeiro, clique 1 vez na empresa que deseja {0}'
+        self.message_remove = 'Confirma a remoção desta empresa?\nTodas suas pendências e emails cadastrados também serão excluídos'
         self.message_save = 'Tem certeza que deseja salvar estas alterações?'
         self.message_pending_save = 'Antes de recarregar os dados, faça ou cancele o salvamento das alterações pendentes'
         self.message_no_save = 'Não há alterações a serem salvas'
@@ -94,7 +95,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def edit_companie(self):
         items = self.listWidget_companie.selectedItems()
         if len(items) == 0:
-            messagebox.showwarning('Aviso', self.message_edit)
+            messagebox.showwarning('Aviso', self.message_select.format('editar'))
             return None
 
         item = items[0]
@@ -116,7 +117,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.db.edit_companie(id, name)
 
-    def remove_companie(self):...
+    def remove_companie(self):
+        items = self.listWidget_companie.selectedItems()
+        if len(items) == 0:
+            messagebox.showwarning('Aviso', self.message_select.format('remover'))
+            return None
+        
+        if messagebox.askyesno('Aviso', self.message_remove) == False:
+            return None
+        
+        item = items[0]
+        self.db.remove_companie(item.__getattribute__('id'))
+        self.listWidget_companie.takeItem(
+            self.listWidget_companie.row(item)
+        )
 
     def open_pedency(self):
         self.re_connection(1)
