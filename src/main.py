@@ -6,7 +6,7 @@ from PySide6.QtGui import (
 )
 
 from PySide6.QtCore import (
-  QThread
+  QThread,
 )
 
 from window_pend import Ui_MainWindow
@@ -14,6 +14,8 @@ from database import DataBase
 from pathlib import Path
 from tkinter import messagebox
 from postman import Postman
+from pendency import Pedency
+from address import Address
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     
@@ -29,8 +31,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             (Path(__file__).parent / 'imgs' / 'load.gif').__str__()
         )
         self.label_load_gif.setMovie(self.movie)
-
         self.message_save = 'Tem certeza que deseja salvar estas alterações?'
+        self.connections = {}
+        
+        self.ref_connection_companie = {
+            self.pushButton_reload_companie: self.reload_companie,
+            self.pushButton_add_func: self.add_companie,
+            self.pushButton_remove_func: self.remove_companie
+        }    
+
+        self.ref_connection_pedency = {
+            self.pushButton_reload_companie: self.reload_pedency
+        }
 
         self.__fill_companies()
         self.__init_icons()
@@ -61,11 +73,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.listWidget_companie.addItem(item)
 
     def open_pedency(self):
+        self.re_connection()
         item = self.listWidget_companie.selectedItems()[0]
         self.current_companie_id = item.__getattribute__('id')
 
         self.pedency = self.__pedency(self.current_companie_id)
-        self.address = self.db.emails(self.current_companie_id)
+        self.address = Address(*self.db.emails(self.current_companie_id))
 
         send_btn, page = self.address()
         send_btn.clicked.connect(self.send_email)
@@ -76,18 +89,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.stackedWidget_email.setCurrentIndex(1)
 
     def __pedency(self, id):
-        pedency = self.db.pedency(id)
-        self.pushButton_add_func.clicked.connect(
-            lambda: pedency.add()
-        )
-        self.pushButton_remove_func.clicked.connect(
-            lambda: pedency.remove()
-        )
+        pedency = Pedency(*self.db.pedency(id))
+
+        self.connections[self.pushButton_add_func] =\
+            self.pushButton_add_func.clicked.connect(
+                lambda: pedency.add()
+            )
+
+        self.connections[self.pushButton_remove_func] =\
+            self.pushButton_remove_func.clicked.connect(
+                lambda: pedency.remove()
+            )
 
         stacked_widget = pedency()
         stacked_widget.setParent(self.page_4)
         self.verticalLayout_3.addWidget(stacked_widget)
         return pedency
+    
+    def reload_companie(self):
+        ...
+
+    def reload_pedency(self):
+        self.pedency.fill(*self.db.pedency(self.current_companie_id))
+        self.address.fill(*self.db.emails(self.current_companie_id))
     
     def save(self):
         try:
@@ -110,6 +134,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_save_func.setHidden(True)
         self.stackedWidget_companie.setCurrentIndex(0)
         self.stackedWidget_email.setCurrentIndex(0)
+
+        self.re_connection()
         
         send_btn, page = self.address()
         page.deleteLater()
@@ -118,6 +144,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         stacked_widget = self.pedency()
         stacked_widget.deleteLater()
         self.verticalLayout_3.removeWidget(stacked_widget)
+
+    def re_connection(self, current_index: int):
+        ref = self.ref_connection_companie if current_index == 1\
+                    else self.ref_connection_pedency
+
+        for widget, connection in self.connections.items():
+            widget.disconnect(connection)
+
+        for widget, func in ref.items():
+            self.connections[widget] = widget.clicked.connect(func)
 
     def send_email(self):
         try:
