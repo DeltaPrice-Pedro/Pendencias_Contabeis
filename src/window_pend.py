@@ -48,6 +48,7 @@ class Ui_MainWindow(object):
         self.gridLayout_4 = QGridLayout(self.page_3)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.listWidget_companie = QListWidget(self.page_3)
+        QListWidgetItem(self.listWidget_companie)
         self.listWidget_companie.setObjectName(u"listWidget_companie")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicy1.setHorizontalStretch(0)
@@ -203,6 +204,11 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.pushButton_add_func = QPushButton(self.groupBox_func)
         self.pushButton_add_func.setObjectName(u"pushButton_add_func")
+        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
+        sizePolicy7.setHorizontalStretch(0)
+        sizePolicy7.setVerticalStretch(0)
+        sizePolicy7.setHeightForWidth(self.pushButton_add_func.sizePolicy().hasHeightForWidth())
+        self.pushButton_add_func.setSizePolicy(sizePolicy7)
         self.pushButton_add_func.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         icon1 = QIcon()
         icon1.addFile(u"../../../../../Downloads/add_icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
@@ -214,6 +220,8 @@ class Ui_MainWindow(object):
 
         self.pushButton_remove_func = QPushButton(self.groupBox_func)
         self.pushButton_remove_func.setObjectName(u"pushButton_remove_func")
+        sizePolicy7.setHeightForWidth(self.pushButton_remove_func.sizePolicy().hasHeightForWidth())
+        self.pushButton_remove_func.setSizePolicy(sizePolicy7)
         self.pushButton_remove_func.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         icon2 = QIcon()
         icon2.addFile(u"../../../../../Downloads/remove_icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
@@ -223,10 +231,23 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.pushButton_remove_func)
 
+        self.pushButton_edit_func = QPushButton(self.groupBox_func)
+        self.pushButton_edit_func.setObjectName(u"pushButton_edit_func")
+        sizePolicy7.setHeightForWidth(self.pushButton_edit_func.sizePolicy().hasHeightForWidth())
+        self.pushButton_edit_func.setSizePolicy(sizePolicy7)
+        icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.MailMessageNew))
+        self.pushButton_edit_func.setIcon(icon3)
+        self.pushButton_edit_func.setIconSize(QSize(30, 30))
+        self.pushButton_edit_func.setFlat(True)
+
+        self.verticalLayout.addWidget(self.pushButton_edit_func)
+
         self.pushButton_save_func = QPushButton(self.groupBox_func)
         self.pushButton_save_func.setObjectName(u"pushButton_save_func")
-        icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSave))
-        self.pushButton_save_func.setIcon(icon3)
+        sizePolicy7.setHeightForWidth(self.pushButton_save_func.sizePolicy().hasHeightForWidth())
+        self.pushButton_save_func.setSizePolicy(sizePolicy7)
+        icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSave))
+        self.pushButton_save_func.setIcon(icon4)
         self.pushButton_save_func.setIconSize(QSize(30, 30))
         self.pushButton_save_func.setFlat(True)
 
@@ -245,8 +266,8 @@ class Ui_MainWindow(object):
         self.pushButton_reload_companie.setObjectName(u"pushButton_reload_companie")
         sizePolicy6.setHeightForWidth(self.pushButton_reload_companie.sizePolicy().hasHeightForWidth())
         self.pushButton_reload_companie.setSizePolicy(sizePolicy6)
-        icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.SyncSynchronizing))
-        self.pushButton_reload_companie.setIcon(icon4)
+        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.SyncSynchronizing))
+        self.pushButton_reload_companie.setIcon(icon5)
 
         self.verticalLayout_5.addWidget(self.pushButton_reload_companie)
 
@@ -325,6 +346,13 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Pend\u00eancias Cont\u00e1beis", None))
+
+        __sortingEnabled = self.listWidget_companie.isSortingEnabled()
+        self.listWidget_companie.setSortingEnabled(False)
+        ___qlistwidgetitem = self.listWidget_companie.item(0)
+        ___qlistwidgetitem.setText(QCoreApplication.translate("MainWindow", u"New Item", None));
+        self.listWidget_companie.setSortingEnabled(__sortingEnabled)
+
         self.label_companie_intro.setText(QCoreApplication.translate("MainWindow", u"Empresas Dispon\u00edveis", None))
         self.label_companie_subintro.setText(QCoreApplication.translate("MainWindow", u"Clique 2x para selecionar", None))
         self.pushButton_exit_companie.setText("")
@@ -334,8 +362,9 @@ class Ui_MainWindow(object):
 "empresa", None))
         self.groupBox_func.setTitle(QCoreApplication.translate("MainWindow", u"Fun\u00e7\u00f5es", None))
         self.pushButton_add_func.setText(QCoreApplication.translate("MainWindow", u"Adcionar", None))
-        self.pushButton_remove_func.setText(QCoreApplication.translate("MainWindow", u"Remover", None))
-        self.pushButton_save_func.setText(QCoreApplication.translate("MainWindow", u"Salvar   ", None))
+        self.pushButton_remove_func.setText(QCoreApplication.translate("MainWindow", u" Remover", None))
+        self.pushButton_edit_func.setText(QCoreApplication.translate("MainWindow", u"  Editar", None))
+        self.pushButton_save_func.setText(QCoreApplication.translate("MainWindow", u"  Salvar   ", None))
         self.pushButton_reload_companie.setText("")
         self.label_load_gif.setText("")
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Enviando Email...", None))

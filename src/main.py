@@ -26,6 +26,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.db = DataBase()
 
+        self.message_edit = 'Primeiro, clique 1 vez na empresa que deseja editar'
         self.message_save = 'Tem certeza que deseja salvar estas alterações?'
         self.message_pending_save = 'Antes de recarregar os dados, faça ou cancele o salvamento das alterações pendentes'
         self.message_no_save = 'Não há alterações a serem salvas'
@@ -53,6 +54,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.listWidget_companie.itemDoubleClicked.connect(
             self.open_pedency
         )
+        self.listWidget_companie.itemChanged.connect(self.confirm_companie)
+
+        self.pushButton_edit_func.clicked.connect(self.edit_companie)
         self.pushButton_save_func.clicked.connect(self.save)
         self.pushButton_exit_companie.clicked.connect(self.exit)
         self.pushButton_save_func.setHidden(True)
@@ -78,13 +82,46 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.re_connection(0)
 
-    def add_companie(self):...
+    def add_companie(self):
+        item = QListWidgetItem()
+        item.setText('Nome da empresa')
+        item.__setattr__('id', None)
+
+        self.listWidget_companie.addItem(item)
+        self.listWidget_companie.openPersistentEditor(item)
+        self.listWidget_companie.editItem(item)
+
+    def edit_companie(self):
+        items = self.listWidget_companie.selectedItems()
+        if len(items) == 0:
+            messagebox.showwarning('Aviso', self.message_edit)
+            return None
+
+        item = items[0]
+        self.listWidget_companie.openPersistentEditor(item)
+        self.listWidget_companie.editItem(item)
+
+    def confirm_companie(self, item: QListWidgetItem):
+        name = item.text()
+        if name == '':
+            messagebox.showerror('Aviso', 'Nome de empresa inválida')
+            return None
+        
+        self.listWidget_companie.closePersistentEditor(item)
+
+        id = item.__getattribute__('id')
+        if id == None:
+            id = self.db.add_companie(name)
+            item.__setattr__('id', id)
+        else:
+            self.db.edit_companie(id, name)
 
     def remove_companie(self):...
 
     def open_pedency(self):
         self.re_connection(1)
         item = self.listWidget_companie.selectedItems()[0]
+        self.label_current_companie.setText(item.text())
         self.current_companie_id = item.__getattribute__('id')
 
         self.pedency = self.__pedency(self.current_companie_id)
@@ -95,6 +132,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.stackedWidget_email.addWidget(page)
 
         self.pushButton_save_func.setHidden(False)
+        self.pushButton_edit_func.setHidden(True)
         self.stackedWidget_companie.setCurrentIndex(1)
         self.stackedWidget_email.setCurrentIndex(1)
 
@@ -154,6 +192,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if messagebox.askyesno('Aviso', self.message_exit_save) == False:
                 return None
 
+        self.pushButton_edit_func.setHidden(False)
         self.pushButton_save_func.setHidden(True)
         self.stackedWidget_companie.setCurrentIndex(0)
         self.stackedWidget_email.setCurrentIndex(0)

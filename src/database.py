@@ -63,6 +63,17 @@ class DataBase:
             f'SELECT id_companies, name FROM {self.COMPANIES_TABLE} '
         )
 
+        self.insert_companie = (
+            f'INSERT INTO {self.COMPANIES_TABLE} '
+            '(name) VALUES (%s) '
+        )
+
+        self.update_companie = (
+            f'UPDATE {self.COMPANIES_TABLE} SET '
+            'name = %s '
+            'WHERE id_companies = %s'
+        )
+
         self.query_pedency = (
             f'SELECT {', '.join(self.columns_pending) } '
             f'FROM {self.PENDING_TABLE} '
@@ -181,6 +192,23 @@ class DataBase:
             )
             self.connection.commit()
 
+    def add_companie(self, name):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                self.insert_companie, (name,) 
+            )
+            self.connection.commit()
+        
+        return cursor.lastrowid
+        
+    def edit_companie(self, id, name):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                self.update_companie, 
+                (name, id) 
+            )
+            self.connection.commit()
+        
     def pedency(self, companie_id: str):
         with self.connection.cursor() as cursor:
             cursor.execute(

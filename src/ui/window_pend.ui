@@ -48,6 +48,11 @@
                 <pointsize>14</pointsize>
                </font>
               </property>
+              <item>
+               <property name="text">
+                <string>New Item</string>
+               </property>
+              </item>
              </widget>
             </item>
             <item row="0" column="0">
@@ -250,6 +255,12 @@ empresa</string>
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
             <widget class="QPushButton" name="pushButton_add_func">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="cursor">
               <cursorShape>PointingHandCursor</cursorShape>
              </property>
@@ -273,11 +284,17 @@ empresa</string>
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_remove_func">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="cursor">
               <cursorShape>PointingHandCursor</cursorShape>
              </property>
              <property name="text">
-              <string>Remover</string>
+              <string> Remover</string>
              </property>
              <property name="icon">
               <iconset>
@@ -295,9 +312,40 @@ empresa</string>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_save_func">
+            <widget class="QPushButton" name="pushButton_edit_func">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
-              <string>Salvar   </string>
+              <string>  Editar</string>
+             </property>
+             <property name="icon">
+              <iconset theme="QIcon::ThemeIcon::MailMessageNew"/>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_save_func">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>  Salvar   </string>
              </property>
              <property name="icon">
               <iconset theme="QIcon::ThemeIcon::DocumentSave"/>
