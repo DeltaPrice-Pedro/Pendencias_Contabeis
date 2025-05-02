@@ -119,14 +119,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     def save(self):
         try:
+            stats_pedenc = self.pedency.has_change()
+            stats_address = self.address.has_change()
+
+            self.message_no_save = 'Não há alterações a serem salvas'
+
+            if any([stats_pedenc, stats_address]) == False:
+                messagebox.showwarning('Aviso', self.message_no_save)
+                return None
+            
             if messagebox.askyesno('Aviso', self.message_save) == False:
                 return None
             
-            ref_change = {
-                self.pedency: self.db.changes_pedency,
-                self.address: self.db.changes_address
-            }
-
+            ref_change = {}
+            if stats_pedenc == True:
+                ref_change[self.pedency] = self.db.changes_pedency
+            
+            if stats_address == True:
+                ref_change[self.address] = self.db.changes_address
+            
             for widget, func in ref_change.items():
                 widget_change = widget.change()
                 func(self.current_companie_id, widget_change)

@@ -192,7 +192,7 @@ class Pedency(ICRUD):
         self.__fill_taxes()
 
     def __fill_taxes(self):
-        # self.table_taxes.clear()
+        # self.table_taxes.clearContents()
         self.table_taxes.setColumnCount(len(self.taxes_header))
         self.table_taxes.setHorizontalHeaderLabels(self.taxes_header)
         for row in range(self.table_pedency.rowCount()):
@@ -230,7 +230,6 @@ class Pedency(ICRUD):
             if item.text() == type:
                 return row
         return None
-    
     
     def add(self):
         row_index = self.table_pedency.rowCount() + 1
@@ -339,7 +338,7 @@ class Pedency(ICRUD):
         except IndexError:
             messagebox.showerror('Aviso', 'Primeiro, selecione a pendência que deseja remover')
 
-    def change(self):
+    def change(self) -> Change | None:
         changes = Change()
         for row in range(self.table_pedency.rowCount()):
             item = self.table_pedency.item(row, 0)
@@ -365,6 +364,13 @@ class Pedency(ICRUD):
                         .__getattribute__('id')
                 )
         return changes
+    
+    def has_change(self)-> bool:
+        for row in range(self.table_pedency.rowCount()):
+            item = self.table_pedency.item(row, 0)
+            if item.background() != self.no_brush:
+                return True
+        return False
 
     def __data_row(self, row) -> dict[str]:
         data = {}

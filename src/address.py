@@ -138,7 +138,10 @@ class Address:
         except IndexError:
             messagebox.showerror('Aviso', 'Primeiro, selecione o e-mail que deseja remover')
 
-    def change(self):
+    def change(self) -> Change | None:
+        if self.has_change() == False:
+            return None
+        
         changes = Change()
         for row in range(self.listWidget_email.count()):
             item = self.listWidget_email.item(row)
@@ -157,6 +160,13 @@ class Address:
             elif brush == self.remove_brush:
                 changes.to_remove(item.__getattribute__('id'))
         return changes
+    
+    def has_change(self)-> bool:
+        for row in range(self.listWidget_email.count()):
+            item = self.listWidget_email.item(row)
+            if item.background() != self.no_brush:
+                return True
+        return False
 
     def __valid_add(self, text):
         if text == '':
