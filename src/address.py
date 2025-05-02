@@ -40,7 +40,7 @@ class Address:
         self.no_brush = QBrush(Qt.BrushStyle.NoBrush)
 
         self.send_btn, self.page = self.__page()
-        self.__fill(id, address)
+        self.fill(id, address)
         pass
 
     def __call__(self, *args, **kwds):
@@ -94,7 +94,8 @@ class Address:
         # listWidget_email.itemChanged.connect(self.updt)
         return listWidget_email
 
-    def __fill(self, ids, data):
+    def fill(self, ids, data):
+        self.listWidget_email.clear()
         for row, value in enumerate(data):
             item = QListWidgetItem()
             item.setFlags(Qt.ItemIsSelectable |Qt.ItemIsEditable |Qt.ItemIsEnabled)

@@ -169,7 +169,9 @@ class DataBase:
             cursor.execute(
                 self.query_companies
             )
-            return {sub[0] : sub[1]  for sub in cursor.fetchall()}
+            self.connection.commit()
+
+        return {sub[0] : sub[1]  for sub in cursor.fetchall()}
 
     def registrar_enderecos(self, enderecos: list[str], id_empresa: str) -> None:
         with self.connection.cursor() as cursor:
@@ -184,27 +186,30 @@ class DataBase:
             cursor.execute(
                 self.query_pedency, (companie_id,)
             )
-            data = {key: [] for key in self.columns_pending}
-            for sub in cursor.fetchall():
-                for index, i in enumerate(sub):
-                    data[self.columns_pending[index]].append(i)
+            self.connection.commit()
+
+        data = {key: [] for key in self.columns_pending}
+        for sub in cursor.fetchall():
+            for index, i in enumerate(sub):
+                data[self.columns_pending[index]].append(i)
             
-            ids = data.pop('id_pending')
-            return ids, data
+        ids = data.pop('id_pending')
+        return ids, data
 
     def emails(self, companie_id: str):
         with self.connection.cursor() as cursor:
             cursor.execute(
                 self.query_emails, (companie_id,)
             )
+            self.connection.commit()
 
-            id = []
-            address = []
-            for sub in cursor.fetchall():
-                id.append(sub[0])
-                address.append(sub[1])
-            
-            return id, address
+        id = []
+        address = []
+        for sub in cursor.fetchall():
+            id.append(sub[0])
+            address.append(sub[1])
+        
+        return id, address
         
     def changes_pedency(self, id_companie: str, change: Change):
         #add:list, updt: dict[tuple[dict]], remove: list[int]

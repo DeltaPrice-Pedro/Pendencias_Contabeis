@@ -188,10 +188,17 @@ class Pedency(ICRUD):
                 item.__setattr__('edited', False)
                 item.setText(str(value))
                 self.table_pedency.setItem(row, column, item)
+        
+        self.__fill_taxes()
 
+    def __fill_taxes(self):
+        # self.table_taxes.clear()
         self.table_taxes.setColumnCount(len(self.taxes_header))
         self.table_taxes.setHorizontalHeaderLabels(self.taxes_header)
-        self.__fill_taxes()
+        for row in range(self.table_pedency.rowCount()):
+            pen_type = self.table_pedency.item(row, 0).text()
+            value = self.table_pedency.item(row, 1).text()
+            self.__taxes(pen_type, value)
 
     def value_float(self, value):
         return float(value.replace('.','').replace(',','.'))
@@ -224,12 +231,7 @@ class Pedency(ICRUD):
                 return row
         return None
     
-    def __fill_taxes(self):
-        for row in range(self.table_pedency.rowCount()):
-            pen_type = self.table_pedency.item(row, 0).text()
-            value = self.table_pedency.item(row, 1).text()
-            self.__taxes(pen_type, value)
-
+    
     def add(self):
         row_index = self.table_pedency.rowCount() + 1
         self.table_pedency.setRowCount(row_index)

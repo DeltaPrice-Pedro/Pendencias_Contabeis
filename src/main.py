@@ -33,9 +33,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.label_load_gif.setMovie(self.movie)
         self.message_save = 'Tem certeza que deseja salvar estas alterações?'
         self.connections = {}
-        
+
         self.ref_connection_companie = {
-            self.pushButton_reload_companie: self.reload_companie,
+            self.pushButton_reload_companie: self.__fill_companies,
             self.pushButton_add_func: self.add_companie,
             self.pushButton_remove_func: self.remove_companie
         }    
@@ -66,14 +66,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def __fill_companies(self):
         data = self.db.companies()
+        self.listWidget_companie.clear()
         for id, name in data.items():
             item = QListWidgetItem()
             item.setText(name)
             item.__setattr__('id', id)
             self.listWidget_companie.addItem(item)
 
+        self.re_connection(0)
+
+    def add_companie(self):...
+
+    def remove_companie(self):...
+
     def open_pedency(self):
-        self.re_connection()
+        self.re_connection(1)
         item = self.listWidget_companie.selectedItems()[0]
         self.current_companie_id = item.__getattribute__('id')
 
@@ -106,9 +113,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.verticalLayout_3.addWidget(stacked_widget)
         return pedency
     
-    def reload_companie(self):
-        ...
-
     def reload_pedency(self):
         self.pedency.fill(*self.db.pedency(self.current_companie_id))
         self.address.fill(*self.db.emails(self.current_companie_id))
@@ -134,8 +138,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_save_func.setHidden(True)
         self.stackedWidget_companie.setCurrentIndex(0)
         self.stackedWidget_email.setCurrentIndex(0)
-
-        self.re_connection()
+        self.re_connection(0)
         
         send_btn, page = self.address()
         page.deleteLater()
@@ -146,11 +149,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.verticalLayout_3.removeWidget(stacked_widget)
 
     def re_connection(self, current_index: int):
-        ref = self.ref_connection_companie if current_index == 1\
+        ref = self.ref_connection_companie if current_index == 0\
                     else self.ref_connection_pedency
 
         for widget, connection in self.connections.items():
             widget.disconnect(connection)
+        self.connections.clear()
 
         for widget, func in ref.items():
             self.connections[widget] = widget.clicked.connect(func)
