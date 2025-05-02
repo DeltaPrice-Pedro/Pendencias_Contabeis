@@ -29,6 +29,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.message_save = 'Tem certeza que deseja salvar estas alterações?'
         self.message_pending_save = 'Antes de recarregar os dados, faça ou cancele o salvamento das alterações pendentes'
         self.message_no_save = 'Não há alterações a serem salvas'
+        self.message_exit_save = 'Tem certeza que deseja sair da empresa SEM SALVAR as mudanças feitas nela?\n\nCaso não queira PERDER as alterações, selecione "não" e as salve'
         self.connections = {}
 
         self.ref_connection_companie = {
@@ -149,6 +150,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showerror('Aviso', err)
 
     def exit(self):
+        if any([self.pedency.has_change(), self.address.has_change()]):
+            if messagebox.askyesno('Aviso', self.message_exit_save) == False:
+                return None
+
         self.pushButton_save_func.setHidden(True)
         self.stackedWidget_companie.setCurrentIndex(0)
         self.stackedWidget_email.setCurrentIndex(0)
