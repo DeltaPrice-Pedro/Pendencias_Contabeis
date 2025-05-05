@@ -32,6 +32,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.message_pending_save = 'Antes de recarregar os dados, faça ou cancele o salvamento das alterações pendentes'
         self.message_no_save = 'Não há alterações a serem salvas'
         self.message_exit_save = 'Tem certeza que deseja sair da empresa SEM SALVAR as mudanças feitas nela?\n\nCaso não queira PERDER as alterações, selecione "não" e as salve'
+        self.message_send_email = 'Confirma o envio dessas pendências aos emails cadastrados?'
+
         self.connections = {}
 
         self.ref_connection_companie = {
@@ -57,6 +59,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.listWidget_companie.itemChanged.connect(self.confirm_companie)
 
+        self.pushButton_cancel_email.clicked.connect(
+            lambda: self.stackedWidget_email.currentIndex(2)
+        )
+        self.pushButton_send_email.clicked.connect(self.send_email)
         self.pushButton_edit_func.clicked.connect(self.edit_companie)
         self.pushButton_save_func.clicked.connect(self.save)
         self.pushButton_exit_companie.clicked.connect(self.exit)
@@ -142,13 +148,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.address = Address(*self.db.emails(self.current_companie_id))
 
         send_btn, page = self.address()
-        send_btn.clicked.connect(self.send_email)
+        send_btn.clicked.connect(self.ask_assign)
         self.stackedWidget_email.addWidget(page)
 
         self.pushButton_save_func.setHidden(False)
         self.pushButton_edit_func.setHidden(True)
         self.stackedWidget_companie.setCurrentIndex(1)
-        self.stackedWidget_email.setCurrentIndex(1)
+        self.stackedWidget_email.setCurrentIndex(2)
 
     def __pedency(self, id):
         pedency = Pedency(*self.db.pedency(id))
@@ -232,13 +238,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for widget, func in ref.items():
             self.connections[widget] = widget.clicked.connect(func)
 
+    def ask_assign(self):
+        self.groupBox_email.setTitle('Assinatura')
+        self.stackedWidget_email.setCurrentIndex(1)
+
     def send_email(self):
         try:
+            name_func = self.lineEdit_name_func.text()
+
+            if name_func == '':
+                raise Exception('Nome inválido')
+            
+            if messagebox.askyesno('Aviso', self.message_send_email) == False:
+                return None
+
             self.exec_load(True)
             address = self.address.data()
             pedency, taxes = self.pedency.data()
 
             self._postman = Postman(
+                name_func,
                 self.label_current_companie.text(),
                 address, 
                 pedency,
@@ -259,6 +278,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showwarning(title='Aviso', message= error)
 
     def conclusion(self, result: str):
+        self.groupBox_email.setTitle('Email')
+        self.stackedWidget_email.setCurrentIndex(2)
         self.exec_load(False)
         messagebox.showinfo(title='Aviso', message= result)
 
