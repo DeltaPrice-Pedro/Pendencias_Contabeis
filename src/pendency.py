@@ -49,6 +49,7 @@ class Pedency(ICRUD):
             'IRPF','DCTF WEB - PREVIDENCIÁRIO', 'DCTF WEB - PIS/COFINS', 'DCTF WEB - RETIDOS', 'DCTF WEB - IRPJ/CSLL', 'FGTS', 'ICMS ANTECIPAÇÃO', 'ICMS D/C', 'ICMS DIFAL', 'ISSQN', 'ISSQN RETIDO', 'SIMPLES NACIONAL', 'TFLF', 'TFS'
         ]
         self.inputs = []
+        self.confirm_connection = None
 
         self.ref_fill = {
             'value': self.value_str,
@@ -156,12 +157,10 @@ class Pedency(ICRUD):
         )
         horizontalLayout.addWidget(pushButton)
 
-        pushButton_2 = QPushButton(frame)
-        pushButton_2.setText('Confirmar')
-        pushButton_2.clicked.connect( 
-            self.confirm_updt
-        )
-        horizontalLayout.addWidget(pushButton_2)
+        self.confirm_btn = QPushButton(frame)
+        self.confirm_btn.setText('Confirmar')
+
+        horizontalLayout.addWidget(self.confirm_btn)
 
         gridLayout.addWidget(frame, 5, 0, 1, 2)
        
@@ -232,20 +231,39 @@ class Pedency(ICRUD):
             if item.text() == type:
                 return row
         return None
-    
+
     def add(self):
-        row_index = self.table_pedency.rowCount() + 1
-        self.table_pedency.setRowCount(row_index)
-        for column_index in range(self.table_pedency.columnCount()):
+        self.default_resp = ['IRPF', '0,0', '01/01/2020', '01/2020', '']
+        for column in range(self.table_pedency.columnCount()):
+            input = self.inputs[column]
+            self.ref_input[type(input)](self.default_resp[column], input)
+
+        self.confirm_connection = self.confirm_btn.clicked.connect( 
+            self.confirm_add
+        )
+        self.stacked_widget.setCurrentIndex(1)
+
+    def confirm_add(self):
+        resp = self.__inputs_response()
+
+        row = self.table_pedency.rowCount()
+        self.table_pedency.setRowCount(row + 1)
+        for column in range(self.table_pedency.columnCount()):
             item = QTableWidgetItem()
             item.__setattr__('id', None)
             item.__setattr__('edited', False)
+            item.setText(resp[column])
             item.setBackground(self.add_brush)
-            self.table_pedency.setItem(row_index, column_index, item)
-
-        # self.table_pedency.setCurrentCell(row_index, 0)
-        # item.setSelected(True)
-        # self.updt()
+            self.table_pedency.setItem(row, column, item)
+            
+        self.__fill_taxes(
+            resp[0], 
+            self.value_str(
+                self.value_float(resp[1])
+            )
+        )
+        self.stacked_widget.setCurrentIndex(0)
+        self.confirm_btn.disconnect(self.confirm_connection)
 
     def updt(self):
         item = self.table_pedency.selectedItems()[0]
@@ -254,6 +272,10 @@ class Pedency(ICRUD):
             item = self.table_pedency.item(row, column)
             input = self.inputs[column]
             self.ref_input[type(input)](item.text(), input)
+
+        self.confirm_connection = self.confirm_btn.clicked.connect( 
+            self.confirm_updt
+        )
         self.stacked_widget.setCurrentIndex(1)
 
     def __set_combo(self, value, widget):
@@ -300,6 +322,7 @@ class Pedency(ICRUD):
             )
         )
         self.stacked_widget.setCurrentIndex(0)
+        self.confirm_btn.disconnect(self.confirm_connection)
 
     def __inputs_response(self):
         resp = []
