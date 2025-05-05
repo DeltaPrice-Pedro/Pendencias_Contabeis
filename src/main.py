@@ -171,6 +171,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def reload_pedency(self):
         if any([self.pedency.has_change(), self.address.has_change()]):
             messagebox.showwarning('Aviso', self.message_pending_save)
+            return
             
         self.pedency.fill(*self.db.pedency(self.current_companie_id))
         self.address.fill(*self.db.emails(self.current_companie_id))
