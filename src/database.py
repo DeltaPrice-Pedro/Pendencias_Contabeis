@@ -24,7 +24,9 @@ class DataBase:
         self.columns_pending = ['id_pending', 'type', 'value', 'competence', 'maturity', 'observations']
 
         self.ref_key_pedency = {
-                'Valor': lambda value: float(value.replace(',','.')),
+                'Valor': lambda value: float(
+                    value.replace('.','').replace(',','.')
+                ),
                 'Competência': self.__tranform_competence,
                 'Vencimento': self.__transform_maturity,
         }
@@ -61,15 +63,18 @@ class DataBase:
             'WHERE id_companies = %s'
         )
 
-        self.insert_pedency = (
-            f'INSERT INTO {self.PENDING_TABLE} '
-            '(value, competence, maturity, type, observations)'
-            ' VALUES (%s, %s, %s, %s, %s) '
-        )
-
         self.insert_email = (
             f'INSERT INTO {self.EMAIL_TABLE} '
             '(address, id_companies) VALUES (%s, %s)'
+        )
+
+        self.insert_pedency = (
+            f'INSERT INTO {self.PENDING_TABLE} '
+            '(value, competence, type, maturity, '
+            'observations, id_companies) '
+            'VALUES (%(Valor)s, %(Competência)s, '
+            '%(Tipo)s, %(Vencimento)s, '
+            '%(Observações)s, %(id_companies)s)'
         )
 
         self.update_pedency = (
@@ -167,26 +172,39 @@ class DataBase:
         
         #ADD
         if any(add):
-            ...
+            with self.connection.cursor() as cursor:
+                infos = self.__transform_add_pedency(id_companie, add)
+                cursor.executemany(
+                    self.insert_pedency,
+                    infos
+                )
+                self.connection.commit()
 
         #UPDATE
-        if any(updt):...
-        # with self.connection.cursor() as cursor:
-        #     infos = self.__transform_pedency(id_companie, updt)
-        #     cursor.executemany(
-        #         self.update_pedency,
-        #         infos
-        #     )
-        #     self.connection.commit()
+        if any(updt):
+            with self.connection.cursor() as cursor:
+                infos = self.__transform_updt_pedency(id_companie, updt)
+                cursor.executemany(
+                    self.update_pedency,
+                    infos
+                )
+                self.connection.commit()
         
         #REMOVE
-        if any(remove):...
-        # self.__remove_change(id_companie, self.delete_pedency, remove)
+        if any(remove):
+            self.__remove_change(id_companie, self.delete_pedency, remove)
 
-    def __transform_pedency(self, id_companie, updt):
+    def __transform_add_pedency(self, id_companie: str, add: list[dict]):
+        for data in add:
+            for key, func in self.ref_key_pedency.items():
+                data[key] = func(data[key])
+            data['id_companies'] = id_companie
+        return add
+
+    def __transform_updt_pedency(self, id_companie, change_values):
         infos = ()
-        for id_data, data in updt.items():
-                #Somando tuplas, caso dê errado, enviar dict com keys certas
+        for id_data, data in change_values.items():
+            #Somando tuplas, caso dê errado, enviar dict com keys certas
             data = data[0]
             for key, func in self.ref_key_pedency.items():
                 data[key] = func(data[key])
