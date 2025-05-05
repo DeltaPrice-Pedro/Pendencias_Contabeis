@@ -45,8 +45,10 @@ class Pedency(ICRUD):
             'Tipo','Valor','Competência','Vencimento','Observações'
         ]
         self.taxes_header = ['Tributo','Valor']
+        self.types_options = [
+            'IRPF','DCTF WEB - PREVIDENCIÁRIO', 'DCTF WEB - PIS/COFINS', 'DCTF WEB - RETIDOS', 'DCTF WEB - IRPJ/CSLL', 'FGTS', 'ICMS ANTECIPAÇÃO', 'ICMS D/C', 'ICMS DIFAL', 'ISSQN', 'ISSQN RETIDO', 'SIMPLES NACIONAL', 'TFLF', 'TFS'
+        ]
         self.inputs = []
-        self.types_options = ['IRPF']
 
         self.ref_fill = {
             'value': self.value_str,
@@ -189,16 +191,16 @@ class Pedency(ICRUD):
                 item.setText(str(value))
                 self.table_pedency.setItem(row, column, item)
         
-        self.__fill_taxes()
+        self.__taxes()
 
-    def __fill_taxes(self):
+    def __taxes(self):
         # self.table_taxes.clearContents()
         self.table_taxes.setColumnCount(len(self.taxes_header))
         self.table_taxes.setHorizontalHeaderLabels(self.taxes_header)
         for row in range(self.table_pedency.rowCount()):
             pen_type = self.table_pedency.item(row, 0).text()
             value = self.table_pedency.item(row, 1).text()
-            self.__taxes(pen_type, value)
+            self.__fill_taxes(pen_type, value)
 
     def value_float(self, value):
         return float(value.replace('.','').replace(',','.'))
@@ -206,7 +208,7 @@ class Pedency(ICRUD):
     def value_str(self, value):
         return currency(value, symbol= False, grouping= True)
 
-    def __taxes(self, type: str, value: str):
+    def __fill_taxes(self, type: str, value: str):
         row = self.__taxes_find(type)
         if row != None:
             value_item = self.table_taxes.item(row, 1)
@@ -291,7 +293,7 @@ class Pedency(ICRUD):
             item.setBackground(bush)
             item.setText(resp[column])
 
-        self.__taxes(
+        self.__fill_taxes(
             resp[0], 
             self.value_str(
                 self.value_float(resp[1]) - self.value_float(old_value)
@@ -327,9 +329,9 @@ class Pedency(ICRUD):
                     bush = self.updt_brush\
                         if True == item.__getattribute__('edited')\
                             else self.no_brush
-                    self.__taxes(pen_type, value)
+                    self.__fill_taxes(pen_type, value)
                 else:
-                    self.__taxes(pen_type, f'-{value}')
+                    self.__fill_taxes(pen_type, f'-{value}')
 
                 for column in range(self.table_pedency.columnCount()):
                     item = self.table_pedency.item(row, column)

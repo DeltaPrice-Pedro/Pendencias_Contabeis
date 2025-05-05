@@ -180,7 +180,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             stats_pedenc = self.pedency.has_change()
             stats_address = self.address.has_change()
 
-            if any([stats_pedenc, stats_address]) == False:
+            if any([stats_pedenc, stats_address]) != True:
                 messagebox.showwarning('Aviso', self.message_no_save)
                 return None
             
