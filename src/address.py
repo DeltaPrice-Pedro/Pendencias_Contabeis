@@ -91,7 +91,7 @@ class Address:
         
         listWidget_email.setFont(self.font)
 
-        # listWidget_email.itemChanged.connect(self.updt)
+        listWidget_email.itemChanged.connect(self.updt)
         return listWidget_email
 
     def fill(self, ids, data):
@@ -101,6 +101,7 @@ class Address:
             item.setFlags(Qt.ItemIsSelectable |Qt.ItemIsEditable |Qt.ItemIsEnabled)
             item.__setattr__('id', ids[row])
             item.__setattr__('edited', False)
+            item.__setattr__('removeble', False)
             item.setText(str(value))
             self.listWidget_email.addItem(item)
 
@@ -109,12 +110,20 @@ class Address:
         item.setFlags(Qt.ItemIsSelectable |Qt.ItemIsEditable |Qt.ItemIsEnabled)
         item.__setattr__('id', None)
         item.__setattr__('edited', False)
+        item.__setattr__('removeble', False)
         item.setBackground(self.add_brush)
 
         self.listWidget_email.addItem(item)
+        # self.listWidget_email.openPersistentEditor(item)
+        # self.listWidget_email.editItem(item)
 
     def updt(self):
         item = self.listWidget_email.selectedItems()[0]
+        if item.__getattribute__('removeble') == True:
+            item.__setattr__('removeble', False)
+            return 
+        
+        # self.listWidget_email.closePersistentEditor(item)
         bush = self.add_brush\
                 if None == item.__getattribute__('id')\
                     else self.updt_brush
@@ -134,6 +143,7 @@ class Address:
                     bush = self.updt_brush\
                         if True == item.__getattribute__('edited')\
                             else self.no_brush
+                item.__setattr__('removeble', True)
                 item.setBackground(bush)
         except IndexError:
             messagebox.showerror('Aviso', 'Primeiro, selecione o e-mail que deseja remover')
