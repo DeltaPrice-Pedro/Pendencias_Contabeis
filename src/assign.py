@@ -19,10 +19,12 @@ class Assign:
     def __call__(self, *args, **kwds):
         ref = {self.KEY_NOME: self.name_func}
         self.__render(ref)
-        ImageEditor().png_image(self.PNG_FILE_NAME, self.DOCX_FILE_NAME)
+        ImageEditor().png_image(
+            self.PNG_FILE_NAME.__str__(), self.DOCX_FILE_NAME.__str__()
+        )
         os.remove(self.DOCX_FILE_NAME)
 
-        return self.PNG_FILE_NAME
+        return self.PNG_FILE_NAME.__str__()
     
     def __render(self, ref):
         self.caminho = DocxTemplate(self.base_ass)
