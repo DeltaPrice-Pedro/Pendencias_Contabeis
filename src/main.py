@@ -321,7 +321,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for i, j in list(zip(*taxes)):
             result.append(f'{i}: {j}')
 
-        self.db.add_history(name_func, companie, ' - '.join(result))
+        self.db.add_history(name_func, companie, ' | '.join(result))
 
     def exec_load(self, action: bool):
         if action == True:
