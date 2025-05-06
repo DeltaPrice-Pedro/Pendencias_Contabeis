@@ -17,7 +17,6 @@ from postman import Postman
 from pendency import Pedency
 from address import Address
 from sheet import Sheet
-from tkinter.filedialog import asksaveasfilename
 from os import startfile
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -63,7 +62,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.listWidget_companie.itemChanged.connect(self.confirm_companie)
 
         self.pushButton_cancel_email.clicked.connect(
-            lambda: self.stackedWidget_email.currentIndex(2)
+            lambda: self.stackedWidget_email.setCurrentIndex(2)
         )
         self.pushButton_send_email.clicked.connect(self.send_email)
         self.pushButton_edit_func.clicked.connect(self.edit_companie)
@@ -192,22 +191,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             data = self.db.history()
             self._sheet = Sheet(data)
 
-            if self._sheet.upload(asksaveasfilename()) == None:
-                raise Exception('Operação cancelada')
+            self._sheet.upload()
             
             self.exec_load(True)
-            self._thread = QThread()
+            self._thread2 = QThread()
 
-            self._sheet.moveToThread(self._thread)
-            self._thread.started.connect(self._sheet.write)
-            self._sheet.end.connect(self._thread.quit)
-            self._sheet.end.connect(self._thread.deleteLater)
-            self._sheet.result.connect(lambda path: startfile(path))
-            self._thread.finished.connect(self._sheet.deleteLater)
-            self._thread.start()
-
+            self._sheet.moveToThread(self._thread2)
+            self._thread2.started.connect(self._sheet.write)
+            self._sheet.end.connect(self._thread2.quit)
+            self._sheet.end.connect(self._thread2.deleteLater)
+            self._sheet.result.connect(self.open_file)
+            self._thread2.finished.connect(self._sheet.deleteLater)
+            self._thread2.start()
         except Exception as err:
-                messagebox.showerror('Aviso', err)
+            self.exec_load(False)
+            messagebox.showerror('Aviso', err)
+
+    def open_file(self, path):
+        self.exec_load(False)
+        startfile(path)
+
     def save(self):
         try:
             stats_pedenc = self.pedency.has_change()
@@ -297,6 +300,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self._postman.end.connect(self._thread.quit)
             self._postman.end.connect(self._thread.deleteLater)
             self._postman.result.connect(self.conclusion)
+            self._postman.sended.connect(self.save_history)
             self._thread.finished.connect(self._postman.deleteLater)
             self._thread.start()
 
@@ -309,6 +313,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.stackedWidget_email.setCurrentIndex(2)
         self.exec_load(False)
         messagebox.showinfo(title='Aviso', message= result)
+
+    def save_history(self, *args):
+        name_func, companie, taxes = args
+
+        result = []
+        for i, j in list(zip(*taxes)):
+            result.append(f'{i}: {j}')
+
+        self.db.add_history(name_func, companie, ' - '.join(result))
 
     def exec_load(self, action: bool):
         if action == True:

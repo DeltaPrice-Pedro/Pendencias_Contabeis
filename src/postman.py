@@ -6,7 +6,7 @@ from delta_mail import DeltaMail
 from assign import Assign
 
 class Postman(QObject):
-
+    sended = Signal(str, str, list)
     result = Signal(str)
     end = Signal()
 
@@ -35,10 +35,15 @@ class Postman(QObject):
             delta_mail = DeltaMail(self.companie, self.address, html)
             delta_mail.attach(assign_filename)
 
-            delta_mail.send()
+            # delta_mail.send()
             
             assign.remove_image()
+            
+            self.sended.emit(
+                self.name_func, self.companie, list(self.taxes.values())
+            )
             self.result.emit(self.result_message)
+            self.end.emit()
         except Exception as error:
             self.result.emit(error)
 

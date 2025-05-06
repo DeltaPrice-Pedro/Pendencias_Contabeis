@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 from os import getenv
 from change import Change
-from datetime import date
+from datetime import date, datetime
 
 load_dotenv(Path(__file__).parent / 'env' / '.env')
 
@@ -36,6 +36,12 @@ class DataBase:
 
         self.query_companies = (
             f'SELECT id_companies, name FROM {self.COMPANIES_TABLE} '
+        )
+
+        self.insert_history = (
+            f'INSERT INTO {self.HISTORY_TABLE} '
+            '(sender, recipient, log_pending, send_datetime) '
+            'VALUES (%s, %s, %s, %s) '
         )
 
         self.insert_companie = (
@@ -165,7 +171,15 @@ class DataBase:
                 data[self.columns_history[index]].append(i)
             
         return data
-
+    
+    def add_history(self, name, companie, log):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                self.insert_history, 
+                (name, companie, log, datetime.now()) 
+            )
+            self.connection.commit()
+        
     def add_companie(self, name):
         with self.connection.cursor() as cursor:
             cursor.execute(

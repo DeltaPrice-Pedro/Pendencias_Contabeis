@@ -2,8 +2,9 @@
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
+from tkinter.filedialog import asksaveasfilename
 
-from PySide6.QtCore import QThread, QObject, Signal, Qt, QSize
+from PySide6.QtCore import QObject, Signal
 
 class Sheet(QObject):
     start = Signal()
@@ -13,6 +14,12 @@ class Sheet(QObject):
     def __init__(self, content: dict[str, list]):
         super().__init__()
         self.file_path = ''
+        self.default_extension = '.xlsx'
+        self.title_upload = 'Defina onde salvar o relatório'
+        self.file_types = (
+            ('Planilha Excel', '*.xlsx'),
+            ('Todos os Arquivos', '*.*')
+        )
         self.content = content
 
         self.text_font = Font(
@@ -63,9 +70,14 @@ class Sheet(QObject):
         self.result.emit(self.file_path)
         self.end.emit()
 
-    def upload(self, file_path: str):
-        if file_path == '':
-            return None
+    def upload(self):
+        self.file_path = asksaveasfilename(
+            title= self.title_upload, 
+            defaultextension= self.default_extension,
+            filetypes= self.file_types
+        )
 
-        self.file_path = file_path + '.xlsx'
+        if self.file_path == '':
+            raise Exception('Operação cancelada')
+
         return self.file_path
