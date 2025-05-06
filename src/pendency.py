@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (QComboBox, QDateEdit, QDoubleSpinBox,
 from re import findall
 from tkinter import messagebox
 from change import Change
+from datetime import datetime
 
 setlocale(LC_MONETARY, 'pt_BR.UTF-8')
 
@@ -50,6 +51,11 @@ class Pedency(ICRUD):
         ]
         self.inputs = []
         self.confirm_connection = None
+
+        now = datetime.now()
+        self.default_resp = [
+            'IRPF', '0,0', now.strftime('%d/%m/%Y'), now.strftime('%m/%Y'), ''
+        ]
 
         self.ref_fill = {
             'value': self.value_str,
@@ -233,7 +239,6 @@ class Pedency(ICRUD):
         return None
 
     def add(self):
-        self.default_resp = ['IRPF', '0,0', '01/01/2020', '01/2020', '']
         for column in range(self.table_pedency.columnCount()):
             input = self.inputs[column]
             self.ref_input[type(input)](self.default_resp[column], input)

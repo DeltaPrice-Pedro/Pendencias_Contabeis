@@ -24,7 +24,7 @@ class Assign:
         )
         os.remove(self.DOCX_FILE_NAME)
 
-        return self.PNG_FILE_NAME.__str__()
+        return self.PNG_FILE_NAME
     
     def __render(self, ref):
         self.caminho = DocxTemplate(self.base_ass)

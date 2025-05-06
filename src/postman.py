@@ -27,11 +27,14 @@ class Postman(QObject):
 
             content = Content()
             assign = Assign(self.name_func)
+            assign_filename = assign()
 
-            content.attach(assign())
+            content.attach(assign_filename.name.__str__())
             html = content.html(df_pedency, df_taxes)
 
             delta_mail = DeltaMail(self.companie, self.address, html)
+            delta_mail.attach(assign_filename)
+
             delta_mail.send()
             
             assign.remove_image()

@@ -29,7 +29,7 @@ class Content:
                                 .replace('$greeting', self.greeting())
     
     def attach(self, image_path):
-        self.body.replace('$img', image_path)
+        self.body = self.body.replace('$img', image_path)
 
     def greeting(self):
         hora_atual = datetime.now().hour
