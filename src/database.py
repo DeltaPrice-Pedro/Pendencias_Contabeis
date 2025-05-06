@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 from os import getenv
 from change import Change
-from datetime import date
+from datetime import date, datetime
 
 load_dotenv(Path(__file__).parent / 'env' / '.env')
 
@@ -11,6 +11,7 @@ class DataBase:
     COMPANIES_TABLE = 'Companies'
     PENDING_TABLE = 'Pending'
     EMAIL_TABLE = 'Emails'
+    HISTORY_TABLE = 'History'
 
     def __init__(self) -> None:
         self.connection = connect(
@@ -23,6 +24,8 @@ class DataBase:
         
         self.columns_pending = ['id_pending', 'type', 'value', 'competence', 'maturity', 'observations']
 
+        self.columns_history = ['Responsável', 'Empresa', 'Data/Hora Envio', 'Registro']
+
         self.ref_key_pedency = {
                 'Valor': lambda value: float(
                     value.replace('.','').replace(',','.')
@@ -33,6 +36,12 @@ class DataBase:
 
         self.query_companies = (
             f'SELECT id_companies, name FROM {self.COMPANIES_TABLE} '
+        )
+
+        self.insert_history = (
+            f'INSERT INTO {self.HISTORY_TABLE} '
+            '(sender, recipient, log_pending, send_datetime) '
+            'VALUES (%s, %s, %s, %s) '
         )
 
         self.insert_companie = (
@@ -61,6 +70,11 @@ class DataBase:
             'SELECT id_emails, address '
             f'FROM {self.EMAIL_TABLE} '
             'WHERE id_companies = %s'
+        )
+
+        self.query_history = (
+            'SELECT sender, recipient, send_datetime, log_pending '
+            f'FROM {self.HISTORY_TABLE} '
         )
 
         self.insert_email = (
@@ -141,7 +155,31 @@ class DataBase:
             address.append(sub[1])
         
         return id, address
+    
+    def history(self):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                self.query_history
+            )
+            self.connection.commit()
 
+        data = {key: [] for key in self.columns_history}
+        for sub in cursor.fetchall():
+            for index, i in enumerate(sub):
+                if self.columns_history[index] == 'Data/Hora Envio':
+                    i = i.strftime('%d/%m/%Y, %H:%M:%S')
+                data[self.columns_history[index]].append(i)
+            
+        return data
+    
+    def add_history(self, name, companie, log):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                self.insert_history, 
+                (name, companie, log, datetime.now()) 
+            )
+            self.connection.commit()
+        
     def add_companie(self, name):
         with self.connection.cursor() as cursor:
             cursor.execute(

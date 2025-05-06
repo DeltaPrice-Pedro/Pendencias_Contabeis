@@ -16,6 +16,8 @@ from tkinter import messagebox
 from postman import Postman
 from pendency import Pedency
 from address import Address
+from sheet import Sheet
+from os import startfile
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     icon_path = Path(__file__).parent / 'imgs' / '{0}_icon.png'
@@ -32,6 +34,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.message_pending_save = 'Antes de recarregar os dados, faça ou cancele o salvamento das alterações pendentes'
         self.message_no_save = 'Não há alterações a serem salvas'
         self.message_exit_save = 'Tem certeza que deseja sair da empresa SEM SALVAR as mudanças feitas nela?\n\nCaso não queira PERDER as alterações, selecione "não" e as salve'
+        self.message_send_email = 'Confirma o envio dessas pendências aos emails cadastrados?'
+
         self.connections = {}
 
         self.ref_connection_companie = {
@@ -57,9 +61,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.listWidget_companie.itemChanged.connect(self.confirm_companie)
 
+        self.pushButton_cancel_email.clicked.connect(
+            lambda: self.stackedWidget_email.setCurrentIndex(2)
+        )
+        self.pushButton_send_email.clicked.connect(self.send_email)
         self.pushButton_edit_func.clicked.connect(self.edit_companie)
         self.pushButton_save_func.clicked.connect(self.save)
         self.pushButton_exit_companie.clicked.connect(self.exit)
+        self.pushButton_sheet_func.clicked.connect(self.sheet)
         self.pushButton_save_func.setHidden(True)
 
     def __init_icons(self):
@@ -142,13 +151,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.address = Address(*self.db.emails(self.current_companie_id))
 
         send_btn, page = self.address()
-        send_btn.clicked.connect(self.send_email)
+        send_btn.clicked.connect(self.ask_assign)
         self.stackedWidget_email.addWidget(page)
 
         self.pushButton_save_func.setHidden(False)
         self.pushButton_edit_func.setHidden(True)
+        self.pushButton_sheet_func.setHidden(True)
         self.stackedWidget_companie.setCurrentIndex(1)
-        self.stackedWidget_email.setCurrentIndex(1)
+        self.stackedWidget_email.setCurrentIndex(2)
 
     def __pedency(self, id):
         pedency = Pedency(*self.db.pedency(id))
@@ -175,7 +185,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             
         self.pedency.fill(*self.db.pedency(self.current_companie_id))
         self.address.fill(*self.db.emails(self.current_companie_id))
-    
+
+    def sheet(self):
+        try:
+            data = self.db.history()
+            self._sheet = Sheet(data)
+
+            self._sheet.upload()
+            
+            self.exec_load(True)
+            self._thread2 = QThread()
+
+            self._sheet.moveToThread(self._thread2)
+            self._thread2.started.connect(self._sheet.write)
+            self._sheet.end.connect(self._thread2.quit)
+            self._sheet.end.connect(self._thread2.deleteLater)
+            self._sheet.result.connect(self.open_file)
+            self._thread2.finished.connect(self._sheet.deleteLater)
+            self._thread2.start()
+        except Exception as err:
+            self.exec_load(False)
+            messagebox.showerror('Aviso', err)
+
+    def open_file(self, path):
+        self.exec_load(False)
+        startfile(path)
+
     def save(self):
         try:
             stats_pedenc = self.pedency.has_change()
@@ -209,6 +244,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.pushButton_edit_func.setHidden(False)
         self.pushButton_save_func.setHidden(True)
+        self.pushButton_sheet_func.setHidden(False)
         self.stackedWidget_companie.setCurrentIndex(0)
         self.stackedWidget_email.setCurrentIndex(0)
         self.re_connection(0)
@@ -232,13 +268,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for widget, func in ref.items():
             self.connections[widget] = widget.clicked.connect(func)
 
+    def ask_assign(self):
+        self.groupBox_email.setTitle('Assinatura')
+        self.stackedWidget_email.setCurrentIndex(1)
+
     def send_email(self):
         try:
+            name_func = self.lineEdit_name_func.text()
+
+            if name_func == '':
+                raise Exception('Nome inválido')
+            
+            if messagebox.askyesno('Aviso', self.message_send_email) == False:
+                return None
+
             self.exec_load(True)
             address = self.address.data()
             pedency, taxes = self.pedency.data()
 
             self._postman = Postman(
+                name_func,
                 self.label_current_companie.text(),
                 address, 
                 pedency,
@@ -251,6 +300,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self._postman.end.connect(self._thread.quit)
             self._postman.end.connect(self._thread.deleteLater)
             self._postman.result.connect(self.conclusion)
+            self._postman.sended.connect(self.save_history)
             self._thread.finished.connect(self._postman.deleteLater)
             self._thread.start()
 
@@ -259,8 +309,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showwarning(title='Aviso', message= error)
 
     def conclusion(self, result: str):
+        self.groupBox_email.setTitle('Email')
+        self.stackedWidget_email.setCurrentIndex(2)
         self.exec_load(False)
         messagebox.showinfo(title='Aviso', message= result)
+
+    def save_history(self, *args):
+        name_func, companie, taxes = args
+
+        result = []
+        for i, j in list(zip(*taxes)):
+            result.append(f'{i}: {j}')
+
+        self.db.add_history(name_func, companie, ' - '.join(result))
 
     def exec_load(self, action: bool):
         if action == True:
