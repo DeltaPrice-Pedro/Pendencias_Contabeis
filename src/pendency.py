@@ -43,7 +43,7 @@ class Pedency(ICRUD):
         self.no_brush = QBrush(Qt.BrushStyle.NoBrush)
 
         self.pedency_header = [
-            'Tipo','Valor','Competência','Vencimento','Observações'
+            'Tipo','Valor','Vencimento','Competência','Observações'
         ]
         self.taxes_header = ['Tributo','Valor']
         self.types_options = [
@@ -308,7 +308,8 @@ class Pedency(ICRUD):
             return self.stacked_widget.setCurrentIndex(0)
 
         bush = ''
-        old_value = self.table_pedency.item(row, 1).text()
+        old_value = self.value_float(self.table_pedency.item(row, 1).text())
+        old_type = self.table_pedency.item(row, 0).text()
         if None == item.__getattribute__('id'):
             bush = self.add_brush
         else:
@@ -320,12 +321,20 @@ class Pedency(ICRUD):
             item.setBackground(bush)
             item.setText(resp[column])
 
-        self.__fill_taxes(
-            resp[0], 
-            self.value_str(
-                self.value_float(resp[1]) - self.value_float(old_value)
+        new_value = self.value_float(resp[1])
+        if old_type != resp[0]:
+            row = self.__taxes_find(old_type)
+            self.table_taxes.removeRow(row)
+
+            self.__fill_taxes(
+                resp[0], 
+                self.value_str(new_value)
             )
-        )
+        else:
+            self.__fill_taxes(
+                resp[0], 
+                self.value_str(new_value - old_value)
+            )
         self.stacked_widget.setCurrentIndex(0)
         self.confirm_btn.disconnect(self.confirm_connection)
 

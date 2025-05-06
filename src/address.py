@@ -114,8 +114,9 @@ class Address:
         item.setBackground(self.add_brush)
 
         self.listWidget_email.addItem(item)
-        # self.listWidget_email.openPersistentEditor(item)
-        # self.listWidget_email.editItem(item)
+        self.listWidget_email.openPersistentEditor(item)
+        self.listWidget_email.editItem(item)
+        item.setSelected(True)
 
     def updt(self):
         item = self.listWidget_email.selectedItems()[0]
@@ -123,7 +124,7 @@ class Address:
             item.__setattr__('removeble', False)
             return 
         
-        # self.listWidget_email.closePersistentEditor(item)
+        self.listWidget_email.closePersistentEditor(item)
         bush = self.add_brush\
                 if None == item.__getattribute__('id')\
                     else self.updt_brush

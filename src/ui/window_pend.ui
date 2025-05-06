@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>593</width>
-    <height>520</height>
+    <width>568</width>
+    <height>517</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -236,7 +236,7 @@
               </sizepolicy>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="page">
               <property name="styleSheet">
@@ -290,7 +290,7 @@ empresa</string>
                   </font>
                  </property>
                  <property name="text">
-                  <string>Nome &amp; Sobrenome:</string>
+                  <string>Responsável Envio:</string>
                  </property>
                 </widget>
                </item>
@@ -305,9 +305,12 @@ empresa</string>
                  <property name="font">
                   <font>
                    <family>Arial</family>
-                   <pointsize>12</pointsize>
+                   <pointsize>9</pointsize>
                    <bold>false</bold>
                   </font>
+                 </property>
+                 <property name="placeholderText">
+                  <string>Insira nome e sobrenome</string>
                  </property>
                 </widget>
                </item>
@@ -490,6 +493,13 @@ empresa</string>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="font">
+              <font>
+               <family>Tw Cen MT</family>
+               <pointsize>16</pointsize>
+               <bold>false</bold>
+              </font>
+             </property>
              <property name="text">
               <string>  Relatório</string>
              </property>
@@ -612,7 +622,7 @@ empresa</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>593</width>
+     <width>568</width>
      <height>22</height>
     </rect>
    </property>
