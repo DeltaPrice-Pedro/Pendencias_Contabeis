@@ -35,7 +35,7 @@ class Postman(QObject):
             delta_mail = DeltaMail(self.companie, self.address, html)
             delta_mail.attach(assign_filename)
 
-            # delta_mail.send()
+            delta_mail.send()
             
             assign.remove_image()
             
