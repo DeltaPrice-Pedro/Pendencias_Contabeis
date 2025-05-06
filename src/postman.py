@@ -46,9 +46,3 @@ class Postman(QObject):
             self.end.emit()
         except Exception as error:
             self.result.emit(error)
-
-        # conteudo_atual.add_linha(pd.Series(data= {
-        #     'Competência': competencia,
-        #     'Vencimento': vencimento,
-        #     'Valor': row.Valor
-        # }))
