@@ -16,6 +16,9 @@ from tkinter import messagebox
 from postman import Postman
 from pendency import Pedency
 from address import Address
+from sheet import Sheet
+from tkinter.filedialog import asksaveasfilename
+from os import startfile
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     icon_path = Path(__file__).parent / 'imgs' / '{0}_icon.png'
@@ -66,6 +69,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_edit_func.clicked.connect(self.edit_companie)
         self.pushButton_save_func.clicked.connect(self.save)
         self.pushButton_exit_companie.clicked.connect(self.exit)
+        self.pushButton_sheet_func.clicked.connect(self.sheet)
         self.pushButton_save_func.setHidden(True)
 
     def __init_icons(self):
@@ -153,6 +157,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.pushButton_save_func.setHidden(False)
         self.pushButton_edit_func.setHidden(True)
+        self.pushButton_sheet_func.setHidden(True)
         self.stackedWidget_companie.setCurrentIndex(1)
         self.stackedWidget_email.setCurrentIndex(2)
 
@@ -181,7 +186,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             
         self.pedency.fill(*self.db.pedency(self.current_companie_id))
         self.address.fill(*self.db.emails(self.current_companie_id))
-    
+
+    def sheet(self):
+        try:
+            data = self.db.history()
+            self._sheet = Sheet(data)
+
+            if self._sheet.upload(asksaveasfilename()) == None:
+                raise Exception('Operação cancelada')
+            
+            self.exec_load(True)
+            self._thread = QThread()
+
+            self._sheet.moveToThread(self._thread)
+            self._thread.started.connect(self._sheet.write)
+            self._sheet.end.connect(self._thread.quit)
+            self._sheet.end.connect(self._thread.deleteLater)
+            self._sheet.result.connect(lambda path: startfile(path))
+            self._thread.finished.connect(self._sheet.deleteLater)
+            self._thread.start()
+
+        except Exception as err:
+                messagebox.showerror('Aviso', err)
     def save(self):
         try:
             stats_pedenc = self.pedency.has_change()
@@ -215,6 +241,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.pushButton_edit_func.setHidden(False)
         self.pushButton_save_func.setHidden(True)
+        self.pushButton_sheet_func.setHidden(False)
         self.stackedWidget_companie.setCurrentIndex(0)
         self.stackedWidget_email.setCurrentIndex(0)
         self.re_connection(0)
