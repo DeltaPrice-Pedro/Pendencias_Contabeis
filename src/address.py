@@ -101,7 +101,7 @@ class Address:
             item.setFlags(Qt.ItemIsSelectable |Qt.ItemIsEditable |Qt.ItemIsEnabled)
             item.__setattr__('id', ids[row])
             item.__setattr__('edited', False)
-            item.__setattr__('removeble', False)
+            item.__setattr__('not_updatable', False)
             item.setText(str(value))
             self.listWidget_email.addItem(item)
 
@@ -110,7 +110,7 @@ class Address:
         item.setFlags(Qt.ItemIsSelectable |Qt.ItemIsEditable |Qt.ItemIsEnabled)
         item.__setattr__('id', None)
         item.__setattr__('edited', False)
-        item.__setattr__('removeble', False)
+        item.__setattr__('not_updatable', False)
         item.setBackground(self.add_brush)
 
         self.listWidget_email.addItem(item)
@@ -120,8 +120,8 @@ class Address:
 
     def updt(self):
         item = self.listWidget_email.selectedItems()[0]
-        if item.__getattribute__('removeble') == True:
-            item.__setattr__('removeble', False)
+        if item.__getattribute__('not_updatable') == True:
+            item.__setattr__('not_updatable', False)
             return 
         
         self.listWidget_email.closePersistentEditor(item)
@@ -144,7 +144,7 @@ class Address:
                     bush = self.updt_brush\
                         if True == item.__getattribute__('edited')\
                             else self.no_brush
-                item.__setattr__('removeble', True)
+                item.__setattr__('not_updatable', True)
                 item.setBackground(bush)
         except IndexError:
             messagebox.showerror('Aviso', 'Primeiro, selecione o e-mail que deseja remover')
@@ -200,6 +200,7 @@ class Address:
                 self.listWidget_email.takeItem(current_row)
                 remove_count = remove_count + 1
             elif brush in [self.add_brush, self.updt_brush]:
+                item.__setattr__('not_updatable', True)
                 item.setBackground(self.no_brush)
 
     def data(self) -> list[str]:

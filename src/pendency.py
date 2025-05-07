@@ -199,7 +199,8 @@ class Pedency(ICRUD):
         self.__taxes()
 
     def __taxes(self):
-        # self.table_taxes.clearContents()
+        self.table_taxes.clear()
+        self.table_taxes.setRowCount(0)
         self.table_taxes.setColumnCount(len(self.taxes_header))
         self.table_taxes.setHorizontalHeaderLabels(self.taxes_header)
         for row in range(self.table_pedency.rowCount()):

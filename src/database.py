@@ -75,6 +75,7 @@ class DataBase:
         self.query_history = (
             'SELECT sender, recipient, send_datetime, log_pending '
             f'FROM {self.HISTORY_TABLE} '
+            'WHERE %s <= send_datetime <= %s'
         )
 
         self.insert_email = (
@@ -156,10 +157,14 @@ class DataBase:
         
         return id, address
     
-    def history(self):
+    def history(self, date_from, date_until):
+        if  date_from > date_until:
+            raise Exception('Datas inválidas')
+            
         with self.connection.cursor() as cursor:
             cursor.execute(
-                self.query_history
+                self.query_history,
+                (date_from, date_until)
             )
             self.connection.commit()
 

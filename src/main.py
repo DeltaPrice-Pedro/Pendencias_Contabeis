@@ -18,6 +18,7 @@ from pendency import Pedency
 from address import Address
 from sheet import Sheet
 from os import startfile
+from datetime import datetime
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     icon_path = Path(__file__).parent / 'imgs' / '{0}_icon.png'
@@ -41,12 +42,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ref_connection_companie = {
             self.pushButton_reload_companie: self.__fill_companies,
             self.pushButton_add_func: self.add_companie,
-            self.pushButton_remove_func: self.remove_companie
+            self.pushButton_remove_func: self.remove_companie,
+            self.pushButton_sheet_func: self.sheet
         }    
 
         self.ref_connection_pedency = {
-            self.pushButton_reload_companie: self.reload_pedency
+            self.pushButton_reload_companie: self.reload_pedency,
+            self.pushButton_sheet_func: self.sheet
         }
+
+        self.ref_date_sheet = [self.dateEdit_from, self.dateEdit_until]
 
         self.movie = QMovie(
             (Path(__file__).parent / 'imgs' / 'load.gif').__str__()
@@ -156,7 +161,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.pushButton_save_func.setHidden(False)
         self.pushButton_edit_func.setHidden(True)
-        self.pushButton_sheet_func.setHidden(True)
         self.stackedWidget_companie.setCurrentIndex(1)
         self.stackedWidget_email.setCurrentIndex(2)
 
@@ -188,7 +192,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def sheet(self):
         try:
-            data = self.db.history()
+            date = self.__date_sheet_cast()
+            data = self.db.history(*date)
             self._sheet = Sheet(data)
 
             self._sheet.upload()
@@ -206,6 +211,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except Exception as err:
             self.exec_load(False)
             messagebox.showerror('Aviso', err)
+
+    def __date_sheet_cast(self):
+        dates = []
+        for widget in self.ref_date_sheet:
+            var = widget.text().split('/')
+            var.reverse()
+            var = map(lambda x: int(x), var)
+            dates.append(datetime(*var))
+        return dates
 
     def open_file(self, path):
         self.exec_load(False)
@@ -244,7 +258,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.pushButton_edit_func.setHidden(False)
         self.pushButton_save_func.setHidden(True)
-        self.pushButton_sheet_func.setHidden(False)
         self.stackedWidget_companie.setCurrentIndex(0)
         self.stackedWidget_email.setCurrentIndex(0)
         self.re_connection(0)
