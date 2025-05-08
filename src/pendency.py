@@ -43,7 +43,7 @@ class Pedency(ICRUD):
         self.no_brush = QBrush(Qt.BrushStyle.NoBrush)
 
         self.pedency_header = [
-            'Tipo','Valor','Competência','Vencimento','Observações'
+            'Tipo','Valor','Competência', 'Vencimento','Observações'
         ]
         self.taxes_header = ['Tributo','Valor']
         self.types_options = [
@@ -135,12 +135,12 @@ class Pedency(ICRUD):
             QCoreApplication.translate("MainWindow", u"MM/yyyy", None)
         )
         self.inputs.append(dateEdit_1)
-        gridLayout.addWidget(dateEdit_1, 3, 1, 1, 1)
+        gridLayout.addWidget(dateEdit_1, 2, 1, 1, 1)
 
         dateEdit_2 = QDateEdit(page_2)
         dateEdit_2.setCalendarPopup(True)
         self.inputs.append(dateEdit_2)
-        gridLayout.addWidget(dateEdit_2, 2, 1, 1, 1)
+        gridLayout.addWidget(dateEdit_2, 3, 1, 1, 1)
 
         textEdit = QTextEdit(page_2)
         self.sizePolicy.setHeightForWidth(textEdit.sizePolicy().hasHeightForWidth())
@@ -199,7 +199,8 @@ class Pedency(ICRUD):
         self.__taxes()
 
     def __taxes(self):
-        # self.table_taxes.clearContents()
+        self.table_taxes.clear()
+        self.table_taxes.setRowCount(0)
         self.table_taxes.setColumnCount(len(self.taxes_header))
         self.table_taxes.setHorizontalHeaderLabels(self.taxes_header)
         for row in range(self.table_pedency.rowCount()):
@@ -308,7 +309,8 @@ class Pedency(ICRUD):
             return self.stacked_widget.setCurrentIndex(0)
 
         bush = ''
-        old_value = self.table_pedency.item(row, 1).text()
+        old_value = self.value_float(self.table_pedency.item(row, 1).text())
+        old_type = self.table_pedency.item(row, 0).text()
         if None == item.__getattribute__('id'):
             bush = self.add_brush
         else:
@@ -320,12 +322,20 @@ class Pedency(ICRUD):
             item.setBackground(bush)
             item.setText(resp[column])
 
-        self.__fill_taxes(
-            resp[0], 
-            self.value_str(
-                self.value_float(resp[1]) - self.value_float(old_value)
+        new_value = self.value_float(resp[1])
+        if old_type != resp[0]:
+            row = self.__taxes_find(old_type)
+            self.table_taxes.removeRow(row)
+
+            self.__fill_taxes(
+                resp[0], 
+                self.value_str(new_value)
             )
-        )
+        else:
+            self.__fill_taxes(
+                resp[0], 
+                self.value_str(new_value - old_value)
+            )
         self.stacked_widget.setCurrentIndex(0)
         self.confirm_btn.disconnect(self.confirm_connection)
 

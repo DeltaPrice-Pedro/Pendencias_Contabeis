@@ -1,23 +1,26 @@
 from PySide6.QtWidgets import (
-    QMainWindow, QApplication, QCheckBox, QTreeWidgetItem, QListWidgetItem, QPushButton, QHBoxLayout, QFrame, QSizePolicy, QTableWidgetItem
+    QMainWindow, QApplication, QListWidgetItem,
 )
 from PySide6.QtGui import (
-  QColor, QBrush, Qt, QIcon, QMovie
+    QIcon, QMovie
 )
 
 from PySide6.QtCore import (
-  QThread,
+    QThread, QDate
 )
 
+from dateutil.relativedelta import relativedelta
 from window_pend import Ui_MainWindow
-from database import DataBase
-from pathlib import Path
+from re import compile, findall
 from tkinter import messagebox
-from postman import Postman
+from database import DataBase
+from datetime import datetime
 from pendency import Pedency
 from address import Address
-from sheet import Sheet
+from postman import Postman
 from os import startfile
+from pathlib import Path
+from sheet import Sheet
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     icon_path = Path(__file__).parent / 'imgs' / '{0}_icon.png'
@@ -36,17 +39,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.message_exit_save = 'Tem certeza que deseja sair da empresa SEM SALVAR as mudanças feitas nela?\n\nCaso não queira PERDER as alterações, selecione "não" e as salve'
         self.message_send_email = 'Confirma o envio dessas pendências aos emails cadastrados?'
 
+        self.__init_date_sheet()
+
         self.connections = {}
+        self.enable_status = True
 
         self.ref_connection_companie = {
             self.pushButton_reload_companie: self.__fill_companies,
             self.pushButton_add_func: self.add_companie,
-            self.pushButton_remove_func: self.remove_companie
+            self.pushButton_remove_func: self.remove_companie,
         }    
 
         self.ref_connection_pedency = {
-            self.pushButton_reload_companie: self.reload_pedency
+            self.pushButton_reload_companie: self.reload_pedency,
         }
+
+        self.ref_disable_btns = [
+            self.pushButton_add_func,
+            self.pushButton_remove_func,
+            self.pushButton_edit_func,
+            self.pushButton_save_func,
+            self.pushButton_send_email,
+            self.pushButton_sheet_func,
+            self.pushButton_exit_companie,
+        ]
+
+        self.ref_date_sheet = [self.dateEdit_from, self.dateEdit_until]
 
         self.movie = QMovie(
             (Path(__file__).parent / 'imgs' / 'load.gif').__str__()
@@ -70,6 +88,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_exit_companie.clicked.connect(self.exit)
         self.pushButton_sheet_func.clicked.connect(self.sheet)
         self.pushButton_save_func.setHidden(True)
+
+    def __init_date_sheet(self):
+        now = datetime.now()
+        regex = compile(r'[0-9]+')
+        ref = {
+            self.dateEdit_until: now,
+            self.dateEdit_from: now - relativedelta(months = 1)
+        }
+
+        for widget, date in ref.items():
+            list_date = findall(regex, date.strftime('%d/%m/%Y'))
+            d, m, y = list_date
+            date = QDate(int(y), int(m), int(d))
+            widget.setDate(date)
 
     def __init_icons(self):
         icon_ref ={
@@ -102,44 +134,58 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.listWidget_companie.editItem(item)
 
     def edit_companie(self):
-        items = self.listWidget_companie.selectedItems()
-        if len(items) == 0:
-            messagebox.showwarning('Aviso', self.message_select.format('editar'))
-            return None
+        try:
+            self.disable_btns()
+            items = self.listWidget_companie.selectedItems()
+            if len(items) == 0:
+                raise Exception(self.message_select.format('editar'))
 
-        item = items[0]
-        self.listWidget_companie.openPersistentEditor(item)
-        self.listWidget_companie.editItem(item)
+            item = items[0]
+            self.listWidget_companie.openPersistentEditor(item)
+            self.listWidget_companie.editItem(item)
+
+        except Exception as error: 
+            self.disable_btns()
+            messagebox.showwarning('Aviso', error)
 
     def confirm_companie(self, item: QListWidgetItem):
-        name = item.text()
-        if name == '':
-            messagebox.showerror('Aviso', 'Nome de empresa inválida')
-            return None
-        
-        self.listWidget_companie.closePersistentEditor(item)
+        try:
+            name = item.text()
+            if name == '':
+                raise Exception('Nome de empresa inválida')
+            
+            self.listWidget_companie.closePersistentEditor(item)
 
-        id = item.__getattribute__('id')
-        if id == None:
-            id = self.db.add_companie(name)
-            item.__setattr__('id', id)
-        else:
-            self.db.edit_companie(id, name)
+            id = item.__getattribute__('id')
+            if id == None:
+                id = self.db.add_companie(name)
+                item.__setattr__('id', id)
+            else:
+                self.db.edit_companie(id, name)
+
+            self.disable_btns()
+        except Exception as error:
+            self.disable_btns()
+            messagebox.showwarning('Aviso', error)
 
     def remove_companie(self):
-        items = self.listWidget_companie.selectedItems()
-        if len(items) == 0:
-            messagebox.showwarning('Aviso', self.message_select.format('remover'))
-            return None
-        
-        if messagebox.askyesno('Aviso', self.message_remove) == False:
-            return None
-        
-        item = items[0]
-        self.db.remove_companie(item.__getattribute__('id'))
-        self.listWidget_companie.takeItem(
-            self.listWidget_companie.row(item)
-        )
+        try:
+            self.disable_btns()
+            items = self.listWidget_companie.selectedItems()
+            if len(items) == 0:
+                raise Exception(self.message_select.format('remover'))
+            
+            if messagebox.askyesno('Aviso', self.message_remove) == False:
+                return None
+            
+            item = items[0]
+            self.db.remove_companie(item.__getattribute__('id'))
+            self.listWidget_companie.takeItem(
+                self.listWidget_companie.row(item)
+            )
+        except Exception as error:
+            self.disable_btns()
+            messagebox.showwarning('Aviso', error)
 
     def open_pedency(self):
         self.re_connection(1)
@@ -156,7 +202,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.pushButton_save_func.setHidden(False)
         self.pushButton_edit_func.setHidden(True)
-        self.pushButton_sheet_func.setHidden(True)
         self.stackedWidget_companie.setCurrentIndex(1)
         self.stackedWidget_email.setCurrentIndex(2)
 
@@ -188,7 +233,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def sheet(self):
         try:
-            data = self.db.history()
+            self.disable_btns()
+            date = self.__date_sheet_cast()
+            if self.stackedWidget_companie.currentIndex() != 0:
+                date.append(self.current_companie_id)
+                
+            data = self.db.history(*date)
             self._sheet = Sheet(data)
 
             self._sheet.upload()
@@ -207,12 +257,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.exec_load(False)
             messagebox.showerror('Aviso', err)
 
+    def __date_sheet_cast(self):
+        dates = []
+        for widget in self.ref_date_sheet:
+            var = widget.text().split('/')
+            var.reverse()
+            var = map(lambda x: int(x), var)
+            dates.append(datetime(*var))
+        return dates
+
     def open_file(self, path):
         self.exec_load(False)
         startfile(path)
 
     def save(self):
         try:
+            self.disable_btns()
             stats_pedenc = self.pedency.has_change()
             stats_address = self.address.has_change()
 
@@ -234,7 +294,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 widget_change = widget.change()
                 func(self.current_companie_id, widget_change)
                 widget.save()
+            
+            self.disable_btns()
         except Exception as err:
+            self.disable_btns()
             messagebox.showerror('Aviso', err)
 
     def exit(self):
@@ -244,7 +307,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.pushButton_edit_func.setHidden(False)
         self.pushButton_save_func.setHidden(True)
-        self.pushButton_sheet_func.setHidden(False)
         self.stackedWidget_companie.setCurrentIndex(0)
         self.stackedWidget_email.setCurrentIndex(0)
         self.re_connection(0)
@@ -274,6 +336,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def send_email(self):
         try:
+            self.disable_btns()
             name_func = self.lineEdit_name_func.text()
 
             if name_func == '':
@@ -321,13 +384,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for i, j in list(zip(*taxes)):
             result.append(f'{i}: {j}')
 
-        self.db.add_history(name_func, companie, ' - '.join(result))
+        self.db.add_history(
+            name_func, companie, ' | '.join(result), self.current_companie_id
+        )
+
+    def disable_btns(self):
+        self.enable_status = not self.enable_status
+        for item in self.ref_disable_btns:
+            item.setEnabled(self.enable_status)
 
     def exec_load(self, action: bool):
         if action == True:
             self.movie.start()
             self.stackedWidget_body.setCurrentIndex(1)
         else:
+            self.disable_btns()
             self.movie.stop()
             self.stackedWidget_body.setCurrentIndex(0)
 
