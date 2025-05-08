@@ -1,35 +1,47 @@
-from smtp2go.core import Smtp2goClient
 from pathlib import Path
 from os import  getenv
-import base64
+
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+import smtplib
+
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).parent / 'env' / '.env')
 
 class DeltaMail:
-    def __init__(self, companie: str, address: list[str], content: str):
-        self.client = Smtp2goClient(api_key= getenv('API_SMTP'))
+    def __init__(self, companie: str, recipients: list[str], content: str):
         self.sender = getenv('SENDER_EMAIL')
+        self.server = getenv("SMTP_SERVER","")
+        self.port = getenv("SMTP_PORT", 0)
+        
+        self.smtp_username = getenv("EMAIL_SENDER","")
+        self.smtp_password = getenv("PASSWRD_SENDER","")
 
-        # address.append(self.sender)
-        self.payload = {
-            'sender': self.sender,
-            'recipients': address,
-            'subject': f'{companie} - PENDÊNCIAS CONTÁBEIS',
-            'html': content,
-        }
+        self.recipients = recipients
 
+        self.msg = MIMEMultipart('mixed')
+        self.msg['Subject'] = f'{companie} - PENDÊNCIAS CONTÁBEIS'
+        self.msg['From'] =  self.sender
+        self.msg['To'] = ', '.join(self.recipients)
+
+        self.recipients.append(self.sender)
+        self.msg.attach(MIMEText(content, 'html', 'utf-8'))
+        
     def attach(self, assign_filename: Path):
-        with open(assign_filename, "rb") as image_file:
-            encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+        with open(assign_filename, 'rb') as fp:
+            image_data = fp.read()
 
-        self.payload['inlines'] = [
-            {
-                'filename': assign_filename.name.__str__(),
-                'fileblob': encoded_string,
-                'mimetype': 'image/png'
-            }
-        ]
+        image = MIMEImage(image_data)
+        image.add_header('Content-ID', assign_filename.stem)
+        self.msg.attach(image)
 
     def send(self):
-        # ...
-        response = self.client.send(**self.payload)
-        if response.success == False:
-            raise Exception('Endereço de email inválido')
+        with smtplib.SMTP(self.server, self.port) as smtp_server:
+            smtp_server.ehlo()
+            smtp_server.starttls()
+            smtp_server.ehlo()
+
+            smtp_server.login(self.smtp_username, self.smtp_password)
+            smtp_server.sendmail(self.sender, self.recipients, self.msg.as_string())
