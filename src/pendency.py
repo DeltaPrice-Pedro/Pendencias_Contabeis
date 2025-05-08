@@ -43,7 +43,7 @@ class Pedency(ICRUD):
         self.no_brush = QBrush(Qt.BrushStyle.NoBrush)
 
         self.pedency_header = [
-            'Tipo','Valor','Vencimento','Competência','Observações'
+            'Tipo','Valor','Competência', 'Vencimento','Observações'
         ]
         self.taxes_header = ['Tributo','Valor']
         self.types_options = [
@@ -135,12 +135,12 @@ class Pedency(ICRUD):
             QCoreApplication.translate("MainWindow", u"MM/yyyy", None)
         )
         self.inputs.append(dateEdit_1)
-        gridLayout.addWidget(dateEdit_1, 3, 1, 1, 1)
+        gridLayout.addWidget(dateEdit_1, 2, 1, 1, 1)
 
         dateEdit_2 = QDateEdit(page_2)
         dateEdit_2.setCalendarPopup(True)
         self.inputs.append(dateEdit_2)
-        gridLayout.addWidget(dateEdit_2, 2, 1, 1, 1)
+        gridLayout.addWidget(dateEdit_2, 3, 1, 1, 1)
 
         textEdit = QTextEdit(page_2)
         self.sizePolicy.setHeightForWidth(textEdit.sizePolicy().hasHeightForWidth())

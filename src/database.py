@@ -40,8 +40,8 @@ class DataBase:
 
         self.insert_history = (
             f'INSERT INTO {self.HISTORY_TABLE} '
-            '(sender, recipient, log_pending, send_datetime) '
-            'VALUES (%s, %s, %s, %s) '
+            '(sender, recipient, log_pending, send_datetime, id_companies) '
+            'VALUES (%s, %s, %s, %s, %s) '
         )
 
         self.insert_companie = (
@@ -75,7 +75,14 @@ class DataBase:
         self.query_history = (
             'SELECT sender, recipient, send_datetime, log_pending '
             f'FROM {self.HISTORY_TABLE} '
-            'WHERE %s <= send_datetime <= %s'
+            'WHERE %s <= send_datetime <= %s '
+        )
+
+        self.query_history_id = (
+            'SELECT sender, recipient, send_datetime, log_pending '
+            f'FROM {self.HISTORY_TABLE} '
+            'WHERE %s <= send_datetime <= %s '
+            'AND id_companies = %s'
         )
 
         self.insert_email = (
@@ -157,14 +164,21 @@ class DataBase:
         
         return id, address
     
-    def history(self, date_from, date_until):
+    def history(self, date_from, date_until, id = None):
         if  date_from > date_until:
             raise Exception('Datas inválidas')
-            
+        
+        query = self.query_history
+        data_query = (date_from, date_until)
+        
+        if id != None:
+            query = self.query_history_id
+            data_query = data_query + (id,)
+
         with self.connection.cursor() as cursor:
             cursor.execute(
-                self.query_history,
-                (date_from, date_until)
+                query,
+                data_query
             )
             self.connection.commit()
 
@@ -177,11 +191,11 @@ class DataBase:
             
         return data
     
-    def add_history(self, name, companie, log):
+    def add_history(self, name, companie, log, id_companies):
         with self.connection.cursor() as cursor:
             cursor.execute(
                 self.insert_history, 
-                (name, companie, log, datetime.now()) 
+                (name, companie, log, datetime.now(), id_companies) 
             )
             self.connection.commit()
         
