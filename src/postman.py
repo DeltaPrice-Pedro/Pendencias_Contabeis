@@ -25,16 +25,17 @@ class Postman(QObject):
             df_pedency = pd.DataFrame(self.pedency)
             df_taxes = pd.DataFrame(self.taxes)
 
-            content = Content()
             assign = Assign(self.name_func)
-            assign_filename = assign()
+            assign_path = assign()
 
-            content.attach(assign_filename.stem)
-            html = content.html(df_pedency, df_taxes)
+            content = Content()
+            html = content.html(
+                df_pedency, df_taxes,
+                assign_path, self.name_func
+            )
 
             delta_mail = DeltaMail(self.companie, self.address, html)
-            delta_mail.attach(assign_filename)
-
+            delta_mail.attach(assign_path)
             delta_mail.send()
             
             assign.remove_image()

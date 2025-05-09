@@ -21,6 +21,8 @@ from postman import Postman
 from os import startfile
 from pathlib import Path
 from sheet import Sheet
+from pymysql import err
+import sys
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     icon_path = Path(__file__).parent / 'imgs' / '{0}_icon.png'
@@ -28,8 +30,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent = None) -> None:
         super().__init__(parent)
+        self.message_error_docker = 'Falha na conexão com o banco de dados. Favor verificar se o aplicativo "DOCKER" está inicializado no servidor, caso constrário, entre em contato com o suporte disponível\n\n{}'
+
+        self.db = self.try_conection()
         self.setupUi(self)
-        self.db = DataBase()
+
+        self.setWindowIcon(
+            QIcon(
+                (Path(__file__).parent / 'imgs' / 'GerenPedenContab.ico').__str__())
+        )
 
         self.message_select = 'Primeiro, clique 1 vez na empresa que deseja {0}'
         self.message_remove = 'Confirma a remoção desta empresa?\nTodas suas pendências e emails cadastrados também serão excluídos'
@@ -40,6 +49,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.message_send_email = 'Confirma o envio dessas pendências aos emails cadastrados?'
 
         self.__init_date_sheet()
+
+        from local_changes import LocalChanges
+
+        self.local_changes = LocalChanges()
+        sender_name = self.local_changes.sender_name()
+        self.lineEdit_name_func.setText(sender_name)
 
         self.connections = {}
         self.enable_status = True
@@ -88,6 +103,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_exit_companie.clicked.connect(self.exit)
         self.pushButton_sheet_func.clicked.connect(self.sheet)
         self.pushButton_save_func.setHidden(True)
+
+    def try_conection(self):
+        try:
+            return DataBase()
+        except err.OperationalError as e:
+            messagebox.showerror('Aviso!', self.message_error_docker.format(e))
+            sys.exit()
 
     def __init_date_sheet(self):
         now = datetime.now()
@@ -372,6 +394,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showwarning(title='Aviso', message= error)
 
     def conclusion(self, result: str):
+        self.local_changes.updt_sender(self.lineEdit_name_func.text())
         self.groupBox_email.setTitle('Email')
         self.stackedWidget_email.setCurrentIndex(2)
         self.exec_load(False)

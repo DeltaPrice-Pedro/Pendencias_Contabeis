@@ -13,35 +13,36 @@ load_dotenv(Path(__file__).parent / 'env' / '.env')
 class DeltaMail:
     def __init__(self, companie: str, recipients: list[str], content: str):
         self.sender = getenv('SENDER_EMAIL')
-        self.server = getenv("SMTP_SERVER","")
-        self.port = getenv("SMTP_PORT", 0)
-        
-        self.smtp_username = getenv("EMAIL_SENDER","")
-        self.smtp_password = getenv("PASSWRD_SENDER","")
-
         self.recipients = recipients
 
         self.msg = MIMEMultipart('mixed')
         self.msg['Subject'] = f'{companie} - PENDÊNCIAS CONTÁBEIS'
-        self.msg['From'] =  self.sender
+        self.msg['From'] =  f'{self.sender} Deltaprice'
         self.msg['To'] = ', '.join(self.recipients)
 
         self.recipients.append(self.sender)
         self.msg.attach(MIMEText(content, 'html', 'utf-8'))
         
-    def attach(self, assign_filename: Path):
-        with open(assign_filename, 'rb') as fp:
+    def attach(self, assign: Path):
+        with open(assign, 'rb') as fp:
             image_data = fp.read()
 
         image = MIMEImage(image_data)
-        image.add_header('Content-ID', assign_filename.stem)
+        image.add_header('Content-ID', assign.stem)
+        image.add_header('Content-Disposition', 'inline', filename='Assign')
         self.msg.attach(image)
 
     def send(self):
-        with smtplib.SMTP(self.server, self.port) as smtp_server:
+        server = getenv("SMTP_SERVER","")
+        port = getenv("SMTP_PORT", 0)
+
+        smtp_username = getenv("EMAIL_SENDER","")
+        smtp_password = getenv("PASSWRD_SENDER","")
+
+        with smtplib.SMTP(server, port) as smtp_server:
             smtp_server.ehlo()
             smtp_server.starttls()
             smtp_server.ehlo()
 
-            smtp_server.login(self.smtp_username, self.smtp_password)
+            smtp_server.login(smtp_username, smtp_password)
             smtp_server.sendmail(self.sender, self.recipients, self.msg.as_string())

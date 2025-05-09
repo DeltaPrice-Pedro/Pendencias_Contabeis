@@ -8,18 +8,18 @@
 
 <body>
     <p>
-        Prezado cliente, $greeting<br>Em virtude do levantamento parcial das Demonstrações Contábeis, não identificamos o pagamento dos tributos relacionados abaixo:
+        Prezado cliente, {greeting}<br>Em virtude do levantamento parcial das Demonstrações Contábeis, não identificamos o pagamento dos tributos relacionados abaixo:
     </p>
     <h3 style="color: rgb(0, 102, 255); margin-bottom: 0.5%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Detalhes</h3>
-    $table_pedency
+    {table_pedency}
     <br>
     <hr>
     <h3 style="color: rgb(0, 102, 255); margin-bottom: 0.5%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Resumo</h3>
-    $table_taxes
+    {table_taxes}
     <p style="font-size: small; font-style: italic;">Obs.: Frisamos que de acordo com o art. 889 do Regulamento do Imposto de Renda e art. 32 da Lei nª 4.357/64: as pessoas jurídicas, enquanto estiverem em débito não garantido, por falta de recolhimento de imposto, taxa ou contribuição no prazo legal, não poderão distribuir lucros a seus sócios ou quotistas.</p>
     <p>Caso deseje regularizar alguma das pendências mencionadas acima, gentileza responder este email informando a data para recálculo.</p>
     <br>
-    <img src="cid:$img" style="width: 50%;">
+    <img style="width:50%;" src="cid:{img}" alt="Assinatura Deltaprice de {alt}"/>
     <p>
         Esta mensagem, incluindo seus anexos, tem caráter confidencial e seu conteúdo é restrito ao destinatário da
         mensagem. Caso você tenha recebido esta mensagem por engano, queira, por favor, retorná-la ao destinatário e

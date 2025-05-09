@@ -14,6 +14,8 @@ class DataBase:
     HISTORY_TABLE = 'History'
 
     def __init__(self) -> None:
+        from tkinter import messagebox
+        messagebox.showinfo('', f'{Path(__file__).parent }\n{getenv('IP_HOST')}')
         self.connection = connect(
                 host= getenv('IP_HOST'),
                 port= int(getenv('PORT_HOST')),
