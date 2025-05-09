@@ -1,7 +1,9 @@
 /venv
-/buid
+/build
+/dist
 *.env
 /src/__pycache__
 *.dia~
 *.autosave
 assign.png
+*.spec

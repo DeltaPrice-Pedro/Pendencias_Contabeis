@@ -34,7 +34,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.db = self.try_conection()
         self.setupUi(self)
-        self.db = DataBase()
 
         self.setWindowIcon(
             QIcon(
