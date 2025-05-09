@@ -3,7 +3,6 @@ from PySide6.QtCore import QObject, Signal
 import pandas as pd
 from content import Content
 from delta_mail import DeltaMail
-from delta_mail2 import DeltaMail2
 from assign import Assign
 
 class Postman(QObject):
@@ -26,16 +25,16 @@ class Postman(QObject):
             df_pedency = pd.DataFrame(self.pedency)
             df_taxes = pd.DataFrame(self.taxes)
 
-            content = Content()
             assign = Assign(self.name_func)
-            assign_filename = assign()
+            assign_path = assign()
 
-            content.attach(assign_filename.stem[1:-1], self.name_func)
-            html = content.html(df_pedency, df_taxes)
+            content = Content()
+            html = content.html(
+                df_pedency, df_taxes,
+                assign_path.stem, self.name_func
+            )
 
-            delta_mail = DeltaMail2(self.companie, self.address, html)
-            delta_mail.attach(assign_filename)
-
+            delta_mail = DeltaMail(self.companie, self.address, html)
             delta_mail.send()
             
             assign.remove_image()

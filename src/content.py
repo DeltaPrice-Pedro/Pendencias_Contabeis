@@ -9,7 +9,13 @@ class Content:
             'Valor': lambda x: f'<span style="color: red;"> R$ {x} </span>'
         }
 
-    def html(self, df_pedency: pd.DataFrame, df_taxes: pd.DataFrame) -> str:
+    def html(self, 
+            df_pedency: pd.DataFrame, 
+            df_taxes: pd.DataFrame,
+            image_path: Path, 
+            name_func: str
+            ) -> str:
+        
         ref = {
             120: df_pedency,
             80: df_taxes
@@ -31,15 +37,11 @@ class Content:
                     table_pedency = html_tables[0],
                     table_taxes = html_tables[1],
                     greeting = self.greeting(),
-                    img = self.image_path,
+                    img = image_path,
                     subtype = 'html',
-                    alt = self.alt,
+                    alt = name_func
                 )
     
-    def attach(self, image_path, name_func):
-        self.image_path = image_path
-        self.alt = name_func,
-        
     def greeting(self):
         hora_atual = datetime.now().hour
         if hora_atual < 12:
