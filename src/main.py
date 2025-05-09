@@ -41,6 +41,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.__init_date_sheet()
 
+        from local_changes import LocalChanges
+
+        self.local_changes = LocalChanges()
+        sender_name = self.local_changes.sender_name()
+        self.lineEdit_name_func.setText(sender_name)
+
         self.connections = {}
         self.enable_status = True
 
@@ -372,6 +378,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showwarning(title='Aviso', message= error)
 
     def conclusion(self, result: str):
+        self.local_changes.updt_sender(self.lineEdit_name_func.text())
         self.groupBox_email.setTitle('Email')
         self.stackedWidget_email.setCurrentIndex(2)
         self.exec_load(False)

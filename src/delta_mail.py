@@ -26,16 +26,16 @@ class DeltaMail:
         self.msg['From'] =  self.sender
         self.msg['To'] = ', '.join(self.recipients)
 
-        self.recipients.append(self.sender)
+        # self.recipients.append(self.sender)
         self.msg.attach(MIMEText(content, 'html', 'utf-8'))
         
     def attach(self, assign_filename: Path):
         with open(assign_filename, 'rb') as fp:
             image_data = fp.read()
 
-        image = MIMEImage(image_data)
-        image.add_header('Content-ID', assign_filename.stem)
-        self.msg.attach(image)
+        msg_image = MIMEImage(image_data)
+        msg_image.add_header('Content-ID', f'<{assign_filename.stem}>')
+        self.msg.attach(msg_image)
 
     def send(self):
         with smtplib.SMTP(self.server, self.port) as smtp_server:
