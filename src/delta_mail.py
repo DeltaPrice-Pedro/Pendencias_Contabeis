@@ -17,18 +17,18 @@ class DeltaMail:
 
         self.msg = MIMEMultipart('mixed')
         self.msg['Subject'] = f'{companie} - PENDÊNCIAS CONTÁBEIS'
-        self.msg['From'] =  self.sender
+        self.msg['From'] =  f'{self.sender} Deltaprice'
         self.msg['To'] = ', '.join(self.recipients)
 
-        # self.recipients.append(self.sender)
+        self.recipients.append(self.sender)
         self.msg.attach(MIMEText(content, 'html', 'utf-8'))
         
-    def attach(self, assign_filename: Path):
-        with open(assign_filename, 'rb') as fp:
+    def attach(self, assign: Path):
+        with open(assign, 'rb') as fp:
             image_data = fp.read()
 
         image = MIMEImage(image_data)
-        image.add_header('Content-ID', f'<{assign_filename.stem}>')
+        image.add_header('Content-ID', assign.stem)
         image.add_header('Content-Disposition', 'inline', filename='Assign')
         self.msg.attach(image)
 

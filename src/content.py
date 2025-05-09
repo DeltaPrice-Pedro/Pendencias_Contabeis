@@ -12,7 +12,7 @@ class Content:
     def html(self, 
             df_pedency: pd.DataFrame, 
             df_taxes: pd.DataFrame,
-            image_path: Path, 
+            assign: Path, 
             name_func: str
             ) -> str:
         
@@ -37,8 +37,7 @@ class Content:
                     table_pedency = html_tables[0],
                     table_taxes = html_tables[1],
                     greeting = self.greeting(),
-                    img = image_path,
-                    subtype = 'html',
+                    img = assign.stem,
                     alt = name_func
                 )
     

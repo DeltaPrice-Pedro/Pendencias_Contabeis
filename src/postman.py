@@ -31,10 +31,11 @@ class Postman(QObject):
             content = Content()
             html = content.html(
                 df_pedency, df_taxes,
-                assign_path.stem, self.name_func
+                assign_path, self.name_func
             )
 
             delta_mail = DeltaMail(self.companie, self.address, html)
+            delta_mail.attach(assign_path)
             delta_mail.send()
             
             assign.remove_image()
