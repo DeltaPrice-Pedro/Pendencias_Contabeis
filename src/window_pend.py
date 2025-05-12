@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(764, 677)
         MainWindow.setAutoFillBackground(False)
-        MainWindow.setStyleSheet(u"background-color: rgb(235, 235, 235);")
+        MainWindow.setStyleSheet(u"background-color: rgb(227, 227, 227);")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -67,6 +67,8 @@ class Ui_MainWindow(object):
         font.setItalic(True)
         self.listWidget_companie.setFont(font)
         self.listWidget_companie.setStyleSheet(u"background-color: rgb(255, 255, 255);")
+        self.listWidget_companie.setAlternatingRowColors(True)
+        self.listWidget_companie.setSortingEnabled(True)
 
         self.gridLayout_4.addWidget(self.listWidget_companie, 1, 0, 1, 1)
 
@@ -219,7 +221,7 @@ class Ui_MainWindow(object):
         self.stackedWidget_email.setMinimumSize(QSize(350, 0))
         self.page = QWidget()
         self.page.setObjectName(u"page")
-        self.page.setStyleSheet(u"background-color: rgb(222, 222, 222);")
+        self.page.setStyleSheet(u"background-color: rgb(194, 194, 194);")
         self.gridLayout_3 = QGridLayout(self.page)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.label_none_companie = QLabel(self.page)
@@ -381,7 +383,7 @@ class Ui_MainWindow(object):
         self.pushButton_sheet_func.setSizePolicy(sizePolicy2)
         self.pushButton_sheet_func.setFont(font7)
         self.pushButton_sheet_func.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.pushButton_sheet_func.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
+        self.pushButton_sheet_func.setStyleSheet(u"background-color: rgb(255, 255, 255);\n"
 "border: 1px solid rgb(85, 170, 255);\n"
 "padding: 5px;\n"
 "border-radius: 8px;")
@@ -423,7 +425,7 @@ class Ui_MainWindow(object):
         self.pushButton_add_func.setSizePolicy(sizePolicy8)
         self.pushButton_add_func.setFont(font7)
         self.pushButton_add_func.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.pushButton_add_func.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
+        self.pushButton_add_func.setStyleSheet(u"background-color: rgb(255, 255, 255);\n"
 "border: 1px solid rgb(85, 170, 255);\n"
 "padding: 5px;\n"
 "border-radius: 8px;")
@@ -440,7 +442,7 @@ class Ui_MainWindow(object):
         self.pushButton_remove_func.setSizePolicy(sizePolicy8)
         self.pushButton_remove_func.setFont(font7)
         self.pushButton_remove_func.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.pushButton_remove_func.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
+        self.pushButton_remove_func.setStyleSheet(u"background-color: rgb(255, 255, 255);\n"
 "border: 1px solid rgb(85, 170, 255);\n"
 "padding: 5px;\n"
 "border-radius: 8px;")
@@ -457,7 +459,7 @@ class Ui_MainWindow(object):
         self.pushButton_edit_func.setSizePolicy(sizePolicy8)
         self.pushButton_edit_func.setFont(font7)
         self.pushButton_edit_func.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.pushButton_edit_func.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
+        self.pushButton_edit_func.setStyleSheet(u"background-color: rgb(255, 255, 255);\n"
 "border: 1px solid rgb(85, 170, 255);\n"
 "padding: 5px;\n"
 "border-radius: 8px;")
@@ -473,7 +475,7 @@ class Ui_MainWindow(object):
         self.pushButton_save_func.setSizePolicy(sizePolicy8)
         self.pushButton_save_func.setFont(font7)
         self.pushButton_save_func.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.pushButton_save_func.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
+        self.pushButton_save_func.setStyleSheet(u"background-color: rgb(255, 255, 255);\n"
 "border: 1px solid rgb(85, 170, 255);\n"
 "padding: 5px;\n"
 "border-radius: 8px;")

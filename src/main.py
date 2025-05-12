@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (
-    QMainWindow, QApplication, QListWidgetItem,
+    QMainWindow, QApplication, QListWidgetItem, QAbstractItemView
 )
 from PySide6.QtGui import (
     QIcon, QMovie
@@ -77,6 +77,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pushButton_send_email,
             self.pushButton_sheet_func,
             self.pushButton_exit_companie,
+            self.pushButton_reload_companie
         ]
 
         self.ref_tool_tip_pedency = {
@@ -100,12 +101,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.label_load_gif.setMovie(self.movie)
 
+        self.open_pedency_connection = None
+        self.re_connect_pedency()
         self.__fill_companies()
         self.__init_icons()
 
-        self.listWidget_companie.itemDoubleClicked.connect(
-            self.open_pedency
-        )
         self.listWidget_companie.itemChanged.connect(self.confirm_companie)
 
         self.pushButton_cancel_email.clicked.connect(
@@ -117,6 +117,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_exit_companie.clicked.connect(self.exit)
         self.pushButton_sheet_func.clicked.connect(self.sheet)
         self.pushButton_save_func.setHidden(True)
+
+    def re_connect_pedency(self):
+        if self.open_pedency_connection == None:
+            self.open_pedency_connection = self.listWidget_companie\
+                .itemDoubleClicked.connect(self.open_pedency)
+        else:
+            self.listWidget_companie.disconnect(self.open_pedency_connection)
+            self.open_pedency_connection = None
 
     def try_conection(self):
         try:
@@ -171,17 +179,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def edit_companie(self):
         try:
-            self.disable_btns()
             items = self.listWidget_companie.selectedItems()
             if len(items) == 0:
                 raise Exception(self.message_select.format('editar'))
+            
+            self.disable_btns()
+            self.re_connect_pedency()
 
             item = items[0]
             self.listWidget_companie.openPersistentEditor(item)
             self.listWidget_companie.editItem(item)
 
         except Exception as error: 
-            self.disable_btns()
             messagebox.showwarning('Aviso', error)
 
     def confirm_companie(self, item: QListWidgetItem):
@@ -199,9 +208,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 self.db.edit_companie(id, name)
 
+            self.re_connect_pedency()
             self.disable_btns()
         except Exception as error:
-            self.disable_btns()
             messagebox.showwarning('Aviso', error)
 
     def remove_companie(self):
