@@ -241,8 +241,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pedency = self.__pedency(self.current_companie_id)
         self.address = Address(*self.db.emails(self.current_companie_id))
 
-        send_btn, page = self.address()
-        send_btn.clicked.connect(self.ask_assign)
+        next_btn, page = self.address()
+        next_btn.clicked.connect(self.open_assign)
         self.stackedWidget_email.addWidget(page)
 
         self.pushButton_save_func.setHidden(False)
@@ -269,12 +269,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return pedency
     
     def reload_pedency(self):
-        if any([self.pedency.has_change(), self.address.has_change()]):
-            messagebox.showwarning('Aviso', self.message_pending_save)
-            return
-            
-        self.pedency.fill(*self.db.pedency(self.current_companie_id))
-        self.address.fill(*self.db.emails(self.current_companie_id))
+        try:
+            if any([self.pedency.has_change(), self.address.has_change()]):
+                raise Exception(self.message_pending_save)
+                
+            self.pedency.fill(*self.db.pedency(self.current_companie_id))
+            self.address.fill(*self.db.emails(self.current_companie_id))
+        except Exception as err:
+            messagebox.showerror('Aviso', err)
 
     def sheet(self):
         try:
@@ -322,8 +324,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             stats_address = self.address.has_change()
 
             if any([stats_pedenc, stats_address]) != True:
-                messagebox.showwarning('Aviso', self.message_no_save)
-                return None
+                raise Exception(self.message_no_save)
             
             if messagebox.askyesno('Aviso', self.message_save) == False:
                 return None
@@ -390,9 +391,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for widget, text in ref.items():
             widget.setToolTip(text)
 
-    def ask_assign(self):
-        self.groupBox_email.setTitle('Assinatura')
-        self.stackedWidget_email.setCurrentIndex(1)
+    def open_assign(self):
+        try:
+            stats_pedenc = self.pedency.has_change()
+            stats_address = self.address.has_change()
+
+            if any([stats_pedenc, stats_address]):
+                raise Exception('Aviso', 'Salve as alterações pendentes antes de prosseguir')
+                
+            self.groupBox_email.setTitle('Assinatura')
+            self.stackedWidget_email.setCurrentIndex(1)
+        
+        except Exception as error:
+            messagebox.showwarning(title='Aviso', message= error)
 
     def send_email(self):
         try:
@@ -408,6 +419,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.exec_load(True)
             address = self.address.data()
             pedency, taxes = self.pedency.data()
+
+            if all([address, pedency]) == False:
+                raise Exception('Não há pendências ou e-mail cadastrados para essa empresa, clique em "Voltar" e adcione a informação faltante')
 
             self._postman = Postman(
                 name_func,
@@ -428,6 +442,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self._thread.start()
 
         except Exception as error:
+            self.disable_btns()
             self.exec_load(False)
             messagebox.showwarning(title='Aviso', message= error)
 

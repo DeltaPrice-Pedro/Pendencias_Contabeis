@@ -25,7 +25,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(764, 677)
+        MainWindow.resize(766, 683)
         MainWindow.setAutoFillBackground(False)
         MainWindow.setStyleSheet(u"background-color: rgb(227, 227, 227);")
         self.centralwidget = QWidget(MainWindow)
@@ -290,7 +290,7 @@ class Ui_MainWindow(object):
         font7.setPointSize(16)
         font7.setBold(False)
         self.pushButton_cancel_email.setFont(font7)
-        self.pushButton_cancel_email.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
+        self.pushButton_cancel_email.setStyleSheet(u"background-color: rgb(255, 255, 255);\n"
 "border: 1px solid rgb(85, 170, 255);\n"
 "padding: 5px;\n"
 "border-radius: 8px;")
@@ -302,7 +302,7 @@ class Ui_MainWindow(object):
         self.pushButton_send_email = QPushButton(self.frame_3)
         self.pushButton_send_email.setObjectName(u"pushButton_send_email")
         self.pushButton_send_email.setFont(font7)
-        self.pushButton_send_email.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
+        self.pushButton_send_email.setStyleSheet(u"background-color: rgb(255, 255, 255);\n"
 "border: 1px solid rgb(85, 170, 255);\n"
 "padding: 5px;\n"
 "border-radius: 8px;")
@@ -541,7 +541,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 764, 22))
+        self.menubar.setGeometry(QRect(0, 0, 766, 22))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
