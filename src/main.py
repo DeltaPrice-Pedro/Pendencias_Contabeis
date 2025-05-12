@@ -79,6 +79,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pushButton_exit_companie,
         ]
 
+        self.ref_tool_tip_pedency = {
+            self.pushButton_add_func: 'Adciona pendência contábil a empresa selecionada',
+            self.pushButton_remove_func: 'Remove a pendência contábil selecionada com 1 clique',
+            self.pushButton_edit_func: 'Edita a pendência contábil selecionada com 1 clique',
+            self.pushButton_sheet_func: 'Gera relatório de envios exclusivo da empresa atual',
+        }
+
+        self.ref_tool_tip_companie = {
+            self.pushButton_add_func: 'Adciona empresa a lista de empresas cadastradas',
+            self.pushButton_remove_func: 'Remove empresa cadastrada',
+            self.pushButton_edit_func: 'Edita o nome de empresa cadastrada',
+            self.pushButton_sheet_func: 'Gera relatório de envio de todas empresas cadastradas',
+        }
+
         self.ref_date_sheet = [self.dateEdit_from, self.dateEdit_until]
 
         self.movie = QMovie(
@@ -144,7 +158,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             item.__setattr__('id', id)
             self.listWidget_companie.addItem(item)
 
-        self.re_connection(0)
+        self.switch_focus(0)
 
     def add_companie(self):
         item = QListWidgetItem()
@@ -210,7 +224,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showwarning('Aviso', error)
 
     def open_pedency(self):
-        self.re_connection(1)
+        self.switch_focus(1)
         item = self.listWidget_companie.selectedItems()[0]
         self.label_current_companie.setText(item.text())
         self.current_companie_id = item.__getattribute__('id')
@@ -331,7 +345,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_save_func.setHidden(True)
         self.stackedWidget_companie.setCurrentIndex(0)
         self.stackedWidget_email.setCurrentIndex(0)
-        self.re_connection(0)
+        self.switch_focus(0)
         
         send_btn, page = self.address()
         page.deleteLater()
@@ -341,16 +355,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         stacked_widget.deleteLater()
         self.verticalLayout_3.removeWidget(stacked_widget)
 
-    def re_connection(self, current_index: int):
-        ref = self.ref_connection_companie if current_index == 0\
-                    else self.ref_connection_pedency
+    def switch_focus(self, current_index: int):
+        ref_connection = {}
+        ref_tool_tip = {}
 
+        if current_index == 0:
+            ref_connection = self.ref_connection_companie
+            ref_tool_tip = self.ref_tool_tip_companie 
+        else:
+            ref_connection = self.ref_connection_pedency
+            ref_tool_tip = self.ref_tool_tip_pedency
+
+        self.re_connection(ref_connection)
+        self.re_tool_tip(ref_tool_tip)
+
+    def re_connection(self, ref):
         for widget, connection in self.connections.items():
             widget.disconnect(connection)
         self.connections.clear()
 
         for widget, func in ref.items():
             self.connections[widget] = widget.clicked.connect(func)
+
+    def re_tool_tip(self, ref):
+        for widget, text in ref.items():
+            widget.setToolTip(text)
 
     def ask_assign(self):
         self.groupBox_email.setTitle('Assinatura')

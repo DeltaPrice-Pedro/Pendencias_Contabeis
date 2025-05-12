@@ -25,7 +25,9 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(635, 650)
+        MainWindow.resize(764, 677)
+        MainWindow.setAutoFillBackground(False)
+        MainWindow.setStyleSheet(u"background-color: rgb(235, 235, 235);")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -36,6 +38,10 @@ class Ui_MainWindow(object):
         self.page_2.setObjectName(u"page_2")
         self.gridLayout_5 = QGridLayout(self.page_2)
         self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_5.addItem(self.verticalSpacer_2, 1, 0, 1, 1)
+
         self.stackedWidget_companie = QStackedWidget(self.page_2)
         self.stackedWidget_companie.setObjectName(u"stackedWidget_companie")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
@@ -56,8 +62,11 @@ class Ui_MainWindow(object):
         sizePolicy1.setHeightForWidth(self.listWidget_companie.sizePolicy().hasHeightForWidth())
         self.listWidget_companie.setSizePolicy(sizePolicy1)
         font = QFont()
-        font.setPointSize(14)
+        font.setFamilies([u"Century"])
+        font.setPointSize(18)
+        font.setItalic(True)
         self.listWidget_companie.setFont(font)
+        self.listWidget_companie.setStyleSheet(u"background-color: rgb(255, 255, 255);")
 
         self.gridLayout_4.addWidget(self.listWidget_companie, 1, 0, 1, 1)
 
@@ -71,7 +80,7 @@ class Ui_MainWindow(object):
         self.label_companie_intro.setObjectName(u"label_companie_intro")
         font1 = QFont()
         font1.setFamilies([u"Tw Cen MT"])
-        font1.setPointSize(18)
+        font1.setPointSize(22)
         font1.setBold(True)
         self.label_companie_intro.setFont(font1)
         self.label_companie_intro.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -129,7 +138,11 @@ class Ui_MainWindow(object):
 
         self.label_current_companie = QLabel(self.frame_current_companie)
         self.label_current_companie.setObjectName(u"label_current_companie")
-        self.label_current_companie.setFont(font1)
+        font3 = QFont()
+        font3.setFamilies([u"Tw Cen MT"])
+        font3.setPointSize(18)
+        font3.setBold(True)
+        self.label_current_companie.setFont(font3)
         self.label_current_companie.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout.addWidget(self.label_current_companie)
@@ -154,26 +167,45 @@ class Ui_MainWindow(object):
         sizePolicy4.setVerticalStretch(0)
         sizePolicy4.setHeightForWidth(self.pushButton_reload_companie.sizePolicy().hasHeightForWidth())
         self.pushButton_reload_companie.setSizePolicy(sizePolicy4)
+        self.pushButton_reload_companie.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         icon1 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.SyncSynchronizing))
         self.pushButton_reload_companie.setIcon(icon1)
 
         self.verticalLayout_5.addWidget(self.pushButton_reload_companie)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.frame_5 = QFrame(self.frame_2)
+        self.frame_5.setObjectName(u"frame_5")
+        self.frame_5.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_5.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_4 = QHBoxLayout(self.frame_5)
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.line_3 = QFrame(self.frame_5)
+        self.line_3.setObjectName(u"line_3")
+        sizePolicy3.setHeightForWidth(self.line_3.sizePolicy().hasHeightForWidth())
+        self.line_3.setSizePolicy(sizePolicy3)
+        self.line_3.setMinimumSize(QSize(5, 0))
+        self.line_3.setStyleSheet(u"background-color: rgb(85, 170, 255);")
+        self.line_3.setLineWidth(0)
+        self.line_3.setMidLineWidth(0)
+        self.line_3.setFrameShape(QFrame.Shape.VLine)
+        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.verticalLayout_5.addItem(self.verticalSpacer)
+        self.horizontalLayout_4.addWidget(self.line_3)
+
+
+        self.verticalLayout_5.addWidget(self.frame_5)
 
 
         self.gridLayout_5.addWidget(self.frame_2, 0, 3, 5, 1)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_5.addItem(self.verticalSpacer_3, 3, 0, 1, 1)
 
         self.groupBox_email = QGroupBox(self.page_2)
         self.groupBox_email.setObjectName(u"groupBox_email")
         sizePolicy2.setHeightForWidth(self.groupBox_email.sizePolicy().hasHeightForWidth())
         self.groupBox_email.setSizePolicy(sizePolicy2)
-        font3 = QFont()
-        font3.setFamilies([u"Tw Cen MT"])
-        font3.setPointSize(16)
-        font3.setBold(False)
         self.groupBox_email.setFont(font3)
         self.groupBox_email.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.groupBox_email.setFlat(True)
@@ -184,10 +216,10 @@ class Ui_MainWindow(object):
         self.stackedWidget_email.setObjectName(u"stackedWidget_email")
         sizePolicy4.setHeightForWidth(self.stackedWidget_email.sizePolicy().hasHeightForWidth())
         self.stackedWidget_email.setSizePolicy(sizePolicy4)
+        self.stackedWidget_email.setMinimumSize(QSize(350, 0))
         self.page = QWidget()
         self.page.setObjectName(u"page")
-        self.page.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
-"")
+        self.page.setStyleSheet(u"background-color: rgb(222, 222, 222);")
         self.gridLayout_3 = QGridLayout(self.page)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.label_none_companie = QLabel(self.page)
@@ -196,7 +228,7 @@ class Ui_MainWindow(object):
         self.label_none_companie.setSizePolicy(sizePolicy4)
         font4 = QFont()
         font4.setFamilies([u"Sitka"])
-        font4.setPointSize(16)
+        font4.setPointSize(18)
         font4.setBold(False)
         font4.setItalic(True)
         self.label_none_companie.setFont(font4)
@@ -234,6 +266,7 @@ class Ui_MainWindow(object):
         font6.setPointSize(9)
         font6.setBold(False)
         self.lineEdit_name_func.setFont(font6)
+        self.lineEdit_name_func.setStyleSheet(u"background-color: rgb(255, 255, 255);")
 
         self.verticalLayout_6.addWidget(self.lineEdit_name_func)
 
@@ -250,6 +283,15 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.pushButton_cancel_email = QPushButton(self.frame_3)
         self.pushButton_cancel_email.setObjectName(u"pushButton_cancel_email")
+        font7 = QFont()
+        font7.setFamilies([u"Tw Cen MT"])
+        font7.setPointSize(16)
+        font7.setBold(False)
+        self.pushButton_cancel_email.setFont(font7)
+        self.pushButton_cancel_email.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
+"border: 1px solid rgb(85, 170, 255);\n"
+"padding: 5px;\n"
+"border-radius: 8px;")
         icon2 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentRevert))
         self.pushButton_cancel_email.setIcon(icon2)
 
@@ -257,6 +299,11 @@ class Ui_MainWindow(object):
 
         self.pushButton_send_email = QPushButton(self.frame_3)
         self.pushButton_send_email.setObjectName(u"pushButton_send_email")
+        self.pushButton_send_email.setFont(font7)
+        self.pushButton_send_email.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
+"border: 1px solid rgb(85, 170, 255);\n"
+"padding: 5px;\n"
+"border-radius: 8px;")
         icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSend))
         self.pushButton_send_email.setIcon(icon3)
 
@@ -274,10 +321,7 @@ class Ui_MainWindow(object):
 
         self.groupBox_sheet = QGroupBox(self.page_2)
         self.groupBox_sheet.setObjectName(u"groupBox_sheet")
-        font7 = QFont()
-        font7.setFamilies([u"Tw Cen MT"])
-        font7.setPointSize(16)
-        self.groupBox_sheet.setFont(font7)
+        self.groupBox_sheet.setFont(font3)
         self.groupBox_sheet.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.groupBox_sheet.setFlat(True)
         self.verticalLayout_7 = QVBoxLayout(self.groupBox_sheet)
@@ -288,35 +332,35 @@ class Ui_MainWindow(object):
         self.frame_4.setFrameShadow(QFrame.Shadow.Raised)
         self.gridLayout_6 = QGridLayout(self.frame_4)
         self.gridLayout_6.setObjectName(u"gridLayout_6")
-        self.dateEdit_until = QDateEdit(self.frame_4)
-        self.dateEdit_until.setObjectName(u"dateEdit_until")
+        self.label_util_sheet = QLabel(self.frame_4)
+        self.label_util_sheet.setObjectName(u"label_util_sheet")
         font8 = QFont()
-        font8.setFamilies([u"Tw Cen MT"])
+        font8.setFamilies([u"Arial"])
         font8.setPointSize(12)
-        self.dateEdit_until.setFont(font8)
+        font8.setBold(False)
+        self.label_util_sheet.setFont(font8)
 
-        self.gridLayout_6.addWidget(self.dateEdit_until, 1, 2, 1, 1)
+        self.gridLayout_6.addWidget(self.label_util_sheet, 1, 3, 1, 1)
 
         self.label_from_sheet = QLabel(self.frame_4)
         self.label_from_sheet.setObjectName(u"label_from_sheet")
-        font9 = QFont()
-        font9.setFamilies([u"Arial"])
-        font9.setPointSize(12)
-        self.label_from_sheet.setFont(font9)
+        self.label_from_sheet.setFont(font8)
 
-        self.gridLayout_6.addWidget(self.label_from_sheet, 0, 0, 1, 1)
-
-        self.label_util_sheet = QLabel(self.frame_4)
-        self.label_util_sheet.setObjectName(u"label_util_sheet")
-        self.label_util_sheet.setFont(font9)
-
-        self.gridLayout_6.addWidget(self.label_util_sheet, 0, 2, 1, 1)
+        self.gridLayout_6.addWidget(self.label_from_sheet, 1, 0, 1, 1)
 
         self.dateEdit_from = QDateEdit(self.frame_4)
         self.dateEdit_from.setObjectName(u"dateEdit_from")
-        self.dateEdit_from.setFont(font8)
+        self.dateEdit_from.setFont(font2)
+        self.dateEdit_from.setStyleSheet(u"background-color: rgb(255, 255, 255);")
 
-        self.gridLayout_6.addWidget(self.dateEdit_from, 1, 0, 1, 1)
+        self.gridLayout_6.addWidget(self.dateEdit_from, 1, 1, 1, 1)
+
+        self.dateEdit_until = QDateEdit(self.frame_4)
+        self.dateEdit_until.setObjectName(u"dateEdit_until")
+        self.dateEdit_until.setFont(font2)
+        self.dateEdit_until.setStyleSheet(u"background-color: rgb(255, 255, 255);")
+
+        self.gridLayout_6.addWidget(self.dateEdit_until, 1, 4, 1, 1)
 
         self.line = QFrame(self.frame_4)
         self.line.setObjectName(u"line")
@@ -326,7 +370,7 @@ class Ui_MainWindow(object):
         self.line.setLineWidth(-1)
         self.line.setFrameShape(QFrame.Shape.VLine)
 
-        self.gridLayout_6.addWidget(self.line, 0, 1, 2, 1)
+        self.gridLayout_6.addWidget(self.line, 1, 2, 1, 1)
 
 
         self.verticalLayout_7.addWidget(self.frame_4)
@@ -335,87 +379,115 @@ class Ui_MainWindow(object):
         self.pushButton_sheet_func.setObjectName(u"pushButton_sheet_func")
         sizePolicy2.setHeightForWidth(self.pushButton_sheet_func.sizePolicy().hasHeightForWidth())
         self.pushButton_sheet_func.setSizePolicy(sizePolicy2)
-        self.pushButton_sheet_func.setFont(font3)
+        self.pushButton_sheet_func.setFont(font7)
+        self.pushButton_sheet_func.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.pushButton_sheet_func.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
+"border: 1px solid rgb(85, 170, 255);\n"
+"padding: 5px;\n"
+"border-radius: 8px;")
         icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.EditPaste))
         self.pushButton_sheet_func.setIcon(icon4)
         self.pushButton_sheet_func.setIconSize(QSize(30, 30))
-        self.pushButton_sheet_func.setFlat(True)
 
         self.verticalLayout_7.addWidget(self.pushButton_sheet_func)
 
 
         self.gridLayout_5.addWidget(self.groupBox_sheet, 4, 0, 1, 1)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_5.addItem(self.verticalSpacer_2, 1, 0, 1, 1)
-
         self.groupBox_func = QGroupBox(self.page_2)
         self.groupBox_func.setObjectName(u"groupBox_func")
         sizePolicy2.setHeightForWidth(self.groupBox_func.sizePolicy().hasHeightForWidth())
         self.groupBox_func.setSizePolicy(sizePolicy2)
-        self.groupBox_func.setFont(font7)
+        self.groupBox_func.setFont(font3)
         self.groupBox_func.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.groupBox_func.setFlat(True)
-        self.verticalLayout = QVBoxLayout(self.groupBox_func)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.pushButton_add_func = QPushButton(self.groupBox_func)
-        self.pushButton_add_func.setObjectName(u"pushButton_add_func")
-        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
+        self.horizontalLayout_5 = QHBoxLayout(self.groupBox_func)
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.frame_6 = QFrame(self.groupBox_func)
+        self.frame_6.setObjectName(u"frame_6")
+        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
         sizePolicy7.setHorizontalStretch(0)
         sizePolicy7.setVerticalStretch(0)
-        sizePolicy7.setHeightForWidth(self.pushButton_add_func.sizePolicy().hasHeightForWidth())
-        self.pushButton_add_func.setSizePolicy(sizePolicy7)
+        sizePolicy7.setHeightForWidth(self.frame_6.sizePolicy().hasHeightForWidth())
+        self.frame_6.setSizePolicy(sizePolicy7)
+        self.frame_6.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_6.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_8 = QVBoxLayout(self.frame_6)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.pushButton_add_func = QPushButton(self.frame_6)
+        self.pushButton_add_func.setObjectName(u"pushButton_add_func")
+        sizePolicy8 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
+        sizePolicy8.setHorizontalStretch(0)
+        sizePolicy8.setVerticalStretch(0)
+        sizePolicy8.setHeightForWidth(self.pushButton_add_func.sizePolicy().hasHeightForWidth())
+        self.pushButton_add_func.setSizePolicy(sizePolicy8)
+        self.pushButton_add_func.setFont(font7)
         self.pushButton_add_func.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.pushButton_add_func.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
+"border: 1px solid rgb(85, 170, 255);\n"
+"padding: 5px;\n"
+"border-radius: 8px;")
         icon5 = QIcon()
         icon5.addFile(u"../../../../../Downloads/add_icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.pushButton_add_func.setIcon(icon5)
         self.pushButton_add_func.setIconSize(QSize(40, 40))
-        self.pushButton_add_func.setFlat(True)
 
-        self.verticalLayout.addWidget(self.pushButton_add_func)
+        self.verticalLayout_8.addWidget(self.pushButton_add_func)
 
-        self.pushButton_remove_func = QPushButton(self.groupBox_func)
+        self.pushButton_remove_func = QPushButton(self.frame_6)
         self.pushButton_remove_func.setObjectName(u"pushButton_remove_func")
-        sizePolicy7.setHeightForWidth(self.pushButton_remove_func.sizePolicy().hasHeightForWidth())
-        self.pushButton_remove_func.setSizePolicy(sizePolicy7)
+        sizePolicy8.setHeightForWidth(self.pushButton_remove_func.sizePolicy().hasHeightForWidth())
+        self.pushButton_remove_func.setSizePolicy(sizePolicy8)
+        self.pushButton_remove_func.setFont(font7)
         self.pushButton_remove_func.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.pushButton_remove_func.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
+"border: 1px solid rgb(85, 170, 255);\n"
+"padding: 5px;\n"
+"border-radius: 8px;")
         icon6 = QIcon()
         icon6.addFile(u"../../../../../Downloads/remove_icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.pushButton_remove_func.setIcon(icon6)
         self.pushButton_remove_func.setIconSize(QSize(35, 35))
-        self.pushButton_remove_func.setFlat(True)
 
-        self.verticalLayout.addWidget(self.pushButton_remove_func)
+        self.verticalLayout_8.addWidget(self.pushButton_remove_func)
 
-        self.pushButton_edit_func = QPushButton(self.groupBox_func)
+        self.pushButton_edit_func = QPushButton(self.frame_6)
         self.pushButton_edit_func.setObjectName(u"pushButton_edit_func")
-        sizePolicy7.setHeightForWidth(self.pushButton_edit_func.sizePolicy().hasHeightForWidth())
-        self.pushButton_edit_func.setSizePolicy(sizePolicy7)
+        sizePolicy8.setHeightForWidth(self.pushButton_edit_func.sizePolicy().hasHeightForWidth())
+        self.pushButton_edit_func.setSizePolicy(sizePolicy8)
+        self.pushButton_edit_func.setFont(font7)
+        self.pushButton_edit_func.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.pushButton_edit_func.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
+"border: 1px solid rgb(85, 170, 255);\n"
+"padding: 5px;\n"
+"border-radius: 8px;")
         icon7 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.MailMessageNew))
         self.pushButton_edit_func.setIcon(icon7)
         self.pushButton_edit_func.setIconSize(QSize(30, 30))
-        self.pushButton_edit_func.setFlat(True)
 
-        self.verticalLayout.addWidget(self.pushButton_edit_func)
+        self.verticalLayout_8.addWidget(self.pushButton_edit_func)
 
-        self.pushButton_save_func = QPushButton(self.groupBox_func)
+        self.pushButton_save_func = QPushButton(self.frame_6)
         self.pushButton_save_func.setObjectName(u"pushButton_save_func")
-        sizePolicy7.setHeightForWidth(self.pushButton_save_func.sizePolicy().hasHeightForWidth())
-        self.pushButton_save_func.setSizePolicy(sizePolicy7)
+        sizePolicy8.setHeightForWidth(self.pushButton_save_func.sizePolicy().hasHeightForWidth())
+        self.pushButton_save_func.setSizePolicy(sizePolicy8)
+        self.pushButton_save_func.setFont(font7)
+        self.pushButton_save_func.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.pushButton_save_func.setStyleSheet(u"background-color: rgb(222, 222, 222);\n"
+"border: 1px solid rgb(85, 170, 255);\n"
+"padding: 5px;\n"
+"border-radius: 8px;")
         icon8 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSave))
         self.pushButton_save_func.setIcon(icon8)
         self.pushButton_save_func.setIconSize(QSize(30, 30))
-        self.pushButton_save_func.setFlat(True)
 
-        self.verticalLayout.addWidget(self.pushButton_save_func)
+        self.verticalLayout_8.addWidget(self.pushButton_save_func)
+
+
+        self.horizontalLayout_5.addWidget(self.frame_6)
 
 
         self.gridLayout_5.addWidget(self.groupBox_func, 0, 0, 1, 1)
-
-        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_5.addItem(self.verticalSpacer_3, 3, 0, 1, 1)
 
         self.stackedWidget_body.addWidget(self.page_2)
         self.page_5 = QWidget()
@@ -450,12 +522,12 @@ class Ui_MainWindow(object):
 
         self.label_2 = QLabel(self.page_5)
         self.label_2.setObjectName(u"label_2")
-        font10 = QFont()
-        font10.setFamilies([u"Tw Cen MT"])
-        font10.setPointSize(36)
-        font10.setBold(True)
-        font10.setItalic(True)
-        self.label_2.setFont(font10)
+        font9 = QFont()
+        font9.setFamilies([u"Tw Cen MT"])
+        font9.setPointSize(36)
+        font9.setBold(True)
+        font9.setItalic(True)
+        self.label_2.setFont(font9)
         self.label_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_2.addWidget(self.label_2)
@@ -467,7 +539,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 635, 22))
+        self.menubar.setGeometry(QRect(0, 0, 764, 22))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -495,24 +567,42 @@ class Ui_MainWindow(object):
 
         self.label_companie_intro.setText(QCoreApplication.translate("MainWindow", u"Empresas Dispon\u00edveis", None))
         self.label_companie_subintro.setText(QCoreApplication.translate("MainWindow", u"Clique 2x para selecionar", None))
+#if QT_CONFIG(tooltip)
+        self.pushButton_exit_companie.setToolTip(QCoreApplication.translate("MainWindow", u"Voltar para a lista de empresas cadastradas", None))
+#endif // QT_CONFIG(tooltip)
         self.pushButton_exit_companie.setText("")
         self.label_current_companie.setText(QCoreApplication.translate("MainWindow", u"Nome Empresa", None))
+#if QT_CONFIG(tooltip)
+        self.pushButton_reload_companie.setToolTip(QCoreApplication.translate("MainWindow", u"Atualizar dados recentes", None))
+#endif // QT_CONFIG(tooltip)
         self.pushButton_reload_companie.setText("")
         self.groupBox_email.setTitle(QCoreApplication.translate("MainWindow", u"Email", None))
         self.label_none_companie.setText(QCoreApplication.translate("MainWindow", u"Primeiro, selecione\n"
 "uma empresa", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Respons\u00e1vel Envio:", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Respons\u00e1vel pelo envio:", None))
         self.lineEdit_name_func.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Insira nome e sobrenome", None))
+#if QT_CONFIG(tooltip)
+        self.pushButton_cancel_email.setToolTip(QCoreApplication.translate("MainWindow", u"Voltar para sele\u00e7\u00e3o de e-mails da empresa", None))
+#endif // QT_CONFIG(tooltip)
         self.pushButton_cancel_email.setText(QCoreApplication.translate("MainWindow", u"Voltar", None))
+#if QT_CONFIG(tooltip)
+        self.pushButton_send_email.setToolTip(QCoreApplication.translate("MainWindow", u"Envia e-mail com assinatura do respons\u00e1vel", None))
+#endif // QT_CONFIG(tooltip)
         self.pushButton_send_email.setText(QCoreApplication.translate("MainWindow", u"Enviar", None))
+#if QT_CONFIG(tooltip)
+        self.groupBox_sheet.setToolTip(QCoreApplication.translate("MainWindow", u"Gerar relat\u00f3rio", None))
+#endif // QT_CONFIG(tooltip)
         self.groupBox_sheet.setTitle(QCoreApplication.translate("MainWindow", u"Relat\u00f3rio", None))
-        self.label_from_sheet.setText(QCoreApplication.translate("MainWindow", u"De:", None))
         self.label_util_sheet.setText(QCoreApplication.translate("MainWindow", u"At\u00e9:", None))
+        self.label_from_sheet.setText(QCoreApplication.translate("MainWindow", u"De:", None))
         self.pushButton_sheet_func.setText(QCoreApplication.translate("MainWindow", u" Gerar", None))
         self.groupBox_func.setTitle(QCoreApplication.translate("MainWindow", u"Fun\u00e7\u00f5es", None))
         self.pushButton_add_func.setText(QCoreApplication.translate("MainWindow", u"Adcionar", None))
         self.pushButton_remove_func.setText(QCoreApplication.translate("MainWindow", u" Remover", None))
-        self.pushButton_edit_func.setText(QCoreApplication.translate("MainWindow", u"  Editar", None))
+        self.pushButton_edit_func.setText(QCoreApplication.translate("MainWindow", u"  Editar    ", None))
+#if QT_CONFIG(tooltip)
+        self.pushButton_save_func.setToolTip(QCoreApplication.translate("MainWindow", u"Salva as altera\u00e7\u00f5es descritas em cores", None))
+#endif // QT_CONFIG(tooltip)
         self.pushButton_save_func.setText(QCoreApplication.translate("MainWindow", u"  Salvar   ", None))
         self.label_load_gif.setText("")
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Enviando Email...", None))
