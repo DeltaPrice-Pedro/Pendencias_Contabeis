@@ -21,7 +21,7 @@ from datetime import datetime
 setlocale(LC_MONETARY, 'pt_BR.UTF-8')
 
 class Pedency(ICRUD):
-    def __init__(self, ids, data):
+    def __init__(self, ids:list[str], data:dict[str,list[str]], taxes:list[str]):
         self.sizePolicy = QSizePolicy(
             QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum
         )
@@ -47,9 +47,7 @@ class Pedency(ICRUD):
             'Tipo','Valor','Competência', 'Vencimento','Observações'
         ]
         self.taxes_header = ['Tributo','Valor']
-        self.types_options = [
-            'IRPF','DCTF WEB - PREVIDENCIÁRIO', 'DCTF WEB - PIS/COFINS', 'DCTF WEB - RETIDOS', 'DCTF WEB - IRPJ/CSLL', 'FGTS', 'ICMS ANTECIPAÇÃO', 'ICMS D/C', 'ICMS DIFAL', 'ISSQN', 'ISSQN RETIDO', 'SIMPLES NACIONAL', 'TFLF', 'TFS'
-        ]
+        self.taxes_options = taxes
         self.inputs = []
         self.confirm_connection = None
 
@@ -122,7 +120,7 @@ class Pedency(ICRUD):
             gridLayout.addWidget(label, i, 0, 1, 1)
 
         comboBox = QComboBox(page_2)
-        comboBox.addItems(self.types_options)
+        comboBox.addItems(self.taxes_options)
         self.inputs.append(comboBox)
         comboBox.setStyleSheet(u"background-color: rgb(255, 255, 255);")
         gridLayout.addWidget(comboBox, 0, 1, 1, 1)
@@ -305,8 +303,8 @@ class Pedency(ICRUD):
         self.stacked_widget.setCurrentIndex(1)
 
     def __set_combo(self, value, widget):
-        if value in self.types_options:
-            index = self.types_options.index(value)
+        if value in self.taxes_options:
+            index = self.taxes_options.index(value)
             widget.setCurrentIndex(index)
         else:
             widget.setCurrentIndex(0)

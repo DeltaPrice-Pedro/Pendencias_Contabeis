@@ -169,7 +169,7 @@ class DataBase:
                 data[self.columns_pending[index]].append(i)
             
         ids = data.pop('id_pending')
-        return ids, data
+        return ids, data, list(self.taxes().values())
 
     def emails(self, companie_id: str):
         with self.connection.cursor() as cursor:
