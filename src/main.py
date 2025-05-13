@@ -10,6 +10,7 @@ from PySide6.QtCore import (
 )
 
 from dateutil.relativedelta import relativedelta
+from local_changes import LocalChanges
 from window_pend import Ui_MainWindow
 from re import compile, findall
 from tkinter import messagebox
@@ -50,18 +51,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.__init_date_sheet()
 
-        from local_changes import LocalChanges
-
         self.local_changes = LocalChanges()
         sender_name = self.local_changes.sender_name()
         self.lineEdit_name_func.setText(sender_name)
 
         self.connections = {}
         self.enable_status = True
-
-        self.current_list = {
-
-        }
 
         self.ref_universal = {
             'companies': [
@@ -104,22 +99,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             ]
         }
 
-        self.ref_connection_companie = {
-            self.pushButton_reload_companie: self.__fill_companies,
-            self.pushButton_add_func: self.add_companie,
-            self.pushButton_remove_func: self.remove_companie,
-        }    
-
-        self.ref_connection_pedency = {
-            self.pushButton_reload_companie: self.reload_pedency,
-        }
-
-        # self.ref_connection_taxes = {
-        #     self.pushButton_reload_companie: self.taxes.fill,
-        #     self.pushButton_add_func: self.taxes.add,
-        #     self.pushButton_remove_func: self.taxes.remove,
-        # }
-
         self.ref_disable_btns = [
             self.pushButton_add_func,
             self.pushButton_remove_func,
@@ -128,22 +107,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pushButton_send_email,
             self.pushButton_sheet_func,
             self.pushButton_exit_companie,
-            self.pushButton_reload_companie
+            self.pushButton_reload_companie,
+            self.pushButton_taxes,
+            self.pushButton_companies
         ]
-
-        self.ref_tool_tip_pedency = {
-            self.pushButton_add_func: 'Adciona pendência contábil a empresa selecionada',
-            self.pushButton_remove_func: 'Remove a pendência contábil selecionada com 1 clique',
-            self.pushButton_edit_func: 'Edita a pendência contábil selecionada com 1 clique',
-            self.pushButton_sheet_func: 'Gera relatório de envios exclusivo da empresa atual',
-        }
-
-        self.ref_tool_tip_companie = {
-            self.pushButton_add_func: 'Adciona empresa a lista de empresas cadastradas',
-            self.pushButton_remove_func: 'Remove empresa cadastrada',
-            self.pushButton_edit_func: 'Edita o nome de empresa cadastrada',
-            self.pushButton_sheet_func: 'Gera relatório de envio de todas empresas cadastradas',
-        }
 
         self.ref_date_sheet = [self.dateEdit_from, self.dateEdit_until]
 
@@ -157,6 +124,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.__fill_companies()
         self.__fill_taxes()
         self.__init_icons()
+        self.switch_focus('companies')
 
         self.listWidget_companie.itemChanged.connect(self.confirm_companie)
         self.listWidget_taxes.itemChanged.connect(self.confirm_taxes)
@@ -221,8 +189,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             item.__setattr__('id', id)
             self.listWidget_companie.addItem(item)
 
-        self.switch_focus('companies')
-
     def __fill_taxes(self):
         data = self.db.taxes()
         self.listWidget_taxes.clear()
@@ -231,8 +197,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             item.setText(name)
             item.__setattr__('id', id)
             self.listWidget_taxes.addItem(item)
-
-        self.switch_focus('taxes')
 
     def add_companie(self):
         item = QListWidgetItem()

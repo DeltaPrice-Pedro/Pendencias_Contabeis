@@ -57,7 +57,7 @@ class Address:
 
         self.listWidget_email = self.__list(page_2)
         self.listWidget_email.setStyleSheet(u"background-color: rgb(255, 255, 255);")
-        verticalLayout.addWidget(self.listWidget_email)
+        verticalLayout.addWidget(self.listWidget_email, alignment= Qt.AlignmentFlag.AlignCenter)
 
         frame_email_func = QFrame(page_2)
         frame_email_func.setFrameShape(QFrame.Shape.StyledPanel)
@@ -92,11 +92,13 @@ class Address:
         pushButton_add = QPushButton(frame_email_func)
         icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListAdd))
         pushButton_add.setIcon(icon)
+        pushButton_add.setStyleSheet(u"background-color: rgb(235, 235, 235);")
         pushButton_add.clicked.connect(self.add)
 
         pushButton_remove = QPushButton(frame_email_func)
         icon_2 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListRemove))
         pushButton_remove.setIcon(icon_2)
+        pushButton_remove.setStyleSheet(u"background-color: rgb(235, 235, 235);")
         pushButton_remove.clicked.connect(self.remove)
         return pushButton_add, pushButton_remove
 
