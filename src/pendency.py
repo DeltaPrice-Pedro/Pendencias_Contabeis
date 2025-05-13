@@ -21,7 +21,7 @@ from datetime import datetime
 setlocale(LC_MONETARY, 'pt_BR.UTF-8')
 
 class Pedency(ICRUD):
-    def __init__(self, ids, data):
+    def __init__(self, ids:list[str], data:dict[str,list[str]], taxes:list[str]):
         self.sizePolicy = QSizePolicy(
             QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum
         )
@@ -29,7 +29,8 @@ class Pedency(ICRUD):
         self.sizePolicy.setVerticalStretch(0)
 
         self.font = QFont()
-        self.font.setPointSize(12)
+        self.font.setFamilies([u"Tw Cen MT"])
+        self.font.setPointSize(16)
 
         self.add_brush = QBrush(QColor(179, 255, 178, 255))
         self.add_brush.setStyle(Qt.BrushStyle.Dense1Pattern)
@@ -46,9 +47,7 @@ class Pedency(ICRUD):
             'Tipo','Valor','Competência', 'Vencimento','Observações'
         ]
         self.taxes_header = ['Tributo','Valor']
-        self.types_options = [
-            'IRPF','DCTF WEB - PREVIDENCIÁRIO', 'DCTF WEB - PIS/COFINS', 'DCTF WEB - RETIDOS', 'DCTF WEB - IRPJ/CSLL', 'FGTS', 'ICMS ANTECIPAÇÃO', 'ICMS D/C', 'ICMS DIFAL', 'ISSQN', 'ISSQN RETIDO', 'SIMPLES NACIONAL', 'TFLF', 'TFS'
-        ]
+        self.taxes_options = taxes
         self.inputs = []
         self.confirm_connection = None
 
@@ -95,6 +94,7 @@ class Pedency(ICRUD):
         self.table_pedency.setEditTriggers(
             QAbstractItemView.EditTrigger.NoEditTriggers
         )
+        self.table_pedency.setStyleSheet(u"background-color: rgb(255, 255, 255);")
         verticalLayout.addWidget(self.table_pedency)
 
         line = QFrame(page_1)
@@ -106,6 +106,7 @@ class Pedency(ICRUD):
         self.table_taxes.setEditTriggers(
             QAbstractItemView.EditTrigger.NoEditTriggers
         )
+        self.table_taxes.setStyleSheet(u"background-color: rgb(255, 255, 255);")
         verticalLayout.addWidget(self.table_taxes)
         return page_1
 
@@ -119,8 +120,9 @@ class Pedency(ICRUD):
             gridLayout.addWidget(label, i, 0, 1, 1)
 
         comboBox = QComboBox(page_2)
-        comboBox.addItems(self.types_options)
+        comboBox.addItems(self.taxes_options)
         self.inputs.append(comboBox)
+        comboBox.setStyleSheet(u"background-color: rgb(255, 255, 255);")
         gridLayout.addWidget(comboBox, 0, 1, 1, 1)
 
         doubleSpinBox = QDoubleSpinBox(page_2)
@@ -128,6 +130,7 @@ class Pedency(ICRUD):
         doubleSpinBox.setMaximum(999999.99)
         doubleSpinBox.setGroupSeparatorShown(True)
         self.inputs.append(doubleSpinBox)
+        doubleSpinBox.setStyleSheet(u"background-color: rgb(255, 255, 255);")
         gridLayout.addWidget(doubleSpinBox, 1, 1, 1, 1)
         
         dateEdit_1 = QDateEdit(page_2)
@@ -135,11 +138,13 @@ class Pedency(ICRUD):
             QCoreApplication.translate("MainWindow", u"MM/yyyy", None)
         )
         self.inputs.append(dateEdit_1)
+        dateEdit_1.setStyleSheet(u"background-color: rgb(255, 255, 255);")
         gridLayout.addWidget(dateEdit_1, 2, 1, 1, 1)
 
         dateEdit_2 = QDateEdit(page_2)
         dateEdit_2.setCalendarPopup(True)
         self.inputs.append(dateEdit_2)
+        dateEdit_2.setStyleSheet(u"background-color: rgb(255, 255, 255);")
         gridLayout.addWidget(dateEdit_2, 3, 1, 1, 1)
 
         textEdit = QTextEdit(page_2)
@@ -147,6 +152,7 @@ class Pedency(ICRUD):
         textEdit.setSizePolicy(self.sizePolicy)
         textEdit.setMaximumSize(QSize(16777215, 50))
         self.inputs.append(textEdit)
+        textEdit.setStyleSheet(u"background-color: rgb(255, 255, 255);")
         gridLayout.addWidget(textEdit, 4, 1, 1, 1)
 
         frame = QFrame(page_2)
@@ -161,10 +167,22 @@ class Pedency(ICRUD):
         pushButton.clicked.connect( 
             lambda: self.stacked_widget.setCurrentIndex(0)
         )
+        pushButton.setStyleSheet(
+            u"background-color: rgb(255, 255, 255);\n"
+            "border: 1px solid rgb(85, 170, 255);\n"
+            "padding: 5px;\n"
+            "border-radius: 8px;"
+        )
         horizontalLayout.addWidget(pushButton)
 
         self.confirm_btn = QPushButton(frame)
         self.confirm_btn.setText('Confirmar')
+        self.confirm_btn.setStyleSheet(
+            u"background-color: rgb(255, 255, 255);\n"
+            "border: 1px solid rgb(85, 170, 255);\n"
+            "padding: 5px;\n"
+            "border-radius: 8px;"
+        )
 
         horizontalLayout.addWidget(self.confirm_btn)
 
@@ -285,8 +303,8 @@ class Pedency(ICRUD):
         self.stacked_widget.setCurrentIndex(1)
 
     def __set_combo(self, value, widget):
-        if value in self.types_options:
-            index = self.types_options.index(value)
+        if value in self.taxes_options:
+            index = self.taxes_options.index(value)
             widget.setCurrentIndex(index)
         else:
             widget.setCurrentIndex(0)

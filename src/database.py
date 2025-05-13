@@ -12,6 +12,7 @@ class DataBase:
     PENDING_TABLE = 'Pending'
     EMAIL_TABLE = 'Emails'
     HISTORY_TABLE = 'History'
+    TAXES_TABLE = 'Taxes'
 
     def __init__(self) -> None:
         self.connection = connect(
@@ -44,6 +45,11 @@ class DataBase:
             'VALUES (%s, %s, %s, %s, %s) '
         )
 
+        self.insert_taxes = (
+            f'INSERT INTO {self.TAXES_TABLE} '
+            '(title) VALUES (%s) '
+        )
+
         self.insert_companie = (
             f'INSERT INTO {self.COMPANIES_TABLE} '
             '(name) VALUES (%s) '
@@ -55,9 +61,20 @@ class DataBase:
             'WHERE id_companies = %s'
         )
 
+        self.update_taxes = (
+            f'UPDATE {self.TAXES_TABLE} SET '
+            'title = %s '
+            'WHERE id_taxes = %s'
+        )
+
         self.delete_companie = (
             f'DELETE FROM {self.COMPANIES_TABLE} '
             'WHERE id_companies = %s ; '
+        )
+
+        self.delete_taxes = (
+            f'DELETE FROM {self.TAXES_TABLE} '
+            'WHERE id_taxes = %s ; '
         )
 
         self.query_pedency = (
@@ -70,6 +87,11 @@ class DataBase:
             'SELECT id_emails, address '
             f'FROM {self.EMAIL_TABLE} '
             'WHERE id_companies = %s'
+        )
+
+        self.query_taxes = (
+            'SELECT id_taxes, title '
+            f'FROM {self.TAXES_TABLE} '
         )
 
         self.query_history = (
@@ -147,7 +169,7 @@ class DataBase:
                 data[self.columns_pending[index]].append(i)
             
         ids = data.pop('id_pending')
-        return ids, data
+        return ids, data, list(self.taxes().values())
 
     def emails(self, companie_id: str):
         with self.connection.cursor() as cursor:
@@ -163,6 +185,15 @@ class DataBase:
             address.append(sub[1])
         
         return id, address
+    
+    def taxes(self):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                self.query_taxes,
+            )
+            self.connection.commit()
+
+        return {sub[0] : sub[1]  for sub in cursor.fetchall()}
     
     def history(self, date_from, date_until, id = None):
         if  date_from > date_until:
@@ -198,6 +229,14 @@ class DataBase:
                 (name, companie, log, datetime.now(), id_companies) 
             )
             self.connection.commit()
+
+    def add_taxes(self, title):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                self.insert_taxes, 
+                (title,) 
+            )
+            self.connection.commit()
         
     def add_companie(self, name):
         with self.connection.cursor() as cursor:
@@ -216,10 +255,25 @@ class DataBase:
             )
             self.connection.commit()
 
+    def edit_taxes(self, id, title):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                self.update_taxes, 
+                (title, id) 
+            )
+            self.connection.commit()
+
     def remove_companie(self, id: str):
         with self.connection.cursor() as cursor:
             cursor.execute(
                 self.delete_companie, (id, )
+            )
+        self.connection.commit()
+
+    def remove_taxes(self, id: str):
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                self.delete_taxes, (id, )
             )
         self.connection.commit()
         
@@ -229,27 +283,33 @@ class DataBase:
         
         #ADD
         if any(add):
-            with self.connection.cursor() as cursor:
-                infos = self.__transform_add_pedency(id_companie, add)
-                cursor.executemany(
-                    self.insert_pedency,
-                    infos
-                )
-                self.connection.commit()
+            self.add_pedency(id_companie, add)
 
         #UPDATE
         if any(updt):
-            with self.connection.cursor() as cursor:
-                infos = self.__transform_updt_pedency(id_companie, updt)
-                cursor.executemany(
-                    self.update_pedency,
-                    infos
-                )
-                self.connection.commit()
+            self.updt_pedency(id_companie, updt)
         
         #REMOVE
         if any(remove):
             self.__remove_change(id_companie, self.delete_pedency, remove)
+
+    def updt_pedency(self, id_companie, updt):
+        with self.connection.cursor() as cursor:
+            infos = self.__transform_updt_pedency(id_companie, updt)
+            cursor.executemany(
+                    self.update_pedency,
+                    infos
+                )
+            self.connection.commit()
+
+    def add_pedency(self, id_companie, add):
+        with self.connection.cursor() as cursor:
+            infos = self.__transform_add_pedency(id_companie, add)
+            cursor.executemany(
+                    self.insert_pedency,
+                    infos
+                )
+            self.connection.commit()
 
     def __transform_add_pedency(self, id_companie: str, add: list[dict]):
         for data in add:
@@ -288,26 +348,32 @@ class DataBase:
 
         #ADD
         if any(add):
-            with self.connection.cursor() as cursor:
-                cursor.executemany(
-                    self.insert_email, 
-                    ([address, id_companie] for address in add)
-                )
-                self.connection.commit()
+            self.add_address(id_companie, add)
 
-        #UPDATE - Falta azul no Main
+        #UPDATE
         if any(updt):
-            with self.connection.cursor() as cursor:
-                cursor.executemany(
-                    self.update_emails, 
-                    ([adderss, id_companie, id_address] \
-                        for id_address, adderss in updt.items())
-                )
-                self.connection.commit()
+            self.updt_address(id_companie, updt)
 
         #REMOVE
         if any(remove):
             self.__remove_change(id_companie, self.delete_email, remove)
+
+    def updt_address(self, id_companie, updt):
+        with self.connection.cursor() as cursor:
+            cursor.executemany(
+                    self.update_emails, 
+                    ([adderss, id_companie, id_address] \
+                        for id_address, adderss in updt.items())
+                )
+            self.connection.commit()
+
+    def add_address(self, id_companie, add):
+        with self.connection.cursor() as cursor:
+            cursor.executemany(
+                    self.insert_email, 
+                    ([address, id_companie] for address in add)
+                )
+            self.connection.commit()
 
     def __remove_change(self, id_companie: str, query: str, data: list[str]):
         with self.connection.cursor() as cursor:

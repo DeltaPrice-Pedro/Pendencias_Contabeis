@@ -7,7 +7,8 @@ from PySide6.QtGui import (
 from PySide6.QtWidgets import (
     QFrame,QHBoxLayout, QListWidget,
     QListWidgetItem, QPushButton,
-    QSizePolicy, QVBoxLayout, QWidget)
+    QSizePolicy, QVBoxLayout, QWidget, QAbstractItemView
+)
 
 from change import Change
 from tkinter import messagebox
@@ -27,6 +28,10 @@ class Address:
         self.font = QFont()
         self.font.setFamilies([u"Tw Cen MT"])
         self.font.setPointSize(12)
+
+        self.font2 = QFont()
+        self.font2.setFamilies([u"Tw Cen MT"])
+        self.font2.setPointSize(16)
 
         self.add_brush = QBrush(QColor(179, 255, 178, 255))
         self.add_brush.setStyle(Qt.BrushStyle.Dense1Pattern)
@@ -51,6 +56,7 @@ class Address:
         verticalLayout = QVBoxLayout(page_2)
 
         self.listWidget_email = self.__list(page_2)
+        self.listWidget_email.setStyleSheet(u"background-color: rgb(255, 255, 255);")
         verticalLayout.addWidget(self.listWidget_email)
 
         frame_email_func = QFrame(page_2)
@@ -65,7 +71,20 @@ class Address:
         verticalLayout.addWidget(frame_email_func)
 
         pushButton_send_email = QPushButton(page_2)
-        pushButton_send_email.setText('Próximo')
+        pushButton_send_email.setText('Próximo  ')
+        pushButton_send_email.setStyleSheet(
+            u"background-color: rgb(255, 255, 255);\n"
+            "border: 1px solid rgb(85, 170, 255);\n"
+            "padding: 5px;\n"
+            "border-radius: 8px;"
+        )
+        pushButton_send_email.setFont(self.font2)
+        pushButton_send_email.setIcon(
+            QIcon(QIcon.fromTheme(QIcon.ThemeIcon.MediaSkipForward))
+        )
+        pushButton_send_email.setLayoutDirection(
+            Qt.LayoutDirection.RightToLeft
+        )
         verticalLayout.addWidget(pushButton_send_email)
         return pushButton_send_email, page_2
 

@@ -17,8 +17,8 @@ class DeltaMail:
 
         self.msg = MIMEMultipart('mixed')
         self.msg['Subject'] = f'{companie} - PENDÊNCIAS CONTÁBEIS'
-        self.msg['From'] =  f'{self.sender} Deltaprice'
         self.msg['To'] = ', '.join(self.recipients)
+        self.msg['From'] =  self.sender
 
         self.recipients.append(self.sender)
         self.msg.attach(MIMEText(content, 'html', 'utf-8'))

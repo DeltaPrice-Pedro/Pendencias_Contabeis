@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (
-    QMainWindow, QApplication, QListWidgetItem,
+    QMainWindow, QApplication, QListWidgetItem, QAbstractItemView
 )
 from PySide6.QtGui import (
     QIcon, QMovie
@@ -59,6 +59,51 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.connections = {}
         self.enable_status = True
 
+        self.current_list = {
+
+        }
+
+        self.ref_universal = {
+            'companies': [
+                {
+                    self.pushButton_add_func: self.add_companie,
+                    self.pushButton_remove_func: self.remove_companie,
+                    self.pushButton_edit_func: self.edit_companie,
+                    self.pushButton_reload_companie: self.__fill_companies,
+                },
+                {
+                    self.pushButton_add_func: 'Adciona empresa a lista de empresas cadastradas',
+                    self.pushButton_remove_func: 'Remove empresa cadastrada',
+                    self.pushButton_edit_func: 'Edita o nome de empresa cadastrada',
+                    self.pushButton_sheet_func: 'Gera relatório de envio de todas empresas cadastradas',
+                }
+            ],
+            'pending': [
+                {
+                    self.pushButton_reload_companie: self.reload_pedency,
+                },
+                {
+                    self.pushButton_add_func: 'Adciona pendência contábil a empresa selecionada',
+                    self.pushButton_remove_func: 'Remove a pendência contábil selecionada com 1 clique',
+                    self.pushButton_edit_func: 'Edita a pendência contábil selecionada com 1 clique',
+                    self.pushButton_sheet_func: 'Gera relatório de envios exclusivo da empresa atual',
+                }
+            ],
+            'taxes': [
+                {
+                    self.pushButton_add_func: self.add_taxes,
+                    self.pushButton_remove_func: self.remove_taxes,
+                    self.pushButton_edit_func: self.edit_taxes,
+                    self.pushButton_reload_companie: self.__fill_taxes,
+                },
+                {
+                    self.pushButton_add_func: 'Adciona imposto a lista de impostos cadastrados',
+                    self.pushButton_remove_func: 'Remove imposto cadastrado',
+                    self.pushButton_edit_func: 'Edita o nome de imposto cadastrado',
+                }
+            ]
+        }
+
         self.ref_connection_companie = {
             self.pushButton_reload_companie: self.__fill_companies,
             self.pushButton_add_func: self.add_companie,
@@ -69,6 +114,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pushButton_reload_companie: self.reload_pedency,
         }
 
+        # self.ref_connection_taxes = {
+        #     self.pushButton_reload_companie: self.taxes.fill,
+        #     self.pushButton_add_func: self.taxes.add,
+        #     self.pushButton_remove_func: self.taxes.remove,
+        # }
+
         self.ref_disable_btns = [
             self.pushButton_add_func,
             self.pushButton_remove_func,
@@ -77,7 +128,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pushButton_send_email,
             self.pushButton_sheet_func,
             self.pushButton_exit_companie,
+            self.pushButton_reload_companie
         ]
+
+        self.ref_tool_tip_pedency = {
+            self.pushButton_add_func: 'Adciona pendência contábil a empresa selecionada',
+            self.pushButton_remove_func: 'Remove a pendência contábil selecionada com 1 clique',
+            self.pushButton_edit_func: 'Edita a pendência contábil selecionada com 1 clique',
+            self.pushButton_sheet_func: 'Gera relatório de envios exclusivo da empresa atual',
+        }
+
+        self.ref_tool_tip_companie = {
+            self.pushButton_add_func: 'Adciona empresa a lista de empresas cadastradas',
+            self.pushButton_remove_func: 'Remove empresa cadastrada',
+            self.pushButton_edit_func: 'Edita o nome de empresa cadastrada',
+            self.pushButton_sheet_func: 'Gera relatório de envio de todas empresas cadastradas',
+        }
 
         self.ref_date_sheet = [self.dateEdit_from, self.dateEdit_until]
 
@@ -86,23 +152,34 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.label_load_gif.setMovie(self.movie)
 
+        self.open_pedency_connection = None
+        self.re_connect_pedency()
         self.__fill_companies()
+        self.__fill_taxes()
         self.__init_icons()
 
-        self.listWidget_companie.itemDoubleClicked.connect(
-            self.open_pedency
-        )
         self.listWidget_companie.itemChanged.connect(self.confirm_companie)
+        self.listWidget_taxes.itemChanged.connect(self.confirm_taxes)
+
+        self.pushButton_companies.clicked.connect(self.open_taxes)
+        self.pushButton_taxes.clicked.connect(self.exit_taxes)
 
         self.pushButton_cancel_email.clicked.connect(
             lambda: self.stackedWidget_email.setCurrentIndex(2)
         )
         self.pushButton_send_email.clicked.connect(self.send_email)
-        self.pushButton_edit_func.clicked.connect(self.edit_companie)
         self.pushButton_save_func.clicked.connect(self.save)
-        self.pushButton_exit_companie.clicked.connect(self.exit)
+        self.pushButton_exit_companie.clicked.connect(self.exit_pedency)
         self.pushButton_sheet_func.clicked.connect(self.sheet)
         self.pushButton_save_func.setHidden(True)
+
+    def re_connect_pedency(self):
+        if self.open_pedency_connection == None:
+            self.open_pedency_connection = self.listWidget_companie\
+                .itemDoubleClicked.connect(self.open_pedency)
+        else:
+            self.listWidget_companie.disconnect(self.open_pedency_connection)
+            self.open_pedency_connection = None
 
     def try_conection(self):
         try:
@@ -144,30 +221,71 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             item.__setattr__('id', id)
             self.listWidget_companie.addItem(item)
 
-        self.re_connection(0)
+        self.switch_focus('companies')
+
+    def __fill_taxes(self):
+        data = self.db.taxes()
+        self.listWidget_taxes.clear()
+        for id, name in data.items():
+            item = QListWidgetItem()
+            item.setText(name)
+            item.__setattr__('id', id)
+            self.listWidget_taxes.addItem(item)
+
+        self.switch_focus('taxes')
 
     def add_companie(self):
         item = QListWidgetItem()
         item.setText('Nome da empresa')
         item.__setattr__('id', None)
 
+        self.disable_btns()
+        self.re_connect_pedency()
+
         self.listWidget_companie.addItem(item)
         self.listWidget_companie.openPersistentEditor(item)
         self.listWidget_companie.editItem(item)
 
+    def add_taxes(self):
+        item = QListWidgetItem()
+        item.setText('Nome do imposto')
+        item.__setattr__('id', None)
+
+        self.disable_btns()
+
+        self.listWidget_taxes.addItem(item)
+        self.listWidget_taxes.openPersistentEditor(item)
+        self.listWidget_taxes.editItem(item)
+
     def edit_companie(self):
         try:
-            self.disable_btns()
             items = self.listWidget_companie.selectedItems()
             if len(items) == 0:
                 raise Exception(self.message_select.format('editar'))
+            
+            self.disable_btns()
+            self.re_connect_pedency()
 
             item = items[0]
             self.listWidget_companie.openPersistentEditor(item)
             self.listWidget_companie.editItem(item)
 
         except Exception as error: 
+            messagebox.showwarning('Aviso', error)
+
+    def edit_taxes(self):
+        try:
+            items = self.listWidget_taxes.selectedItems()
+            if len(items) == 0:
+                raise Exception(self.message_select.format('editar'))
+            
             self.disable_btns()
+
+            item = items[0]
+            self.listWidget_taxes.openPersistentEditor(item)
+            self.listWidget_taxes.editItem(item)
+
+        except Exception as error: 
             messagebox.showwarning('Aviso', error)
 
     def confirm_companie(self, item: QListWidgetItem):
@@ -185,9 +303,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 self.db.edit_companie(id, name)
 
+            self.re_connect_pedency()
             self.disable_btns()
         except Exception as error:
+            messagebox.showwarning('Aviso', error)
+
+    def confirm_taxes(self, item: QListWidgetItem):
+        try:
+            name = item.text()
+            if name == '':
+                raise Exception('Nome do imposto inválido')
+            
+            self.listWidget_taxes.closePersistentEditor(item)
+
+            id = item.__getattribute__('id')
+            if id == None:
+                id = self.db.add_taxes(name)
+                item.__setattr__('id', id)
+            else:
+                self.db.edit_taxes(id, name)
+
             self.disable_btns()
+        except Exception as error:
             messagebox.showwarning('Aviso', error)
 
     def remove_companie(self):
@@ -205,12 +342,43 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.listWidget_companie.takeItem(
                 self.listWidget_companie.row(item)
             )
+            self.disable_btns()
         except Exception as error:
             self.disable_btns()
             messagebox.showwarning('Aviso', error)
 
+    def remove_taxes(self):
+        try:
+            self.disable_btns()
+            items = self.listWidget_taxes.selectedItems()
+            if len(items) == 0:
+                raise Exception(self.message_select.format('remover'))
+            
+            if messagebox.askyesno('Aviso', self.message_remove) == False:
+                return None
+            
+            item = items[0]
+            self.db.remove_taxes(item.__getattribute__('id'))
+            self.listWidget_taxes.takeItem(
+                self.listWidget_taxes.row(item)
+            )
+            self.disable_btns()
+        except Exception as error:
+            self.disable_btns()
+            messagebox.showwarning('Aviso', error)
+
+    def open_taxes(self):
+        self.stackedWidget_companie.setCurrentIndex(1)
+        self.pushButton_sheet_func.setEnabled(False)
+        self.switch_focus('taxes')
+
+    def exit_taxes(self):
+        self.stackedWidget_companie.setCurrentIndex(0)
+        self.pushButton_sheet_func.setEnabled(True)
+        self.switch_focus('companies')
+
     def open_pedency(self):
-        self.re_connection(1)
+        self.switch_focus('pending')
         item = self.listWidget_companie.selectedItems()[0]
         self.label_current_companie.setText(item.text())
         self.current_companie_id = item.__getattribute__('id')
@@ -218,13 +386,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pedency = self.__pedency(self.current_companie_id)
         self.address = Address(*self.db.emails(self.current_companie_id))
 
-        send_btn, page = self.address()
-        send_btn.clicked.connect(self.ask_assign)
+        next_btn, page = self.address()
+        next_btn.clicked.connect(self.open_assign)
         self.stackedWidget_email.addWidget(page)
 
         self.pushButton_save_func.setHidden(False)
         self.pushButton_edit_func.setHidden(True)
-        self.stackedWidget_companie.setCurrentIndex(1)
+        self.stackedWidget_companie.setCurrentIndex(2)
         self.stackedWidget_email.setCurrentIndex(2)
 
     def __pedency(self, id):
@@ -246,12 +414,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return pedency
     
     def reload_pedency(self):
-        if any([self.pedency.has_change(), self.address.has_change()]):
-            messagebox.showwarning('Aviso', self.message_pending_save)
-            return
-            
-        self.pedency.fill(*self.db.pedency(self.current_companie_id))
-        self.address.fill(*self.db.emails(self.current_companie_id))
+        try:
+            if any([self.pedency.has_change(), self.address.has_change()]):
+                raise Exception(self.message_pending_save)
+                
+            self.pedency.fill(*self.db.pedency(self.current_companie_id))
+            self.address.fill(*self.db.emails(self.current_companie_id))
+        except Exception as err:
+            messagebox.showerror('Aviso', err)
 
     def sheet(self):
         try:
@@ -299,8 +469,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             stats_address = self.address.has_change()
 
             if any([stats_pedenc, stats_address]) != True:
-                messagebox.showwarning('Aviso', self.message_no_save)
-                return None
+                raise Exception(self.message_no_save)
             
             if messagebox.askyesno('Aviso', self.message_save) == False:
                 return None
@@ -322,7 +491,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.disable_btns()
             messagebox.showerror('Aviso', err)
 
-    def exit(self):
+    def exit_pedency(self):
         if any([self.pedency.has_change(), self.address.has_change()]):
             if messagebox.askyesno('Aviso', self.message_exit_save) == False:
                 return None
@@ -331,7 +500,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_save_func.setHidden(True)
         self.stackedWidget_companie.setCurrentIndex(0)
         self.stackedWidget_email.setCurrentIndex(0)
-        self.re_connection(0)
+        self.switch_focus('companies')
         
         send_btn, page = self.address()
         page.deleteLater()
@@ -341,10 +510,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         stacked_widget.deleteLater()
         self.verticalLayout_3.removeWidget(stacked_widget)
 
-    def re_connection(self, current_index: int):
-        ref = self.ref_connection_companie if current_index == 0\
-                    else self.ref_connection_pedency
+    def switch_focus(self, current_widget: str):
+        ref_connection = {}
+        ref_tool_tip = {}
 
+        ref_connection, ref_tool_tip = self.ref_universal[current_widget]
+        self.re_connection(ref_connection)
+        self.re_tool_tip(ref_tool_tip)
+
+    def re_connection(self, ref):
         for widget, connection in self.connections.items():
             widget.disconnect(connection)
         self.connections.clear()
@@ -352,9 +526,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for widget, func in ref.items():
             self.connections[widget] = widget.clicked.connect(func)
 
-    def ask_assign(self):
-        self.groupBox_email.setTitle('Assinatura')
-        self.stackedWidget_email.setCurrentIndex(1)
+    def re_tool_tip(self, ref):
+        for widget, text in ref.items():
+            widget.setToolTip(text)
+
+    def open_assign(self):
+        try:
+            stats_pedenc = self.pedency.has_change()
+            stats_address = self.address.has_change()
+
+            if any([stats_pedenc, stats_address]):
+                raise Exception('Aviso', 'Salve as alterações pendentes antes de prosseguir')
+                
+            self.groupBox_email.setTitle('Assinatura')
+            self.stackedWidget_email.setCurrentIndex(1)
+        
+        except Exception as error:
+            messagebox.showwarning(title='Aviso', message= error)
 
     def send_email(self):
         try:
@@ -370,6 +558,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.exec_load(True)
             address = self.address.data()
             pedency, taxes = self.pedency.data()
+
+            if all([address, pedency]) == False:
+                raise Exception('Não há pendências ou e-mail cadastrados para essa empresa, clique em "Voltar" e adcione a informação faltante')
 
             self._postman = Postman(
                 name_func,
@@ -390,6 +581,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self._thread.start()
 
         except Exception as error:
+            self.disable_btns()
             self.exec_load(False)
             messagebox.showwarning(title='Aviso', message= error)
 
