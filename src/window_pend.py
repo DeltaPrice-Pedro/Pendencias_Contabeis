@@ -79,6 +79,8 @@ class Ui_MainWindow(object):
         font.setFamilies([u"Tw Cen MT"])
         font.setPointSize(12)
         self.pushButton_companies.setFont(font)
+        self.pushButton_companies.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.pushButton_companies.setStyleSheet(u"background-color: rgb(235, 235, 235);")
         icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.EditCopy))
         self.pushButton_companies.setIcon(icon)
 
@@ -159,6 +161,8 @@ class Ui_MainWindow(object):
         self.pushButton_taxes = QPushButton(self.frame_8)
         self.pushButton_taxes.setObjectName(u"pushButton_taxes")
         self.pushButton_taxes.setFont(font)
+        self.pushButton_taxes.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.pushButton_taxes.setStyleSheet(u"background-color: rgb(235, 235, 235);")
         icon1 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.GoHome))
         self.pushButton_taxes.setIcon(icon1)
 
@@ -181,14 +185,15 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.label_title_taxes)
 
         self.listWidget_taxes = QListWidget(self.page_6)
-        __qlistwidgetitem = QListWidgetItem(self.listWidget_taxes)
-        __qlistwidgetitem.setTextAlignment(Qt.AlignCenter);
         self.listWidget_taxes.setObjectName(u"listWidget_taxes")
         font4 = QFont()
         font4.setFamilies([u"Arial"])
         font4.setPointSize(22)
         self.listWidget_taxes.setFont(font4)
         self.listWidget_taxes.setStyleSheet(u"background-color: rgb(255, 255, 255);")
+        self.listWidget_taxes.setInputMethodHints(Qt.InputMethodHint.ImhUppercaseOnly)
+        self.listWidget_taxes.setItemAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.listWidget_taxes.setSortingEnabled(True)
 
         self.verticalLayout.addWidget(self.listWidget_taxes)
 
@@ -210,6 +215,7 @@ class Ui_MainWindow(object):
         sizePolicy5.setVerticalStretch(0)
         sizePolicy5.setHeightForWidth(self.pushButton_exit_companie.sizePolicy().hasHeightForWidth())
         self.pushButton_exit_companie.setSizePolicy(sizePolicy5)
+        self.pushButton_exit_companie.setStyleSheet(u"background-color: rgb(235, 235, 235);")
         icon2 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.SystemLogOut))
         self.pushButton_exit_companie.setIcon(icon2)
 
@@ -254,6 +260,7 @@ class Ui_MainWindow(object):
         sizePolicy6.setHeightForWidth(self.pushButton_reload_companie.sizePolicy().hasHeightForWidth())
         self.pushButton_reload_companie.setSizePolicy(sizePolicy6)
         self.pushButton_reload_companie.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.pushButton_reload_companie.setStyleSheet(u"background-color: rgb(235, 235, 235);")
         icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.SyncSynchronizing))
         self.pushButton_reload_companie.setIcon(icon3)
 
@@ -353,6 +360,8 @@ class Ui_MainWindow(object):
         font8.setBold(False)
         self.lineEdit_name_func.setFont(font8)
         self.lineEdit_name_func.setStyleSheet(u"background-color: rgb(255, 255, 255);")
+        self.lineEdit_name_func.setMaxLength(25)
+        self.lineEdit_name_func.setClearButtonEnabled(True)
 
         self.verticalLayout_6.addWidget(self.lineEdit_name_func)
 
@@ -650,13 +659,6 @@ class Ui_MainWindow(object):
 
         self.pushButton_taxes.setText(QCoreApplication.translate("MainWindow", u"Empresas Cadastradas", None))
         self.label_title_taxes.setText(QCoreApplication.translate("MainWindow", u"Impostos Dispon\u00edveis", None))
-
-        __sortingEnabled1 = self.listWidget_taxes.isSortingEnabled()
-        self.listWidget_taxes.setSortingEnabled(False)
-        ___qlistwidgetitem1 = self.listWidget_taxes.item(0)
-        ___qlistwidgetitem1.setText(QCoreApplication.translate("MainWindow", u"New Item", None));
-        self.listWidget_taxes.setSortingEnabled(__sortingEnabled1)
-
 #if QT_CONFIG(tooltip)
         self.pushButton_exit_companie.setToolTip(QCoreApplication.translate("MainWindow", u"Voltar para a lista de empresas cadastradas", None))
 #endif // QT_CONFIG(tooltip)

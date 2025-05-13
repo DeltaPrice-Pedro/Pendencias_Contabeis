@@ -32,6 +32,10 @@ class Pedency(ICRUD):
         self.font.setFamilies([u"Tw Cen MT"])
         self.font.setPointSize(16)
 
+        self.font2 = QFont()
+        self.font2.setFamilies([u"Tw Cen MT"])
+        self.font2.setPointSize(20)
+
         self.add_brush = QBrush(QColor(179, 255, 178, 255))
         self.add_brush.setStyle(Qt.BrushStyle.Dense1Pattern)
 
@@ -164,6 +168,7 @@ class Pedency(ICRUD):
 
         pushButton = QPushButton(frame)
         pushButton.setText('Cancelar')
+        pushButton.setFont(self.font2)
         pushButton.clicked.connect( 
             lambda: self.stacked_widget.setCurrentIndex(0)
         )
@@ -177,6 +182,7 @@ class Pedency(ICRUD):
 
         self.confirm_btn = QPushButton(frame)
         self.confirm_btn.setText('Confirmar')
+        self.confirm_btn.setFont(self.font2)
         self.confirm_btn.setStyleSheet(
             u"background-color: rgb(255, 255, 255);\n"
             "border: 1px solid rgb(85, 170, 255);\n"

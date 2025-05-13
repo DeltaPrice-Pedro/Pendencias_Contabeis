@@ -104,6 +104,12 @@
                       <pointsize>12</pointsize>
                      </font>
                     </property>
+                    <property name="cursor">
+                     <cursorShape>PointingHandCursor</cursorShape>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(235, 235, 235);</string>
+                    </property>
                     <property name="text">
                      <string> Impostos cadastrados</string>
                     </property>
@@ -229,6 +235,12 @@
                    <pointsize>12</pointsize>
                   </font>
                  </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(235, 235, 235);</string>
+                 </property>
                  <property name="text">
                   <string>Empresas Cadastradas</string>
                  </property>
@@ -287,14 +299,15 @@
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>
               </property>
-              <item>
-               <property name="text">
-                <string>New Item</string>
-               </property>
-               <property name="textAlignment">
-                <set>AlignCenter</set>
-               </property>
-              </item>
+              <property name="inputMethodHints">
+               <set>Qt::InputMethodHint::ImhUppercaseOnly</set>
+              </property>
+              <property name="itemAlignment">
+               <set>Qt::AlignmentFlag::AlignHCenter</set>
+              </property>
+              <property name="sortingEnabled">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
            </layout>
@@ -320,6 +333,9 @@
                  </property>
                  <property name="toolTip">
                   <string>Voltar para a lista de empresas cadastradas</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(235, 235, 235);</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -382,6 +398,9 @@
              </property>
              <property name="toolTip">
               <string>Atualizar dados recentes</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(235, 235, 235);</string>
              </property>
              <property name="text">
               <string/>
@@ -565,8 +584,14 @@ uma empresa</string>
                  <property name="styleSheet">
                   <string notr="true">background-color: rgb(255, 255, 255);</string>
                  </property>
+                 <property name="maxLength">
+                  <number>25</number>
+                 </property>
                  <property name="placeholderText">
                   <string>Insira nome e sobrenome</string>
+                 </property>
+                 <property name="clearButtonEnabled">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
