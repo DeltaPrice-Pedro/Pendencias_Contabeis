@@ -20,6 +20,7 @@ from address import Address
 from postman import Postman
 from os import startfile
 from pathlib import Path
+from taxes import Taxes
 from sheet import Sheet
 from pymysql import err
 import sys
@@ -59,6 +60,51 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.connections = {}
         self.enable_status = True
 
+        self.taxes = Taxes(*self.db.taxes())
+        page = self.taxes()
+        self.stackedWidget_companie.addWidget(page)
+
+        self.ref_universal = {
+            'companie': [
+                {
+                    self.pushButton_add_func: self.add_companie,
+                    self.pushButton_remove_func: self.remove_companie,
+                    self.pushButton_edit_func: self.edit_companie,
+                    self.pushButton_reload_companie: self.__fill_companies,
+                },
+                {
+                    self.pushButton_add_func: 'Adciona empresa a lista de empresas cadastradas',
+                    self.pushButton_remove_func: 'Remove empresa cadastrada',
+                    self.pushButton_edit_func: 'Edita o nome de empresa cadastrada',
+                    self.pushButton_sheet_func: 'Gera relatório de envio de todas empresas cadastradas',
+                }
+            ],
+            'pending': [
+                {
+                    self.pushButton_reload_companie: self.reload_pedency,
+                },
+                {
+                    self.pushButton_add_func: 'Adciona pendência contábil a empresa selecionada',
+                    self.pushButton_remove_func: 'Remove a pendência contábil selecionada com 1 clique',
+                    self.pushButton_edit_func: 'Edita a pendência contábil selecionada com 1 clique',
+                    self.pushButton_sheet_func: 'Gera relatório de envios exclusivo da empresa atual',
+                }
+            ],
+            'taxes': [
+                {
+                    self.pushButton_add_func: self.taxes.add,
+                    self.pushButton_edit_func: self.taxes.updt,
+                    self.pushButton_remove_func: self.taxes.remove,
+                    self.pushButton_reload_companie: self.taxes.fill,
+                },
+                {
+                    self.pushButton_add_func: 'Adciona imposto a lista de impostos cadastrados',
+                    self.pushButton_remove_func: 'Remove imposto cadastrado',
+                    self.pushButton_edit_func: 'Edita o nome de imposto cadastrado',
+                }
+            ]
+        }
+
         self.ref_connection_companie = {
             self.pushButton_reload_companie: self.__fill_companies,
             self.pushButton_add_func: self.add_companie,
@@ -67,6 +113,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.ref_connection_pedency = {
             self.pushButton_reload_companie: self.reload_pedency,
+        }
+
+        self.ref_connection_taxes = {
+            self.pushButton_reload_companie: self.taxes.fill,
+            self.pushButton_add_func: self.taxes.add,
+            self.pushButton_remove_func: self.taxes.remove,
         }
 
         self.ref_disable_btns = [
@@ -112,7 +164,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             lambda: self.stackedWidget_email.setCurrentIndex(2)
         )
         self.pushButton_send_email.clicked.connect(self.send_email)
-        self.pushButton_edit_func.clicked.connect(self.edit_companie)
         self.pushButton_save_func.clicked.connect(self.save)
         self.pushButton_exit_companie.clicked.connect(self.exit)
         self.pushButton_sheet_func.clicked.connect(self.sheet)
@@ -232,6 +283,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.disable_btns()
             messagebox.showwarning('Aviso', error)
 
+    def open_taxes(self):
+        self.stackedWidget_companie.setCurrentIndex(1)
+        self.switch_focus(2)
+
     def open_pedency(self):
         self.switch_focus(1)
         item = self.listWidget_companie.selectedItems()[0]
@@ -247,7 +302,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.pushButton_save_func.setHidden(False)
         self.pushButton_edit_func.setHidden(True)
-        self.stackedWidget_companie.setCurrentIndex(1)
+        self.stackedWidget_companie.setCurrentIndex(2)
         self.stackedWidget_email.setCurrentIndex(2)
 
     def __pedency(self, id):
