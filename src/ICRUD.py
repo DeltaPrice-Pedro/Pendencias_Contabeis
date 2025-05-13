@@ -9,3 +9,9 @@ class ICRUD(ABC):
 
     @abstractmethod
     def remove():...
+
+    @abstractmethod
+    def change():...
+
+    @abstractmethod
+    def save():...
