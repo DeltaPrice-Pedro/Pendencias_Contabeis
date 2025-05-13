@@ -20,7 +20,6 @@ from address import Address
 from postman import Postman
 from os import startfile
 from pathlib import Path
-from taxes import Taxes
 from sheet import Sheet
 from pymysql import err
 import sys
@@ -60,12 +59,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.connections = {}
         self.enable_status = True
 
-        self.taxes = Taxes(*self.db.taxes())
-        page = self.taxes()
-        self.stackedWidget_companie.addWidget(page)
+        self.current_list = {
+
+        }
 
         self.ref_universal = {
-            'companie': [
+            'companies': [
                 {
                     self.pushButton_add_func: self.add_companie,
                     self.pushButton_remove_func: self.remove_companie,
@@ -92,10 +91,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             ],
             'taxes': [
                 {
-                    self.pushButton_add_func: self.taxes.add,
-                    self.pushButton_edit_func: self.taxes.updt,
-                    self.pushButton_remove_func: self.taxes.remove,
-                    self.pushButton_reload_companie: self.taxes.fill,
+                    self.pushButton_add_func: self.add_taxes,
+                    self.pushButton_remove_func: self.remove_taxes,
+                    self.pushButton_edit_func: self.edit_taxes,
+                    self.pushButton_reload_companie: self.__fill_taxes,
                 },
                 {
                     self.pushButton_add_func: 'Adciona imposto a lista de impostos cadastrados',
@@ -115,11 +114,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pushButton_reload_companie: self.reload_pedency,
         }
 
-        self.ref_connection_taxes = {
-            self.pushButton_reload_companie: self.taxes.fill,
-            self.pushButton_add_func: self.taxes.add,
-            self.pushButton_remove_func: self.taxes.remove,
-        }
+        # self.ref_connection_taxes = {
+        #     self.pushButton_reload_companie: self.taxes.fill,
+        #     self.pushButton_add_func: self.taxes.add,
+        #     self.pushButton_remove_func: self.taxes.remove,
+        # }
 
         self.ref_disable_btns = [
             self.pushButton_add_func,
@@ -156,16 +155,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.open_pedency_connection = None
         self.re_connect_pedency()
         self.__fill_companies()
+        self.__fill_taxes()
         self.__init_icons()
 
         self.listWidget_companie.itemChanged.connect(self.confirm_companie)
+        self.listWidget_taxes.itemChanged.connect(self.confirm_taxes)
+
+        self.pushButton_companies.clicked.connect(self.open_taxes)
+        self.pushButton_taxes.clicked.connect(self.exit_taxes)
 
         self.pushButton_cancel_email.clicked.connect(
             lambda: self.stackedWidget_email.setCurrentIndex(2)
         )
         self.pushButton_send_email.clicked.connect(self.send_email)
         self.pushButton_save_func.clicked.connect(self.save)
-        self.pushButton_exit_companie.clicked.connect(self.exit)
+        self.pushButton_exit_companie.clicked.connect(self.exit_pedency)
         self.pushButton_sheet_func.clicked.connect(self.sheet)
         self.pushButton_save_func.setHidden(True)
 
@@ -217,16 +221,41 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             item.__setattr__('id', id)
             self.listWidget_companie.addItem(item)
 
-        self.switch_focus(0)
+        self.switch_focus('companies')
+
+    def __fill_taxes(self):
+        data = self.db.taxes()
+        self.listWidget_taxes.clear()
+        for id, name in data.items():
+            item = QListWidgetItem()
+            item.setText(name)
+            item.__setattr__('id', id)
+            self.listWidget_taxes.addItem(item)
+
+        self.switch_focus('taxes')
 
     def add_companie(self):
         item = QListWidgetItem()
         item.setText('Nome da empresa')
         item.__setattr__('id', None)
 
+        self.disable_btns()
+        self.re_connect_pedency()
+
         self.listWidget_companie.addItem(item)
         self.listWidget_companie.openPersistentEditor(item)
         self.listWidget_companie.editItem(item)
+
+    def add_taxes(self):
+        item = QListWidgetItem()
+        item.setText('Nome do imposto')
+        item.__setattr__('id', None)
+
+        self.disable_btns()
+
+        self.listWidget_taxes.addItem(item)
+        self.listWidget_taxes.openPersistentEditor(item)
+        self.listWidget_taxes.editItem(item)
 
     def edit_companie(self):
         try:
@@ -240,6 +269,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             item = items[0]
             self.listWidget_companie.openPersistentEditor(item)
             self.listWidget_companie.editItem(item)
+
+        except Exception as error: 
+            messagebox.showwarning('Aviso', error)
+
+    def edit_taxes(self):
+        try:
+            items = self.listWidget_taxes.selectedItems()
+            if len(items) == 0:
+                raise Exception(self.message_select.format('editar'))
+            
+            self.disable_btns()
+
+            item = items[0]
+            self.listWidget_taxes.openPersistentEditor(item)
+            self.listWidget_taxes.editItem(item)
 
         except Exception as error: 
             messagebox.showwarning('Aviso', error)
@@ -264,6 +308,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except Exception as error:
             messagebox.showwarning('Aviso', error)
 
+    def confirm_taxes(self, item: QListWidgetItem):
+        try:
+            name = item.text()
+            if name == '':
+                raise Exception('Nome do imposto inválido')
+            
+            self.listWidget_taxes.closePersistentEditor(item)
+
+            id = item.__getattribute__('id')
+            if id == None:
+                id = self.db.add_taxes(name)
+                item.__setattr__('id', id)
+            else:
+                self.db.edit_taxes(id, name)
+
+            self.disable_btns()
+        except Exception as error:
+            messagebox.showwarning('Aviso', error)
+
     def remove_companie(self):
         try:
             self.disable_btns()
@@ -279,16 +342,43 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.listWidget_companie.takeItem(
                 self.listWidget_companie.row(item)
             )
+            self.disable_btns()
+        except Exception as error:
+            self.disable_btns()
+            messagebox.showwarning('Aviso', error)
+
+    def remove_taxes(self):
+        try:
+            self.disable_btns()
+            items = self.listWidget_taxes.selectedItems()
+            if len(items) == 0:
+                raise Exception(self.message_select.format('remover'))
+            
+            if messagebox.askyesno('Aviso', self.message_remove) == False:
+                return None
+            
+            item = items[0]
+            self.db.remove_taxes(item.__getattribute__('id'))
+            self.listWidget_taxes.takeItem(
+                self.listWidget_taxes.row(item)
+            )
+            self.disable_btns()
         except Exception as error:
             self.disable_btns()
             messagebox.showwarning('Aviso', error)
 
     def open_taxes(self):
         self.stackedWidget_companie.setCurrentIndex(1)
-        self.switch_focus(2)
+        self.pushButton_sheet_func.setEnabled(False)
+        self.switch_focus('taxes')
+
+    def exit_taxes(self):
+        self.stackedWidget_companie.setCurrentIndex(0)
+        self.pushButton_sheet_func.setEnabled(True)
+        self.switch_focus('companies')
 
     def open_pedency(self):
-        self.switch_focus(1)
+        self.switch_focus('pending')
         item = self.listWidget_companie.selectedItems()[0]
         self.label_current_companie.setText(item.text())
         self.current_companie_id = item.__getattribute__('id')
@@ -401,7 +491,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.disable_btns()
             messagebox.showerror('Aviso', err)
 
-    def exit(self):
+    def exit_pedency(self):
         if any([self.pedency.has_change(), self.address.has_change()]):
             if messagebox.askyesno('Aviso', self.message_exit_save) == False:
                 return None
@@ -410,7 +500,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_save_func.setHidden(True)
         self.stackedWidget_companie.setCurrentIndex(0)
         self.stackedWidget_email.setCurrentIndex(0)
-        self.switch_focus(0)
+        self.switch_focus('companies')
         
         send_btn, page = self.address()
         page.deleteLater()
@@ -420,17 +510,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         stacked_widget.deleteLater()
         self.verticalLayout_3.removeWidget(stacked_widget)
 
-    def switch_focus(self, current_index: int):
+    def switch_focus(self, current_widget: str):
         ref_connection = {}
         ref_tool_tip = {}
 
-        if current_index == 0:
-            ref_connection = self.ref_connection_companie
-            ref_tool_tip = self.ref_tool_tip_companie 
-        else:
-            ref_connection = self.ref_connection_pedency
-            ref_tool_tip = self.ref_tool_tip_pedency
-
+        ref_connection, ref_tool_tip = self.ref_universal[current_widget]
         self.re_connection(ref_connection)
         self.re_tool_tip(ref_tool_tip)
 

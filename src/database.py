@@ -193,13 +193,7 @@ class DataBase:
             )
             self.connection.commit()
 
-        id = []
-        title = []
-        for sub in cursor.fetchall():
-            id.append(sub[0])
-            title.append(sub[1])
-        
-        return id, title
+        return {sub[0] : sub[1]  for sub in cursor.fetchall()}
     
     def history(self, date_from, date_until, id = None):
         if  date_from > date_until:

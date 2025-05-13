@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>766</width>
+    <width>847</width>
     <height>683</height>
    </rect>
   </property>
@@ -91,7 +91,7 @@
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="QPushButton" name="pushButton">
+                   <widget class="QPushButton" name="pushButton_companies">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -133,7 +133,7 @@
                  <property name="font">
                   <font>
                    <family>Tw Cen MT</family>
-                   <pointsize>22</pointsize>
+                   <pointsize>28</pointsize>
                    <bold>true</bold>
                   </font>
                  </property>
@@ -222,7 +222,7 @@
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_7">
                <item>
-                <widget class="QPushButton" name="pushButton_2">
+                <widget class="QPushButton" name="pushButton_taxes">
                  <property name="font">
                   <font>
                    <family>Tw Cen MT</family>
@@ -254,7 +254,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_3">
+             <widget class="QLabel" name="label_title_taxes">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                 <horstretch>0</horstretch>
@@ -264,7 +264,7 @@
               <property name="font">
                <font>
                 <family>Tw Cen MT</family>
-                <pointsize>22</pointsize>
+                <pointsize>28</pointsize>
                 <bold>true</bold>
                </font>
               </property>
@@ -277,10 +277,24 @@
              </widget>
             </item>
             <item>
-             <widget class="QListWidget" name="listWidget">
+             <widget class="QListWidget" name="listWidget_taxes">
+              <property name="font">
+               <font>
+                <family>Arial</family>
+                <pointsize>22</pointsize>
+               </font>
+              </property>
               <property name="styleSheet">
                <string notr="true">background-color: rgb(255, 255, 255);</string>
               </property>
+              <item>
+               <property name="text">
+                <string>New Item</string>
+               </property>
+               <property name="textAlignment">
+                <set>AlignCenter</set>
+               </property>
+              </item>
              </widget>
             </item>
            </layout>
@@ -1091,7 +1105,7 @@ border-radius: 8px;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>766</width>
+     <width>847</width>
      <height>22</height>
     </rect>
    </property>
