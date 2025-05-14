@@ -155,9 +155,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.open_pedency_connection = None
 
     def in_operation(self):
-        hide = not self.pushButton_cancel_operation.isHidden()
-        self.pushButton_cancel_operation.setHidden(hide)
-        self.pushButton_confirm_operation.setHidden(hide)
+        hide = not self.frame_operation.isHidden()
+        self.frame_operation.setHidden(hide)
 
     def try_conection(self):
         try:

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>847</width>
-    <height>616</height>
+    <height>626</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -195,18 +195,44 @@ border-radius: 8px;</string>
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>25</height>
+               <height>35</height>
               </size>
              </property>
              <property name="font">
               <font>
                <family>Tw Cen MT</family>
-               <pointsize>11</pointsize>
+               <pointsize>13</pointsize>
+               <italic>true</italic>
                <underline>true</underline>
               </font>
              </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(235, 235, 235);</string>
+             </property>
              <property name="text">
               <string>Cancelar</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="Line" name="line_4">
+             <property name="minimumSize">
+              <size>
+               <width>3</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(85, 170, 255);</string>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Shadow::Plain</enum>
+             </property>
+             <property name="lineWidth">
+              <number>-1</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Orientation::Vertical</enum>
              </property>
             </widget>
            </item>
@@ -215,15 +241,19 @@ border-radius: 8px;</string>
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>25</height>
+               <height>35</height>
               </size>
              </property>
              <property name="font">
               <font>
                <family>Tw Cen MT</family>
-               <pointsize>11</pointsize>
+               <pointsize>13</pointsize>
+               <italic>true</italic>
                <underline>true</underline>
               </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(235, 235, 235);</string>
              </property>
              <property name="text">
               <string>Confirmar</string>
@@ -702,11 +732,6 @@ border-radius: 8px;</string>
               <property name="sortingEnabled">
                <bool>true</bool>
               </property>
-              <item>
-               <property name="text">
-                <string>New Item</string>
-               </property>
-              </item>
              </widget>
             </item>
            </layout>

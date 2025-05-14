@@ -25,7 +25,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(847, 616)
+        MainWindow.resize(847, 626)
         MainWindow.setAutoFillBackground(False)
         MainWindow.setStyleSheet(u"background-color: rgb(227, 227, 227);")
         self.centralwidget = QWidget(MainWindow)
@@ -136,19 +136,32 @@ class Ui_MainWindow(object):
         self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
         self.pushButton_cancel_operation = QPushButton(self.frame_operation)
         self.pushButton_cancel_operation.setObjectName(u"pushButton_cancel_operation")
-        self.pushButton_cancel_operation.setMinimumSize(QSize(0, 25))
+        self.pushButton_cancel_operation.setMinimumSize(QSize(0, 35))
         font4 = QFont()
         font4.setFamilies([u"Tw Cen MT"])
-        font4.setPointSize(11)
+        font4.setPointSize(13)
+        font4.setItalic(True)
         font4.setUnderline(True)
         self.pushButton_cancel_operation.setFont(font4)
+        self.pushButton_cancel_operation.setStyleSheet(u"background-color: rgb(235, 235, 235);")
 
         self.horizontalLayout_8.addWidget(self.pushButton_cancel_operation)
 
+        self.line_4 = QFrame(self.frame_operation)
+        self.line_4.setObjectName(u"line_4")
+        self.line_4.setMinimumSize(QSize(3, 0))
+        self.line_4.setStyleSheet(u"background-color: rgb(85, 170, 255);")
+        self.line_4.setFrameShadow(QFrame.Shadow.Plain)
+        self.line_4.setLineWidth(-1)
+        self.line_4.setFrameShape(QFrame.Shape.VLine)
+
+        self.horizontalLayout_8.addWidget(self.line_4)
+
         self.pushButton_confirm_operation = QPushButton(self.frame_operation)
         self.pushButton_confirm_operation.setObjectName(u"pushButton_confirm_operation")
-        self.pushButton_confirm_operation.setMinimumSize(QSize(0, 25))
+        self.pushButton_confirm_operation.setMinimumSize(QSize(0, 35))
         self.pushButton_confirm_operation.setFont(font4)
+        self.pushButton_confirm_operation.setStyleSheet(u"background-color: rgb(235, 235, 235);")
 
         self.horizontalLayout_8.addWidget(self.pushButton_confirm_operation)
 
@@ -401,7 +414,6 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addWidget(self.frame_title_companie, 0, 0, 1, 1)
 
         self.listWidget_companie = QListWidget(self.page_3)
-        QListWidgetItem(self.listWidget_companie)
         self.listWidget_companie.setObjectName(u"listWidget_companie")
         sizePolicy7 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicy7.setHorizontalStretch(0)
@@ -691,13 +703,6 @@ class Ui_MainWindow(object):
         self.pushButton_companies.setText(QCoreApplication.translate("MainWindow", u" Impostos cadastrados", None))
         self.label_companie_intro.setText(QCoreApplication.translate("MainWindow", u"Empresas Dispon\u00edveis", None))
         self.label_companie_subintro.setText(QCoreApplication.translate("MainWindow", u"Clique 2x para selecionar", None))
-
-        __sortingEnabled = self.listWidget_companie.isSortingEnabled()
-        self.listWidget_companie.setSortingEnabled(False)
-        ___qlistwidgetitem = self.listWidget_companie.item(0)
-        ___qlistwidgetitem.setText(QCoreApplication.translate("MainWindow", u"New Item", None));
-        self.listWidget_companie.setSortingEnabled(__sortingEnabled)
-
         self.pushButton_taxes.setText(QCoreApplication.translate("MainWindow", u"Empresas Cadastradas", None))
         self.label_title_taxes.setText(QCoreApplication.translate("MainWindow", u"Impostos Dispon\u00edveis", None))
 #if QT_CONFIG(tooltip)
