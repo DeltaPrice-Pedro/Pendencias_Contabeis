@@ -1,9 +1,10 @@
+from dateutil.relativedelta import relativedelta
+from datetime import date, datetime
 from pymysql import err, connect
 from dotenv import load_dotenv
+from change import Change
 from pathlib import Path
 from os import getenv
-from change import Change
-from datetime import date, datetime
 
 load_dotenv(Path(__file__).parent / 'env' / '.env')
 
@@ -206,6 +207,7 @@ class DataBase:
             raise Exception('Datas inválidas')
         
         query = self.query_history
+        date_until = date_until + relativedelta(days = 1)
         data_query = (date_from, date_until)
 
         if id != None:
