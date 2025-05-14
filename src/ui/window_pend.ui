@@ -732,11 +732,6 @@ border-radius: 8px;</string>
               <property name="sortingEnabled">
                <bool>true</bool>
               </property>
-              <item>
-               <property name="text">
-                <string>New Item</string>
-               </property>
-              </item>
              </widget>
             </item>
            </layout>

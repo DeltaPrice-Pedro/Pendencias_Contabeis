@@ -25,7 +25,13 @@ class DataBase:
         
         self.columns_pending = ['id_pending', 'type', 'value', 'competence', 'maturity', 'observations']
 
-        self.columns_history = ['Responsável', 'Empresa', 'Data/Hora Envio', 'Registro']
+        self.ref_history = {
+            'Responsável': lambda x : x,
+            'Empresa': lambda x: x, 
+            'Data Envio': lambda x: x.strftime('%d/%m/%Y'),
+            'Hora Envio': lambda x: x.strftime('%H:%M:%S'),
+            'Registro': lambda x: x,
+        }
 
         self.ref_key_pedency = {
                 'Valor': lambda value: float(
@@ -95,15 +101,15 @@ class DataBase:
         )
 
         self.query_history = (
-            'SELECT sender, recipient, send_datetime, log_pending '
+            'SELECT sender, recipient, send_datetime, send_datetime, log_pending '
             f'FROM {self.HISTORY_TABLE} '
-            'WHERE %s <= send_datetime <= %s '
+            "WHERE send_datetime BETWEEN %s AND %s "
         )
 
         self.query_history_id = (
             'SELECT sender, recipient, send_datetime, log_pending '
             f'FROM {self.HISTORY_TABLE} '
-            'WHERE %s <= send_datetime <= %s '
+            "WHERE send_datetime BETWEEN %s AND %s "
             'AND id_companies = %s'
         )
 
@@ -201,7 +207,7 @@ class DataBase:
         
         query = self.query_history
         data_query = (date_from, date_until)
-        
+
         if id != None:
             query = self.query_history_id
             data_query = data_query + (id,)
@@ -213,12 +219,12 @@ class DataBase:
             )
             self.connection.commit()
 
-        data = {key: [] for key in self.columns_history}
+        columns_history = list(self.ref_history.keys())
+        data = {key: [] for key in columns_history}
         for sub in cursor.fetchall():
             for index, i in enumerate(sub):
-                if self.columns_history[index] == 'Data/Hora Envio':
-                    i = i.strftime('%d/%m/%Y, %H:%M:%S')
-                data[self.columns_history[index]].append(i)
+                i = self.ref_history[columns_history[index]](i)
+                data[columns_history[index]].append(i)
             
         return data
     

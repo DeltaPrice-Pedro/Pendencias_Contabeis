@@ -53,8 +53,13 @@ class Pedency(ICRUD):
         self.taxes_header = ['Tributo','Valor']
         self.taxes_options = taxes
         self.inputs = []
-        self.confirm_connection = None
         self.season_updts = []
+        
+        self.current_operation = ''
+        self.ref_operation = {
+            'add': self.confirm_add,
+            'updt': self.confirm_updt
+        }
 
         now = datetime.now()
         self.default_resp = [
@@ -88,14 +93,13 @@ class Pedency(ICRUD):
         pass
 
     def __call__(self, *args, **kwds):
-        return self.stacked_widget
+        return self.table_pedency, self.stacked_widget
 
     def __page_1(self) -> QWidget:
         page_1 = QWidget()
         verticalLayout = QVBoxLayout(page_1)
 
         self.table_pedency = QTableWidget(page_1)
-        self.table_pedency.itemDoubleClicked.connect(self.updt)
         self.table_pedency.setEditTriggers(
             QAbstractItemView.EditTrigger.NoEditTriggers
         )
@@ -159,43 +163,11 @@ class Pedency(ICRUD):
         self.inputs.append(textEdit)
         textEdit.setStyleSheet(u"background-color: rgb(255, 255, 255);")
         gridLayout.addWidget(textEdit, 4, 1, 1, 1)
-
-        frame = QFrame(page_2)
-        self.sizePolicy.setHeightForWidth(frame.sizePolicy().hasHeightForWidth())
-        frame.setSizePolicy(self.sizePolicy)
-        frame.setFrameShape(QFrame.Shape.StyledPanel)
-        frame.setFrameShadow(QFrame.Shadow.Raised)
-        horizontalLayout = QHBoxLayout(frame)
-
-        pushButton = QPushButton(frame)
-        pushButton.setText('Cancelar')
-        pushButton.setFont(self.font2)
-        pushButton.clicked.connect( 
-            lambda: self.stacked_widget.setCurrentIndex(0)
-        )
-        pushButton.setStyleSheet(
-            u"background-color: rgb(255, 255, 255);\n"
-            "border: 1px solid rgb(85, 170, 255);\n"
-            "padding: 5px;\n"
-            "border-radius: 8px;"
-        )
-        horizontalLayout.addWidget(pushButton)
-
-        self.confirm_btn = QPushButton(frame)
-        self.confirm_btn.setText('Confirmar')
-        self.confirm_btn.setFont(self.font2)
-        self.confirm_btn.setStyleSheet(
-            u"background-color: rgb(255, 255, 255);\n"
-            "border: 1px solid rgb(85, 170, 255);\n"
-            "padding: 5px;\n"
-            "border-radius: 8px;"
-        )
-
-        horizontalLayout.addWidget(self.confirm_btn)
-
-        gridLayout.addWidget(frame, 5, 0, 1, 2)
        
         return page_2
+    
+    def cancel(self):
+        self.stacked_widget.setCurrentIndex(0)
 
     def __label_factory(self, page_2: QWidget) -> QLabel:
         label = QLabel(page_2)
@@ -263,15 +235,16 @@ class Pedency(ICRUD):
             if item.text() == type:
                 return row
         return None
+    
+    def confirm(self):
+        self.ref_operation[self.current_operation]()
 
     def add(self):
         for column in range(self.table_pedency.columnCount()):
             input = self.inputs[column]
             self.ref_input[type(input)](self.default_resp[column], input)
 
-        self.confirm_connection = self.confirm_btn.clicked.connect( 
-            self.confirm_add
-        )
+        self.current_operation = 'add'
         self.stacked_widget.setCurrentIndex(1)
 
     def confirm_add(self):
@@ -294,7 +267,6 @@ class Pedency(ICRUD):
             )
         )
         self.stacked_widget.setCurrentIndex(0)
-        self.confirm_btn.disconnect(self.confirm_connection)
 
     def updt(self):
         item = self.table_pedency.selectedItems()[0]
@@ -304,9 +276,7 @@ class Pedency(ICRUD):
             input = self.inputs[column]
             self.ref_input[type(input)](item.text(), input)
 
-        self.confirm_connection = self.confirm_btn.clicked.connect( 
-            self.confirm_updt
-        )
+        self.current_operation = 'updt'
         self.stacked_widget.setCurrentIndex(1)
 
     def __set_combo(self, value, widget):
@@ -374,7 +344,6 @@ class Pedency(ICRUD):
                 self.value_str(new_value - old_value)
             )
         self.stacked_widget.setCurrentIndex(0)
-        self.confirm_btn.disconnect(self.confirm_connection)
 
     def __check_season_updt(self, resp):
         for old_updt in self.season_updts:
