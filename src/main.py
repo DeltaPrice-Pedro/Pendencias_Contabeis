@@ -125,14 +125,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.open_pedency_connection = None
         self.re_connect_pedency()
-        self.in_operation()
+        self.frame_operation.setHidden(True)
+
         self.__fill_companies()
         self.__fill_taxes()
         self.__init_icons()
         self.switch_focus('companies')
-
-        # self.listWidget_companie.itemChanged.connect(self.confirm_companie)
-        # self.listWidget_taxes.itemChanged.connect(self.confirm_taxes)
 
         self.pushButton_companies.clicked.connect(self.open_taxes)
         self.pushButton_taxes.clicked.connect(self.exit_taxes)
@@ -146,6 +144,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_sheet_func.clicked.connect(self.sheet)
         self.pushButton_save_func.setHidden(True)
 
+        self.pushButton_add_func.clicked.connect(self.in_operation)
+        self.pushButton_edit_func.clicked.connect(self.in_operation)
+        self.pushButton_cancel_operation.clicked.connect(self.in_operation)
+        self.pushButton_confirm_operation.clicked.connect(self.in_operation)
+
     def re_connect_pedency(self):
         if self.open_pedency_connection == None:
             self.open_pedency_connection = self.listWidget_companie\
@@ -155,6 +158,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.open_pedency_connection = None
 
     def in_operation(self):
+        self.disable_btns()
         hide = not self.frame_operation.isHidden()
         self.frame_operation.setHidden(hide)
 
@@ -212,9 +216,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         item.setText('Nome da empresa')
         item.__setattr__('id', None)
 
-        self.disable_btns()
         self.re_connect_pedency()
-        self.in_operation()
 
         self.current_item_edited = item
         self.listWidget_companie.addItem(item)
@@ -226,9 +228,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         item.setText('Nome do imposto')
         item.__setattr__('id', None)
 
-        self.disable_btns()
-        self.in_operation()
-
         self.current_item_edited = item
         self.listWidget_taxes.addItem(item)
         self.listWidget_taxes.openPersistentEditor(item)
@@ -236,38 +235,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def edit_companie(self):
         try:
-            items = self.listWidget_companie.selectedItems()
-            if len(items) == 0:
-                raise Exception(self.message_select.format('editar'))
-            
-            self.disable_btns()
+            item = self.listWidget_companie.selectedItems()[0]
             self.re_connect_pedency()
-            self.in_operation()
 
-            item = items[0]
             self.current_old_edited = item.text()
             self.current_item_edited = item
             self.listWidget_companie.openPersistentEditor(item)
             self.listWidget_companie.editItem(item)
 
+        except IndexError:
+            messagebox.showerror('Aviso', self.message_select.format('editar'))
         except Exception as error: 
             messagebox.showwarning('Aviso', error)
 
     def edit_taxes(self):
         try:
-            items = self.listWidget_taxes.selectedItems()
-            if len(items) == 0:
-                raise Exception(self.message_select.format('editar'))
-            
-            self.disable_btns()
-            self.in_operation()
+            item = self.listWidget_taxes.selectedItems()[0]
 
-            item = items[0]
             self.current_old_edited = item.text()
             self.current_item_edited = item
             self.listWidget_taxes.openPersistentEditor(item)
             self.listWidget_taxes.editItem(item)
 
+        except IndexError:
+            messagebox.showerror('Aviso', self.message_select.format('editar'))
         except Exception as error: 
             messagebox.showwarning('Aviso', error)
 
@@ -288,8 +279,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.db.edit_companie(id, name)
 
             self.re_connect_pedency()
-            self.in_operation()
-            self.disable_btns()
         except Exception as error:
             messagebox.showwarning('Aviso', error)
 
@@ -305,8 +294,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             item.setText(self.current_old_edited)
 
         self.re_connect_pedency()
-        self.in_operation()
-        self.disable_btns()
 
     def cancel_taxes(self):
         item = self.current_item_edited
@@ -318,9 +305,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             )
         else:
             item.setText(self.current_old_edited)
-
-        self.disable_btns()
-        self.in_operation()
 
     def confirm_taxes(self):
         try:
@@ -338,8 +322,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 self.db.edit_taxes(id, name)
 
-            self.in_operation()
-            self.disable_btns()
         except Exception as error:
             messagebox.showwarning('Aviso', error)
 
@@ -423,8 +405,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pushButton_remove_func.clicked.connect(
                 lambda: pedency.remove()
             )
+        
+        self.connections[self.pushButton_cancel_operation] =\
+            self.pushButton_cancel_operation.clicked.connect(
+                lambda: pedency.cancel()
+            )
+        
+        self.connections[self.pushButton_confirm_operation] =\
+            self.pushButton_confirm_operation.clicked.connect(
+                lambda: pedency.confirm()
+            )
 
-        stacked_widget = pedency()
+        table, stacked_widget = pedency()
+        self.connections[table] = table.itemDoubleClicked.connect(
+            lambda: pedency.updt()
+        )
+        self.connections[table] = table.itemDoubleClicked.connect(
+            self.in_operation
+        )
+        
         stacked_widget.setParent(self.page_4)
         self.verticalLayout_3.addWidget(stacked_widget)
         return pedency
@@ -522,7 +521,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         page.deleteLater()
         self.stackedWidget_email.removeWidget(page)
 
-        stacked_widget = self.pedency()
+        table, stacked_widget = self.pedency()
         stacked_widget.deleteLater()
         self.verticalLayout_3.removeWidget(stacked_widget)
 
