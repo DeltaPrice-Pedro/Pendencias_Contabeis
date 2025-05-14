@@ -54,6 +54,7 @@ class Pedency(ICRUD):
         self.taxes_options = taxes
         self.inputs = []
         self.confirm_connection = None
+        self.season_updts = []
 
         now = datetime.now()
         self.default_resp = [
@@ -326,23 +327,35 @@ class Pedency(ICRUD):
             widget.setDate(date)
 
     def confirm_updt(self):
+        bush = ''
+        edited = True
+
         resp = self.__inputs_response()
         item = self.table_pedency.selectedItems()[0]
         row = item.row()
+
+        #Mudou mesmo?
         if self.__check_updt(resp, row) == False:
             return self.stacked_widget.setCurrentIndex(0)
+        
+        #Esses dados já existiram nessa sessão?
+        elif self.__check_season_updt(resp) == True:
+            bush = self.no_brush
+            edited = False
 
-        bush = ''
+        else:
+            self.season_updts.append(self.pedency_items(row))
+            if None == item.__getattribute__('id'):
+                bush = self.add_brush
+            else:
+                bush = self.updt_brush
+        
         old_value = self.value_float(self.table_pedency.item(row, 1).text())
         old_type = self.table_pedency.item(row, 0).text()
-        if None == item.__getattribute__('id'):
-            bush = self.add_brush
-        else:
-            bush = self.updt_brush
 
         for column in range(self.table_pedency.columnCount()):
             item = self.table_pedency.item(row, column)
-            item.__setattr__('edited', True)
+            item.__setattr__('edited', edited)
             item.setBackground(bush)
             item.setText(resp[column])
 
@@ -362,6 +375,19 @@ class Pedency(ICRUD):
             )
         self.stacked_widget.setCurrentIndex(0)
         self.confirm_btn.disconnect(self.confirm_connection)
+
+    def __check_season_updt(self, resp):
+        for old_updt in self.season_updts:
+            if resp == old_updt:
+                self.season_updts.remove(old_updt)
+                return True
+        return False
+
+    def pedency_items(self, row):
+        items = []
+        for column in range(self.table_pedency.columnCount()):
+            items.append(self.table_pedency.item(row, column).text())
+        return items
 
     def __inputs_response(self):
         resp = []
