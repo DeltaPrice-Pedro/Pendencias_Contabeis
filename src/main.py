@@ -65,6 +65,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.pushButton_remove_func: self.remove_companie,
                     self.pushButton_edit_func: self.edit_companie,
                     self.pushButton_reload_companie: self.__fill_companies,
+                    self.pushButton_confirm_operation: self.confirm_companie,
+                    self.pushButton_cancel_operation: self.cancel_companie
                 },
                 {
                     self.pushButton_add_func: 'Adciona empresa a lista de empresas cadastradas',
@@ -90,6 +92,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.pushButton_remove_func: self.remove_taxes,
                     self.pushButton_edit_func: self.edit_taxes,
                     self.pushButton_reload_companie: self.__fill_taxes,
+                    self.pushButton_confirm_operation: self.confirm_taxes,
+                    self.pushButton_cancel_operation: self.cancel_taxes
                 },
                 {
                     self.pushButton_add_func: 'Adciona imposto a lista de impostos cadastrados',
@@ -121,13 +125,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.open_pedency_connection = None
         self.re_connect_pedency()
+        self.in_operation()
         self.__fill_companies()
         self.__fill_taxes()
         self.__init_icons()
         self.switch_focus('companies')
 
-        self.listWidget_companie.itemChanged.connect(self.confirm_companie)
-        self.listWidget_taxes.itemChanged.connect(self.confirm_taxes)
+        # self.listWidget_companie.itemChanged.connect(self.confirm_companie)
+        # self.listWidget_taxes.itemChanged.connect(self.confirm_taxes)
 
         self.pushButton_companies.clicked.connect(self.open_taxes)
         self.pushButton_taxes.clicked.connect(self.exit_taxes)
@@ -148,6 +153,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.listWidget_companie.disconnect(self.open_pedency_connection)
             self.open_pedency_connection = None
+
+    def in_operation(self):
+        hide = not self.pushButton_cancel_operation.isHidden()
+        self.pushButton_cancel_operation.setHidden(hide)
+        self.pushButton_confirm_operation.setHidden(hide)
 
     def try_conection(self):
         try:
@@ -205,7 +215,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.disable_btns()
         self.re_connect_pedency()
+        self.in_operation()
 
+        self.current_item_edited = item
         self.listWidget_companie.addItem(item)
         self.listWidget_companie.openPersistentEditor(item)
         self.listWidget_companie.editItem(item)
@@ -216,7 +228,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         item.__setattr__('id', None)
 
         self.disable_btns()
+        self.in_operation()
 
+        self.current_item_edited = item
         self.listWidget_taxes.addItem(item)
         self.listWidget_taxes.openPersistentEditor(item)
         self.listWidget_taxes.editItem(item)
@@ -229,8 +243,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             
             self.disable_btns()
             self.re_connect_pedency()
+            self.in_operation()
 
             item = items[0]
+            self.current_old_edited = item.text()
+            self.current_item_edited = item
             self.listWidget_companie.openPersistentEditor(item)
             self.listWidget_companie.editItem(item)
 
@@ -244,16 +261,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 raise Exception(self.message_select.format('editar'))
             
             self.disable_btns()
+            self.in_operation()
 
             item = items[0]
+            self.current_old_edited = item.text()
+            self.current_item_edited = item
             self.listWidget_taxes.openPersistentEditor(item)
             self.listWidget_taxes.editItem(item)
 
         except Exception as error: 
             messagebox.showwarning('Aviso', error)
 
-    def confirm_companie(self, item: QListWidgetItem):
+    def confirm_companie(self):
         try:
+            item = self.current_item_edited
             name = item.text()
             if name == '':
                 raise Exception('Nome de empresa inválida')
@@ -268,12 +289,43 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.db.edit_companie(id, name)
 
             self.re_connect_pedency()
+            self.in_operation()
             self.disable_btns()
         except Exception as error:
             messagebox.showwarning('Aviso', error)
 
-    def confirm_taxes(self, item: QListWidgetItem):
+    def cancel_companie(self):
+        item = self.current_item_edited
+        self.listWidget_companie.closePersistentEditor(item)
+
+        if item.__getattribute__('id') == None:
+            self.listWidget_companie.takeItem(
+                self.listWidget_companie.row(item)
+            )
+        else:
+            item.setText(self.current_old_edited)
+
+        self.re_connect_pedency()
+        self.in_operation()
+        self.disable_btns()
+
+    def cancel_taxes(self):
+        item = self.current_item_edited
+        self.listWidget_taxes.closePersistentEditor(item)
+
+        if item.__getattribute__('id') == None:
+            self.listWidget_taxes.takeItem(
+                self.listWidget_taxes.row(item)
+            )
+        else:
+            item.setText(self.current_old_edited)
+
+        self.disable_btns()
+        self.in_operation()
+
+    def confirm_taxes(self):
         try:
+            item = self.current_item_edited
             name = item.text()
             if name == '':
                 raise Exception('Nome do imposto inválido')
@@ -287,6 +339,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 self.db.edit_taxes(id, name)
 
+            self.in_operation()
             self.disable_btns()
         except Exception as error:
             messagebox.showwarning('Aviso', error)
