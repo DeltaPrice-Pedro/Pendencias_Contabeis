@@ -135,9 +135,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_companies.clicked.connect(self.open_taxes)
         self.pushButton_taxes.clicked.connect(self.exit_taxes)
 
-        self.pushButton_cancel_email.clicked.connect(
-            lambda: self.stackedWidget_email.setCurrentIndex(2)
-        )
+        self.pushButton_cancel_email.clicked.connect(self.exit_assign)
         self.pushButton_send_email.clicked.connect(self.send_email)
         self.pushButton_save_func.clicked.connect(self.save)
         self.pushButton_exit_companie.clicked.connect(self.exit_pedency)
@@ -333,6 +331,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 raise Exception(self.message_select.format('remover'))
             
             if messagebox.askyesno('Aviso', self.message_remove) == False:
+                self.disable_btns()
                 return None
             
             item = items[0]
@@ -342,8 +341,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             )
             self.disable_btns()
         except Exception as error:
-            self.disable_btns()
             messagebox.showwarning('Aviso', error)
+            self.disable_btns()
 
     def remove_taxes(self):
         try:
@@ -551,13 +550,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             stats_address = self.address.has_change()
 
             if any([stats_pedenc, stats_address]):
-                raise Exception('Aviso', 'Salve as alterações pendentes antes de prosseguir')
+                raise Exception('Salve as alterações pendentes antes de prosseguir')
                 
             self.groupBox_email.setTitle('Assinatura')
             self.stackedWidget_email.setCurrentIndex(1)
         
         except Exception as error:
             messagebox.showwarning(title='Aviso', message= error)
+
+    def exit_assign(self):
+        self.groupBox_email.setTitle('Email')
+        self.stackedWidget_email.setCurrentIndex(2)
 
     def send_email(self):
         try:

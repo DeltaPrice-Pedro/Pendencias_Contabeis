@@ -25,7 +25,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(847, 626)
+        MainWindow.resize(847, 628)
         MainWindow.setAutoFillBackground(False)
         MainWindow.setStyleSheet(u"background-color: rgb(227, 227, 227);")
         self.centralwidget = QWidget(MainWindow)
@@ -140,10 +140,16 @@ class Ui_MainWindow(object):
         font4 = QFont()
         font4.setFamilies([u"Tw Cen MT"])
         font4.setPointSize(13)
+        font4.setBold(True)
         font4.setItalic(True)
         font4.setUnderline(True)
         self.pushButton_cancel_operation.setFont(font4)
-        self.pushButton_cancel_operation.setStyleSheet(u"background-color: rgb(235, 235, 235);")
+        self.pushButton_cancel_operation.setStyleSheet(u"background-color: rgb(255, 153, 153);\n"
+"border: 2px solid black;\n"
+"padding: 5px;\n"
+"border-radius: 8px;")
+        icon1 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ApplicationExit))
+        self.pushButton_cancel_operation.setIcon(icon1)
 
         self.horizontalLayout_8.addWidget(self.pushButton_cancel_operation)
 
@@ -161,7 +167,12 @@ class Ui_MainWindow(object):
         self.pushButton_confirm_operation.setObjectName(u"pushButton_confirm_operation")
         self.pushButton_confirm_operation.setMinimumSize(QSize(0, 35))
         self.pushButton_confirm_operation.setFont(font4)
-        self.pushButton_confirm_operation.setStyleSheet(u"background-color: rgb(235, 235, 235);")
+        self.pushButton_confirm_operation.setStyleSheet(u"background-color: rgb(183, 255, 194);\n"
+"border: 2px solid black;\n"
+"padding: 5px;\n"
+"border-radius: 8px;")
+        icon2 = QIcon(QIcon.fromTheme(u"emblem-downloads"))
+        self.pushButton_confirm_operation.setIcon(icon2)
 
         self.horizontalLayout_8.addWidget(self.pushButton_confirm_operation)
 
@@ -259,8 +270,8 @@ class Ui_MainWindow(object):
 "border: 1px solid rgb(85, 170, 255);\n"
 "padding: 5px;\n"
 "border-radius: 8px;")
-        icon1 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentRevert))
-        self.pushButton_cancel_email.setIcon(icon1)
+        icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentRevert))
+        self.pushButton_cancel_email.setIcon(icon3)
 
         self.horizontalLayout_3.addWidget(self.pushButton_cancel_email)
 
@@ -271,8 +282,8 @@ class Ui_MainWindow(object):
 "border: 1px solid rgb(85, 170, 255);\n"
 "padding: 5px;\n"
 "border-radius: 8px;")
-        icon2 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSend))
-        self.pushButton_send_email.setIcon(icon2)
+        icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSend))
+        self.pushButton_send_email.setIcon(icon4)
 
         self.horizontalLayout_3.addWidget(self.pushButton_send_email)
 
@@ -302,8 +313,8 @@ class Ui_MainWindow(object):
         self.pushButton_reload_companie.setSizePolicy(sizePolicy1)
         self.pushButton_reload_companie.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.pushButton_reload_companie.setStyleSheet(u"background-color: rgb(235, 235, 235);")
-        icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.SyncSynchronizing))
-        self.pushButton_reload_companie.setIcon(icon3)
+        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.SyncSynchronizing))
+        self.pushButton_reload_companie.setIcon(icon5)
 
         self.verticalLayout_5.addWidget(self.pushButton_reload_companie)
 
@@ -378,8 +389,8 @@ class Ui_MainWindow(object):
         self.pushButton_companies.setFont(font8)
         self.pushButton_companies.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.pushButton_companies.setStyleSheet(u"background-color: rgb(235, 235, 235);")
-        icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.EditCopy))
-        self.pushButton_companies.setIcon(icon4)
+        icon6 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.EditCopy))
+        self.pushButton_companies.setIcon(icon6)
 
         self.horizontalLayout_6.addWidget(self.pushButton_companies)
 
@@ -449,8 +460,8 @@ class Ui_MainWindow(object):
         self.pushButton_taxes.setFont(font8)
         self.pushButton_taxes.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.pushButton_taxes.setStyleSheet(u"background-color: rgb(235, 235, 235);")
-        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.GoHome))
-        self.pushButton_taxes.setIcon(icon5)
+        icon7 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.GoHome))
+        self.pushButton_taxes.setIcon(icon7)
 
         self.horizontalLayout_7.addWidget(self.pushButton_taxes)
 
@@ -498,8 +509,8 @@ class Ui_MainWindow(object):
         sizePolicy4.setHeightForWidth(self.pushButton_exit_companie.sizePolicy().hasHeightForWidth())
         self.pushButton_exit_companie.setSizePolicy(sizePolicy4)
         self.pushButton_exit_companie.setStyleSheet(u"background-color: rgb(235, 235, 235);")
-        icon6 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.SystemLogOut))
-        self.pushButton_exit_companie.setIcon(icon6)
+        icon8 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.SystemLogOut))
+        self.pushButton_exit_companie.setIcon(icon8)
 
         self.horizontalLayout.addWidget(self.pushButton_exit_companie)
 
@@ -546,9 +557,9 @@ class Ui_MainWindow(object):
 "border: 1px solid rgb(85, 170, 255);\n"
 "padding: 5px;\n"
 "border-radius: 8px;")
-        icon7 = QIcon()
-        icon7.addFile(u"../../../../../Downloads/add_icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton_add_func.setIcon(icon7)
+        icon9 = QIcon()
+        icon9.addFile(u"../../../../../Downloads/add_icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_add_func.setIcon(icon9)
         self.pushButton_add_func.setIconSize(QSize(40, 40))
 
         self.gridLayout_7.addWidget(self.pushButton_add_func, 0, 0, 1, 1)
@@ -563,8 +574,8 @@ class Ui_MainWindow(object):
 "border: 1px solid rgb(85, 170, 255);\n"
 "padding: 5px;\n"
 "border-radius: 8px;")
-        icon8 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSave))
-        self.pushButton_save_func.setIcon(icon8)
+        icon10 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSave))
+        self.pushButton_save_func.setIcon(icon10)
         self.pushButton_save_func.setIconSize(QSize(35, 35))
 
         self.gridLayout_7.addWidget(self.pushButton_save_func, 2, 1, 1, 1)
@@ -579,9 +590,9 @@ class Ui_MainWindow(object):
 "border: 1px solid rgb(85, 170, 255);\n"
 "padding: 5px;\n"
 "border-radius: 8px;")
-        icon9 = QIcon()
-        icon9.addFile(u"../../../../../Downloads/remove_icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton_remove_func.setIcon(icon9)
+        icon11 = QIcon()
+        icon11.addFile(u"../../../../../Downloads/remove_icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_remove_func.setIcon(icon11)
         self.pushButton_remove_func.setIconSize(QSize(35, 35))
 
         self.gridLayout_7.addWidget(self.pushButton_remove_func, 2, 0, 1, 1)
@@ -596,8 +607,8 @@ class Ui_MainWindow(object):
 "border: 1px solid rgb(85, 170, 255);\n"
 "padding: 5px;\n"
 "border-radius: 8px;")
-        icon10 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.MailMessageNew))
-        self.pushButton_edit_func.setIcon(icon10)
+        icon12 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.MailMessageNew))
+        self.pushButton_edit_func.setIcon(icon12)
         self.pushButton_edit_func.setIconSize(QSize(35, 35))
 
         self.gridLayout_7.addWidget(self.pushButton_edit_func, 0, 1, 1, 1)

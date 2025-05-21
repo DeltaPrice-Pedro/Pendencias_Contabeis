@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>847</width>
-    <height>626</height>
+    <height>628</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -203,14 +203,21 @@ border-radius: 8px;</string>
                <family>Tw Cen MT</family>
                <pointsize>13</pointsize>
                <italic>true</italic>
+               <bold>true</bold>
                <underline>true</underline>
               </font>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: rgb(235, 235, 235);</string>
+              <string notr="true">background-color: rgb(255, 153, 153);
+border: 2px solid black;
+padding: 5px;
+border-radius: 8px;</string>
              </property>
              <property name="text">
               <string>Cancelar</string>
+             </property>
+             <property name="icon">
+              <iconset theme="QIcon::ThemeIcon::ApplicationExit"/>
              </property>
             </widget>
            </item>
@@ -249,14 +256,21 @@ border-radius: 8px;</string>
                <family>Tw Cen MT</family>
                <pointsize>13</pointsize>
                <italic>true</italic>
+               <bold>true</bold>
                <underline>true</underline>
               </font>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: rgb(235, 235, 235);</string>
+              <string notr="true">background-color: rgb(183, 255, 194);
+border: 2px solid black;
+padding: 5px;
+border-radius: 8px;</string>
              </property>
              <property name="text">
               <string>Confirmar</string>
+             </property>
+             <property name="icon">
+              <iconset theme="emblem-downloads"/>
              </property>
             </widget>
            </item>
