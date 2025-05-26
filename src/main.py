@@ -26,10 +26,16 @@ from pymysql import err
 import sys
 
 class MainWindow(QMainWindow, Ui_MainWindow):
+    """
+    Classe principal da aplicação. Gerencia a interface gráfica, interações do usuário, integração com banco de dados, controle de empresas, pendências, impostos, emails, geração de relatórios e envio de emails.
+    """
     icon_path = Path(__file__).parent / 'imgs' / '{0}_icon.png'
     current_companie_id = ''
 
     def __init__(self, parent = None) -> None:
+        """
+        Inicializa a janela principal, configura conexões, ícones, widgets e carrega dados iniciais.
+        """
         super().__init__(parent)
         self.message_error_docker = 'Falha na conexão com o banco de dados. Favor verificar se o aplicativo "DOCKER" está inicializado no servidor, caso constrário, entre em contato com o suporte disponível\n\n{}'
 
@@ -135,9 +141,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_companies.clicked.connect(self.open_taxes)
         self.pushButton_taxes.clicked.connect(self.exit_taxes)
 
-        self.pushButton_cancel_email.clicked.connect(
-            lambda: self.stackedWidget_email.setCurrentIndex(2)
-        )
+        self.pushButton_cancel_email.clicked.connect(self.exit_assign)
         self.pushButton_send_email.clicked.connect(self.send_email)
         self.pushButton_save_func.clicked.connect(self.save)
         self.pushButton_exit_companie.clicked.connect(self.exit_pedency)
@@ -150,6 +154,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_confirm_operation.clicked.connect(self.in_operation)
 
     def re_connect_pedency(self):
+        """
+        (Re)conecta o evento de duplo clique na lista de empresas para abrir as pendências.
+        """
+        """
+        (Re)conecta o evento de duplo clique na lista de empresas para abrir as pendências.
+        """
         if self.open_pedency_connection == None:
             self.open_pedency_connection = self.listWidget_companie\
                 .itemDoubleClicked.connect(self.open_pedency)
@@ -158,11 +168,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.open_pedency_connection = None
 
     def in_operation(self):
+        """
+        Alterna o estado de operação, desabilitando botões e mostrando/escondendo o frame de operação.
+        """
+        """
+        Alterna o estado de operação, desabilitando botões e mostrando/escondendo o frame de operação.
+        """
         self.disable_btns()
         hide = not self.frame_operation.isHidden()
         self.frame_operation.setHidden(hide)
 
     def try_conection(self):
+        """
+        Tenta conectar ao banco de dados, exibindo mensagem de erro caso falhe.
+        """
+        """
+        Tenta conectar ao banco de dados, exibindo mensagem de erro caso falhe.
+        """
         try:
             return DataBase()
         except err.OperationalError as e:
@@ -170,6 +192,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             sys.exit()
 
     def __init_date_sheet(self):
+        """
+        Inicializa os campos de data do relatório com datas padrão (último mês).
+        """
+        """
+        Inicializa os campos de data do relatório com datas padrão (último mês).
+        """
         now = datetime.now()
         regex = compile(r'[0-9]+')
         ref = {
@@ -184,6 +212,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             widget.setDate(date)
 
     def __init_icons(self):
+        """
+        Inicializa ícones dos botões principais.
+        """
+        """
+        Inicializa ícones dos botões principais.
+        """
         icon_ref ={
             self.pushButton_add_func: 'add',
             self.pushButton_remove_func: 'remove'
@@ -194,6 +228,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             btn.setIcon(icon)
 
     def __fill_companies(self):
+        """
+        Preenche a lista de empresas cadastradas a partir do banco de dados.
+        """
+        """
+        Preenche a lista de empresas cadastradas a partir do banco de dados.
+        """
         data = self.db.companies()
         self.listWidget_companie.clear()
         for id, name in data.items():
@@ -203,6 +243,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.listWidget_companie.addItem(item)
 
     def __fill_taxes(self):
+        """
+        Preenche a lista de impostos cadastrados a partir do banco de dados.
+        """
+        """
+        Preenche a lista de impostos cadastrados a partir do banco de dados.
+        """
         data = self.db.taxes()
         self.listWidget_taxes.clear()
         for id, name in data.items():
@@ -212,6 +258,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.listWidget_taxes.addItem(item)
 
     def add_companie(self):
+        """
+        Adiciona uma nova empresa à lista para edição.
+        """
+        """
+        Adiciona uma nova empresa à lista para edição.
+        """
         item = QListWidgetItem()
         item.setText('Nome da empresa')
         item.__setattr__('id', None)
@@ -224,6 +276,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.listWidget_companie.editItem(item)
 
     def add_taxes(self):
+        """
+        Adiciona um novo imposto à lista para edição.
+        """
+        """
+        Adiciona um novo imposto à lista para edição.
+        """
         item = QListWidgetItem()
         item.setText('Nome do imposto')
         item.__setattr__('id', None)
@@ -234,6 +292,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.listWidget_taxes.editItem(item)
 
     def edit_companie(self):
+        """
+        Permite editar o nome da empresa selecionada.
+        """
+        """
+        Permite editar o nome da empresa selecionada.
+        """
         try:
             item = self.listWidget_companie.selectedItems()[0]
             self.re_connect_pedency()
@@ -249,6 +313,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showwarning('Aviso', error)
 
     def edit_taxes(self):
+        """
+        Permite editar o nome do imposto selecionado.
+        """
+        """
+        Permite editar o nome do imposto selecionado.
+        """
         try:
             item = self.listWidget_taxes.selectedItems()[0]
 
@@ -263,6 +333,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showwarning('Aviso', error)
 
     def confirm_companie(self):
+        """
+        Confirma a adição ou edição de uma empresa.
+        """
+        """
+        Confirma a adição ou edição de uma empresa.
+        """
         try:
             item = self.current_item_edited
             name = item.text()
@@ -283,6 +359,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showwarning('Aviso', error)
 
     def cancel_companie(self):
+        """
+        Cancela a edição ou adição de uma empresa.
+        """
+        """
+        Cancela a edição ou adição de uma empresa.
+        """
         item = self.current_item_edited
         self.listWidget_companie.closePersistentEditor(item)
 
@@ -296,6 +378,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.re_connect_pedency()
 
     def cancel_taxes(self):
+        """
+        Cancela a edição ou adição de um imposto.
+        """
+        """
+        Cancela a edição ou adição de um imposto.
+        """
         item = self.current_item_edited
         self.listWidget_taxes.closePersistentEditor(item)
 
@@ -307,6 +395,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             item.setText(self.current_old_edited)
 
     def confirm_taxes(self):
+        """
+        Confirma a adição ou edição de um imposto.
+        """
+        """
+        Confirma a adição ou edição de um imposto.
+        """
         try:
             item = self.current_item_edited
             name = item.text()
@@ -326,6 +420,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showwarning('Aviso', error)
 
     def remove_companie(self):
+        """
+        Remove a empresa selecionada, após confirmação do usuário.
+        """
+        """
+        Remove a empresa selecionada, após confirmação do usuário.
+        """
         try:
             self.disable_btns()
             items = self.listWidget_companie.selectedItems()
@@ -333,6 +433,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 raise Exception(self.message_select.format('remover'))
             
             if messagebox.askyesno('Aviso', self.message_remove) == False:
+                self.disable_btns()
                 return None
             
             item = items[0]
@@ -342,10 +443,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             )
             self.disable_btns()
         except Exception as error:
-            self.disable_btns()
             messagebox.showwarning('Aviso', error)
+            self.disable_btns()
 
     def remove_taxes(self):
+        """
+        Remove o imposto selecionado, após confirmação do usuário.
+        """
+        """
+        Remove o imposto selecionado, após confirmação do usuário.
+        """
         try:
             self.disable_btns()
             items = self.listWidget_taxes.selectedItems()
@@ -366,16 +473,34 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showwarning('Aviso', error)
 
     def open_taxes(self):
+        """
+        Abre a tela de impostos.
+        """
+        """
+        Abre a tela de impostos.
+        """
         self.stackedWidget_companie.setCurrentIndex(1)
         self.pushButton_sheet_func.setEnabled(False)
         self.switch_focus('taxes')
 
     def exit_taxes(self):
+        """
+        Retorna à tela de empresas.
+        """
+        """
+        Retorna à tela de empresas.
+        """
         self.stackedWidget_companie.setCurrentIndex(0)
         self.pushButton_sheet_func.setEnabled(True)
         self.switch_focus('companies')
 
     def open_pedency(self):
+        """
+        Abre a tela de pendências da empresa selecionada.
+        """
+        """
+        Abre a tela de pendências da empresa selecionada.
+        """
         self.switch_focus('pending')
         item = self.listWidget_companie.selectedItems()[0]
         self.label_current_companie.setText(item.text())
@@ -394,6 +519,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.stackedWidget_email.setCurrentIndex(2)
 
     def __pedency(self, id):
+        """
+        Inicializa o widget de pendências para a empresa selecionada.
+        """
+        """
+        Inicializa o widget de pendências para a empresa selecionada.
+        """
         pedency = Pedency(*self.db.pedency(id))
 
         self.connections[self.pushButton_add_func] =\
@@ -429,6 +560,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return pedency
     
     def reload_pedency(self):
+        """
+        Recarrega as pendências e emails da empresa, caso não haja alterações pendentes.
+        """
+        """
+        Recarrega as pendências e emails da empresa, caso não haja alterações pendentes.
+        """
         try:
             if any([self.pedency.has_change(), self.address.has_change()]):
                 raise Exception(self.message_pending_save)
@@ -439,6 +576,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showerror('Aviso', err)
 
     def sheet(self):
+        """
+        Gera e exporta o relatório de envios, conforme o contexto atual (todas empresas ou empresa selecionada).
+        """
+        """
+        Gera e exporta o relatório de envios, conforme o contexto atual (todas empresas ou empresa selecionada).
+        """
         try:
             self.disable_btns()
             date = self.__date_sheet_cast()
@@ -465,6 +608,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showerror('Aviso', err)
 
     def __date_sheet_cast(self):
+        """
+        Converte as datas dos widgets para objetos datetime.
+        """
+        """
+        Converte as datas dos widgets para objetos datetime.
+        """
         dates = []
         for widget in self.ref_date_sheet:
             var = widget.text().split('/')
@@ -474,10 +623,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return dates
 
     def open_file(self, path):
+        """
+        Abre o arquivo gerado pelo relatório.
+        """
+        """
+        Abre o arquivo gerado pelo relatório.
+        """
         self.exec_load(False)
         startfile(path)
 
     def save(self):
+        """
+        Salva alterações de pendências e emails, caso existam.
+        """
+        """
+        Salva alterações de pendências e emails, caso existam.
+        """
         try:
             self.disable_btns()
             stats_pedenc = self.pedency.has_change()
@@ -507,6 +668,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showerror('Aviso', err)
 
     def exit_pedency(self):
+        """
+        Sai da tela de pendências, descartando alterações não salvas se necessário.
+        """
+        """
+        Sai da tela de pendências, descartando alterações não salvas se necessário.
+        """
         if any([self.pedency.has_change(), self.address.has_change()]):
             if messagebox.askyesno('Aviso', self.message_exit_save) == False:
                 return None
@@ -526,6 +693,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.verticalLayout_3.removeWidget(stacked_widget)
 
     def switch_focus(self, current_widget: str):
+        """
+        Atualiza as conexões e tooltips dos botões conforme o contexto atual.
+        """
+        """
+        Atualiza as conexões e tooltips dos botões conforme o contexto atual.
+        """
         ref_connection = {}
         ref_tool_tip = {}
 
@@ -534,6 +707,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.re_tool_tip(ref_tool_tip)
 
     def re_connection(self, ref):
+        """
+        Reconecta os sinais dos botões conforme o dicionário de referência.
+        """
+        """
+        Reconecta os sinais dos botões conforme o dicionário de referência.
+        """
         for widget, connection in self.connections.items():
             widget.disconnect(connection)
         self.connections.clear()
@@ -542,16 +721,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.connections[widget] = widget.clicked.connect(func)
 
     def re_tool_tip(self, ref):
+        """
+        Atualiza as tooltips dos botões conforme o dicionário de referência.
+        """
+        """
+        Atualiza as tooltips dos botões conforme o dicionário de referência.
+        """
         for widget, text in ref.items():
             widget.setToolTip(text)
 
     def open_assign(self):
+        """
+        Abre a tela de assinatura de email, se não houver alterações pendentes.
+        """
+        """
+        Abre a tela de assinatura de email, se não houver alterações pendentes.
+        """
         try:
             stats_pedenc = self.pedency.has_change()
             stats_address = self.address.has_change()
 
             if any([stats_pedenc, stats_address]):
-                raise Exception('Aviso', 'Salve as alterações pendentes antes de prosseguir')
+                raise Exception('Salve as alterações pendentes antes de prosseguir')
                 
             self.groupBox_email.setTitle('Assinatura')
             self.stackedWidget_email.setCurrentIndex(1)
@@ -559,7 +750,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except Exception as error:
             messagebox.showwarning(title='Aviso', message= error)
 
+    def exit_assign(self):
+        """
+        Retorna à tela de email.
+        """
+        """
+        Retorna à tela de email.
+        """
+        self.groupBox_email.setTitle('Email')
+        self.stackedWidget_email.setCurrentIndex(2)
+
     def send_email(self):
+        """
+        Envia email com as pendências da empresa selecionada para os endereços cadastrados.
+        """
+        """
+        Envia email com as pendências da empresa selecionada para os endereços cadastrados.
+        """
         try:
             self.disable_btns()
             name_func = self.lineEdit_name_func.text()
@@ -601,6 +808,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             messagebox.showwarning(title='Aviso', message= error)
 
     def conclusion(self, result: str):
+        """
+        Exibe mensagem de conclusão do envio de email.
+        """
+        """
+        Exibe mensagem de conclusão do envio de email.
+        """
         self.local_changes.updt_sender(self.lineEdit_name_func.text())
         self.groupBox_email.setTitle('Email')
         self.stackedWidget_email.setCurrentIndex(2)
@@ -608,6 +821,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         messagebox.showinfo(title='Aviso', message= result)
 
     def save_history(self, *args):
+        """
+        Salva o histórico de envio de emails no banco de dados.
+        """
+        """
+        Salva o histórico de envio de emails no banco de dados.
+        """
         name_func, companie, taxes = args
 
         result = []
@@ -619,11 +838,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
 
     def disable_btns(self):
+        """
+        Alterna o estado de habilitação dos botões principais.
+        """
+        """
+        Alterna o estado de habilitação dos botões principais.
+        """
         self.enable_status = not self.enable_status
         for item in self.ref_disable_btns:
             item.setEnabled(self.enable_status)
 
     def exec_load(self, action: bool):
+        """
+        Exibe ou oculta o GIF de carregamento e alterna a tela de carregamento.
+        """
+        """
+        Exibe ou oculta o GIF de carregamento e alterna a tela de carregamento.
+        """
         if action == True:
             self.movie.start()
             self.stackedWidget_body.setCurrentIndex(1)
@@ -633,6 +864,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.stackedWidget_body.setCurrentIndex(0)
 
 if __name__ == '__main__':
+    """
+    Ponto de entrada da aplicação.
+    """
+    """
+    Ponto de entrada da aplicação.
+    """
     app = QApplication()
     window = MainWindow()
     window.show()

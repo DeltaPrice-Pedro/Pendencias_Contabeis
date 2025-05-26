@@ -5,11 +5,17 @@ from delta_mail import DeltaMail
 from assign import Assign
 
 class Postman(QObject):
+    """
+    Responsável por orquestrar o envio de emails com as pendências e impostos.
+    """
     sended = Signal(str, str, list)
     result = Signal(str)
     end = Signal()
 
     def __init__(self, name_func: str, companie: str, address: list[str], pedency: dict[list], taxes: dict[list]):
+        """
+        Inicializa o Postman com os dados necessários para envio.
+        """
         super().__init__()
         self.name_func = name_func
         self.companie = companie
@@ -20,6 +26,9 @@ class Postman(QObject):
         pass
 
     def execute(self):
+        """
+        Executa o processo de envio de email, gerando HTML, anexando assinatura e enviando.
+        """
         try:
             df_pedency = pd.DataFrame(self.pedency)
             df_taxes = pd.DataFrame(self.taxes)

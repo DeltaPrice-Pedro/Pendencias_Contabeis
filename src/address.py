@@ -15,7 +15,17 @@ from tkinter import messagebox
 from re import findall
 
 class Address:
+    """
+    Gerencia a interface e as operações relacionadas aos endereços de email de uma empresa.
+    Permite adicionar, editar, remover e validar emails, além de controlar as alterações para persistência.
+    """
     def __init__(self, id, address):
+        """
+        Inicializa o widget de emails com os dados fornecidos.
+        Args:
+            id (list): Lista de IDs dos emails.
+            address (list): Lista de endereços de email.
+        """
         self.sizePolicy = QSizePolicy(
             QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum
         )
@@ -49,9 +59,15 @@ class Address:
         pass
 
     def __call__(self, *args, **kwds):
+        """
+        Retorna o botão de envio e o widget da página de emails.
+        """
         return self.send_btn, self.page
 
     def __page(self):
+        """
+        Cria a página de emails com lista, botões e botão de próximo.
+        """
         page_2 = QWidget()
         verticalLayout = QVBoxLayout(page_2)
 
@@ -89,6 +105,9 @@ class Address:
         return pushButton_send_email, page_2
 
     def __buttons(self, frame_email_func):
+        """
+        Cria os botões de adicionar e remover email.
+        """
         pushButton_add = QPushButton(frame_email_func)
         icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ListAdd))
         pushButton_add.setIcon(icon)
@@ -103,6 +122,9 @@ class Address:
         return pushButton_add, pushButton_remove
 
     def __list(self, page_2):
+        """
+        Cria o QListWidget para exibir os emails.
+        """
         listWidget_email = QListWidget(page_2)
         
         self.sizePolicy_2.setHeightForWidth(
@@ -116,6 +138,9 @@ class Address:
         return listWidget_email
 
     def fill(self, ids, data):
+        """
+        Preenche a lista de emails com os dados fornecidos.
+        """
         self.listWidget_email.clear()
         for row, value in enumerate(data):
             item = QListWidgetItem()
@@ -127,6 +152,9 @@ class Address:
             self.listWidget_email.addItem(item)
 
     def add(self):
+        """
+        Adiciona um novo campo de email para edição.
+        """
         item = QListWidgetItem()
         item.setFlags(Qt.ItemIsSelectable |Qt.ItemIsEditable |Qt.ItemIsEnabled)
         item.__setattr__('id', None)
@@ -140,6 +168,9 @@ class Address:
         item.setSelected(True)
 
     def updt(self):
+        """
+        Atualiza o estado visual do item selecionado após edição.
+        """
         item = self.listWidget_email.selectedItems()[0]
         if item.__getattribute__('not_updatable') == True:
             item.__setattr__('not_updatable', False)
@@ -153,6 +184,9 @@ class Address:
         item.setBackground(bush)
 
     def remove(self):
+        """
+        Marca ou remove um email da lista, conforme o contexto.
+        """
         try:
             item = self.listWidget_email.selectedItems()[0]
             if item.text() == '' or item.__getattribute__('id') == None:
@@ -171,6 +205,9 @@ class Address:
             messagebox.showerror('Aviso', 'Primeiro, selecione o e-mail que deseja remover')
 
     def change(self) -> Change | None:
+        """
+        Retorna um objeto Change com as alterações feitas nos emails.
+        """
         if self.has_change() == False:
             return None
         
@@ -194,6 +231,9 @@ class Address:
         return changes
     
     def has_change(self)-> bool:
+        """
+        Verifica se há alterações pendentes nos emails.
+        """
         for row in range(self.listWidget_email.count()):
             item = self.listWidget_email.item(row)
             if item.background() != self.no_brush:
@@ -201,6 +241,9 @@ class Address:
         return False
 
     def __valid_add(self, text):
+        """
+        Valida o formato do email antes de adicionar.
+        """
         if text == '':
             raise Exception(
                     'Defina um endereço de e-mail para o espaço adcionado, caso contrário, o remova'
@@ -212,6 +255,9 @@ class Address:
             )
         
     def save(self):
+        """
+        Aplica as alterações visuais e remove emails marcados para remoção.
+        """
         remove_count = 0
         for row in range(self.listWidget_email.count()):
             current_row = row - remove_count
@@ -225,6 +271,9 @@ class Address:
                 item.setBackground(self.no_brush)
 
     def data(self) -> list[str]:
+        """
+        Retorna a lista atual de emails.
+        """
         data_row = []
         for row in range(self.listWidget_email.count()):
             item = self.listWidget_email.item(row)

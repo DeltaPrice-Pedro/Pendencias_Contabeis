@@ -3,6 +3,9 @@ from datetime import datetime
 import pandas as pd
 
 class Content:
+    """
+    Responsável por gerar o conteúdo HTML dos emails enviados pelo sistema.
+    """
     def __init__(self):
         self.CONTENT_BASE = Path(__file__).parent / 'html' / 'content_email.html'
         self.red_color_formatter = {
@@ -15,7 +18,9 @@ class Content:
             assign: Path, 
             name_func: str
             ) -> str:
-        
+        """
+        Gera o HTML do email a partir dos dados de pendências, impostos e assinatura.
+        """
         ref = {
             120: df_pedency,
             80: df_taxes
@@ -42,6 +47,9 @@ class Content:
                 )
     
     def greeting(self):
+        """
+        Retorna uma saudação apropriada de acordo com o horário atual.
+        """
         hora_atual = datetime.now().hour
         if hora_atual < 12:
             return 'bom dia!'
