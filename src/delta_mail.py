@@ -11,7 +11,13 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).parent / 'env' / '.env')
 
 class DeltaMail:
+    """
+    Classe responsável por compor e enviar emails com conteúdo HTML e anexos de imagem.
+    """
     def __init__(self, companie: str, recipients: list[str], content: str):
+        """
+        Inicializa o email com assunto, destinatários e conteúdo HTML.
+        """
         self.sender = getenv('SENDER_EMAIL')
         self.recipients = recipients
 
@@ -24,6 +30,11 @@ class DeltaMail:
         self.msg.attach(MIMEText(content, 'html', 'utf-8'))
         
     def attach(self, assign: Path):
+        """
+        Anexa uma imagem ao email (assinatura).
+        Args:
+            assign (Path): Caminho do arquivo de imagem a ser anexado.
+        """
         with open(assign, 'rb') as fp:
             image_data = fp.read()
 
@@ -33,6 +44,9 @@ class DeltaMail:
         self.msg.attach(image)
 
     def send(self):
+        """
+        Envia o email utilizando as configurações SMTP do ambiente.
+        """
         server = getenv("SMTP_SERVER","")
         port = getenv("SMTP_PORT", 0)
 

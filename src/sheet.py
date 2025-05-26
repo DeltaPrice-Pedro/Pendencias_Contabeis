@@ -1,4 +1,3 @@
-
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
@@ -7,6 +6,9 @@ from tkinter.filedialog import asksaveasfilename
 from PySide6.QtCore import QObject, Signal
 
 class Sheet(QObject):
+    """
+    Responsável por gerar e salvar relatórios de envios em formato Excel (.xlsx).
+    """
     start = Signal()
     end = Signal()
     result = Signal(str)
@@ -48,6 +50,9 @@ class Sheet(QObject):
 
 
     def write(self) -> dict:
+        """
+        Cria e salva o arquivo Excel com os dados fornecidos.
+        """
         self.start.emit()
 
         wb = Workbook()
@@ -71,6 +76,11 @@ class Sheet(QObject):
         self.end.emit()
 
     def upload(self):
+        """
+        Abre o diálogo para o usuário escolher onde salvar o arquivo Excel.
+        Returns:
+            str: Caminho do arquivo salvo.
+        """
         self.file_path = asksaveasfilename(
             title= self.title_upload, 
             defaultextension= self.default_extension,
