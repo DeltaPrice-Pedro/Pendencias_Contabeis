@@ -9,6 +9,10 @@ from os import getenv
 load_dotenv(Path(__file__).parent / 'env' / '.env')
 
 class DataBase:
+    """
+    Classe responsável por todas as operações de acesso ao banco de dados MySQL.
+    Gerencia empresas, pendências, emails, impostos e histórico de envios.
+    """
     COMPANIES_TABLE = 'Companies'
     PENDING_TABLE = 'Pending'
     EMAIL_TABLE = 'Emails'
@@ -16,6 +20,9 @@ class DataBase:
     TAXES_TABLE = 'Taxes'
 
     def __init__(self) -> None:
+        """
+        Inicializa a conexão com o banco de dados e define queries e referências.
+        """
         self.connection = connect(
                 host= getenv('IP_HOST'),
                 port= int(getenv('PORT_HOST')),
@@ -155,6 +162,9 @@ class DataBase:
         pass
 
     def companies(self) -> list[str]:
+        """
+        Retorna todas as empresas cadastradas.
+        """
         with self.connection.cursor() as cursor:
             cursor.execute(
                 self.query_companies
@@ -164,6 +174,9 @@ class DataBase:
         return {sub[0] : sub[1]  for sub in cursor.fetchall()}
     
     def pedency(self, companie_id: str):
+        """
+        Retorna as pendências da empresa informada.
+        """
         with self.connection.cursor() as cursor:
             cursor.execute(
                 self.query_pedency, (companie_id,)
@@ -179,6 +192,9 @@ class DataBase:
         return ids, data, list(self.taxes().values())
 
     def emails(self, companie_id: str):
+        """
+        Retorna os emails cadastrados para a empresa informada.
+        """
         with self.connection.cursor() as cursor:
             cursor.execute(
                 self.query_emails, (companie_id,)
@@ -194,6 +210,9 @@ class DataBase:
         return id, address
     
     def taxes(self):
+        """
+        Retorna todos os impostos cadastrados.
+        """
         with self.connection.cursor() as cursor:
             cursor.execute(
                 self.query_taxes,
@@ -203,6 +222,9 @@ class DataBase:
         return {sub[0] : sub[1]  for sub in cursor.fetchall()}
     
     def history(self, date_from, date_until, id = None):
+        """
+        Retorna o histórico de envios no período informado, podendo filtrar por empresa.
+        """
         if  date_from > date_until:
             raise Exception('Datas inválidas')
         
@@ -231,6 +253,9 @@ class DataBase:
         return data
     
     def add_history(self, name, companie, log, id_companies):
+        """
+        Adiciona um registro ao histórico de envios.
+        """
         with self.connection.cursor() as cursor:
             cursor.execute(
                 self.insert_history, 
@@ -239,6 +264,9 @@ class DataBase:
             self.connection.commit()
 
     def add_taxes(self, title):
+        """
+        Adiciona um novo imposto.
+        """
         with self.connection.cursor() as cursor:
             cursor.execute(
                 self.insert_taxes, 
@@ -247,6 +275,9 @@ class DataBase:
             self.connection.commit()
         
     def add_companie(self, name):
+        """
+        Adiciona uma nova empresa.
+        """
         with self.connection.cursor() as cursor:
             cursor.execute(
                 self.insert_companie, (name,) 
@@ -256,6 +287,9 @@ class DataBase:
         return cursor.lastrowid
         
     def edit_companie(self, id, name):
+        """
+        Edita o nome de uma empresa.
+        """
         with self.connection.cursor() as cursor:
             cursor.execute(
                 self.update_companie, 
@@ -264,6 +298,9 @@ class DataBase:
             self.connection.commit()
 
     def edit_taxes(self, id, title):
+        """
+        Edita o nome de um imposto.
+        """
         with self.connection.cursor() as cursor:
             cursor.execute(
                 self.update_taxes, 
@@ -272,6 +309,9 @@ class DataBase:
             self.connection.commit()
 
     def remove_companie(self, id: str):
+        """
+        Remove uma empresa e seus dados relacionados.
+        """
         with self.connection.cursor() as cursor:
             cursor.execute(
                 self.delete_companie, (id, )
@@ -279,6 +319,9 @@ class DataBase:
         self.connection.commit()
 
     def remove_taxes(self, id: str):
+        """
+        Remove um imposto.
+        """
         with self.connection.cursor() as cursor:
             cursor.execute(
                 self.delete_taxes, (id, )
@@ -286,6 +329,9 @@ class DataBase:
         self.connection.commit()
         
     def changes_pedency(self, id_companie: str, change: Change):
+        """
+        Aplica as alterações de pendências (add, update, remove) para a empresa.
+        """
         #add:list, updt: dict[tuple[dict]], remove: list[int]
         add, updt, remove = change.data()
         
@@ -302,6 +348,9 @@ class DataBase:
             self.__remove_change(id_companie, self.delete_pedency, remove)
 
     def updt_pedency(self, id_companie, updt):
+        """
+        Atualiza pendências existentes.
+        """
         with self.connection.cursor() as cursor:
             infos = self.__transform_updt_pedency(id_companie, updt)
             cursor.executemany(
@@ -311,6 +360,9 @@ class DataBase:
             self.connection.commit()
 
     def add_pedency(self, id_companie, add):
+        """
+        Adiciona novas pendências.
+        """
         with self.connection.cursor() as cursor:
             infos = self.__transform_add_pedency(id_companie, add)
             cursor.executemany(
@@ -320,6 +372,9 @@ class DataBase:
             self.connection.commit()
 
     def __transform_add_pedency(self, id_companie: str, add: list[dict]):
+        """
+        Prepara os dados para inserção de pendências.
+        """
         for data in add:
             for key, func in self.ref_key_pedency.items():
                 data[key] = func(data[key])
@@ -327,6 +382,9 @@ class DataBase:
         return add
 
     def __transform_updt_pedency(self, id_companie, change_values):
+        """
+        Prepara os dados para atualização de pendências.
+        """
         infos = ()
         for id_data, data in change_values.items():
             #Somando tuplas, caso dê errado, enviar dict com keys certas
@@ -340,17 +398,26 @@ class DataBase:
         return infos
 
     def __tranform_competence(self, value):
+        """
+        Converte competência de string para data.
+        """
         comp = [int(value) for value in value.split('/')]
         comp.reverse()
         comp.append(1)
         return date(*comp)
     
     def __transform_maturity(self, value):
+        """
+        Converte vencimento de string para data.
+        """
         comp = [int(value) for value in value.split('/')]
         comp.reverse()
         return date(*comp)
 
     def changes_address(self, id_companie: str, change: Change):
+        """
+        Aplica as alterações de emails (add, update, remove) para a empresa.
+        """
         #add: list[str], updt: dict[str], remove: list[int]
         add, updt, remove = change.data()
 
@@ -367,6 +434,9 @@ class DataBase:
             self.__remove_change(id_companie, self.delete_email, remove)
 
     def updt_address(self, id_companie, updt):
+        """
+        Atualiza emails existentes.
+        """
         with self.connection.cursor() as cursor:
             cursor.executemany(
                     self.update_emails, 
@@ -376,6 +446,9 @@ class DataBase:
             self.connection.commit()
 
     def add_address(self, id_companie, add):
+        """
+        Adiciona novos emails.
+        """
         with self.connection.cursor() as cursor:
             cursor.executemany(
                     self.insert_email, 
@@ -384,6 +457,9 @@ class DataBase:
             self.connection.commit()
 
     def __remove_change(self, id_companie: str, query: str, data: list[str]):
+        """
+        Remove registros (pendências ou emails) conforme IDs informados.
+        """
         with self.connection.cursor() as cursor:
             cursor.executemany(
                 query, 

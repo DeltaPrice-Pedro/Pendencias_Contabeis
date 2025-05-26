@@ -21,7 +21,18 @@ from datetime import datetime
 setlocale(LC_MONETARY, 'pt_BR.UTF-8')
 
 class Pedency(ICRUD):
+    """
+    Gerencia a interface e as operações relacionadas às pendências contábeis de uma empresa.
+    Permite adicionar, editar, remover e validar pendências, além de controlar as alterações para persistência.
+    """
     def __init__(self, ids:list[str], data:dict[str,list[str]], taxes:list[str]):
+        """
+        Inicializa o widget de pendências com os dados fornecidos.
+        Args:
+            ids (list): Lista de IDs das pendências.
+            data (dict): Dados das pendências.
+            taxes (list): Lista de impostos disponíveis.
+        """
         self.sizePolicy = QSizePolicy(
             QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum
         )
@@ -93,9 +104,15 @@ class Pedency(ICRUD):
         pass
 
     def __call__(self, *args, **kwds):
+        """
+        Retorna a tabela de pendências e o widget empilhado.
+        """
         return self.table_pedency, self.stacked_widget
 
     def __page_1(self) -> QWidget:
+        """
+        Cria a página principal com as tabelas de pendências e impostos.
+        """
         page_1 = QWidget()
         verticalLayout = QVBoxLayout(page_1)
 
@@ -120,6 +137,9 @@ class Pedency(ICRUD):
         return page_1
 
     def __page_2(self) -> QWidget:
+        """
+        Cria a página de edição/adicionar pendência.
+        """
         page_2 = QWidget()
         gridLayout = QGridLayout(page_2)
 
@@ -167,9 +187,15 @@ class Pedency(ICRUD):
         return page_2
     
     def cancel(self):
+        """
+        Cancela a operação de edição/adicionar e retorna à página principal.
+        """
         self.stacked_widget.setCurrentIndex(0)
 
     def __label_factory(self, page_2: QWidget) -> QLabel:
+        """
+        Cria um QLabel com formatação padrão.
+        """
         label = QLabel(page_2)
         self.sizePolicy.setHeightForWidth(label.sizePolicy().hasHeightForWidth())
         label.setSizePolicy(self.sizePolicy)
@@ -177,6 +203,9 @@ class Pedency(ICRUD):
         return label
     
     def fill(self, ids: list[str], data: dict[str,str]):
+        """
+        Preenche a tabela de pendências com os dados fornecidos.
+        """
         self.table_pedency.clear()
         self.table_pedency.setColumnCount(len(data.keys()))
         self.table_pedency.setHorizontalHeaderLabels(self.pedency_header)
@@ -196,6 +225,9 @@ class Pedency(ICRUD):
         self.__taxes()
 
     def __taxes(self):
+        """
+        Atualiza a tabela de impostos conforme as pendências.
+        """
         self.table_taxes.clear()
         self.table_taxes.setRowCount(0)
         self.table_taxes.setColumnCount(len(self.taxes_header))
@@ -206,12 +238,21 @@ class Pedency(ICRUD):
             self.__fill_taxes(pen_type, value)
 
     def value_float(self, value):
+        """
+        Converte valor monetário de string para float.
+        """
         return float(value.replace('.','').replace(',','.'))
     
     def value_str(self, value):
+        """
+        Converte valor monetário de float para string formatada.
+        """
         return currency(value, symbol= False, grouping= True)
 
     def __fill_taxes(self, type: str, value: str):
+        """
+        Atualiza ou adiciona o valor do imposto na tabela de impostos.
+        """
         row = self.__taxes_find(type)
         if row != None:
             value_item = self.table_taxes.item(row, 1)
@@ -230,6 +271,9 @@ class Pedency(ICRUD):
                 self.table_taxes.setItem(row, column, item)
 
     def __taxes_find(self, type):
+        """
+        Busca o índice de um imposto na tabela de impostos.
+        """
         for row in range(self.table_taxes.rowCount()):
             item = self.table_taxes.item(row, 0)
             if item.text() == type:
@@ -237,9 +281,15 @@ class Pedency(ICRUD):
         return None
     
     def confirm(self):
+        """
+        Confirma a operação atual (adicionar ou editar pendência).
+        """
         self.ref_operation[self.current_operation]()
 
     def add(self):
+        """
+        Inicia o processo de adição de uma nova pendência.
+        """
         for column in range(self.table_pedency.columnCount()):
             input = self.inputs[column]
             self.ref_input[type(input)](self.default_resp[column], input)
@@ -248,6 +298,9 @@ class Pedency(ICRUD):
         self.stacked_widget.setCurrentIndex(1)
 
     def confirm_add(self):
+        """
+        Confirma e adiciona a nova pendência à tabela.
+        """
         resp = self.__inputs_response()
 
         row = self.table_pedency.rowCount()
@@ -269,6 +322,9 @@ class Pedency(ICRUD):
         self.stacked_widget.setCurrentIndex(0)
 
     def updt(self):
+        """
+        Inicia o processo de edição da pendência selecionada.
+        """
         item = self.table_pedency.selectedItems()[0]
         row = item.row()
         for column in range(self.table_pedency.columnCount()):
@@ -280,6 +336,9 @@ class Pedency(ICRUD):
         self.stacked_widget.setCurrentIndex(1)
 
     def __set_combo(self, value, widget):
+        """
+        Define o valor de um QComboBox.
+        """
         if value in self.taxes_options:
             index = self.taxes_options.index(value)
             widget.setCurrentIndex(index)
@@ -287,16 +346,22 @@ class Pedency(ICRUD):
             widget.setCurrentIndex(0)
 
     def __set_date(self, value, widget):
-            list_date = findall(r'[0-9]+', value)
-            if len(list_date) == 2:
-                m, y = list_date
-                d = 1
-            else:
-                d, m, y = list_date
-            date = QDate(int(y), int(m), int(d))
-            widget.setDate(date)
+        """
+        Define o valor de um QDateEdit.
+        """
+        list_date = findall(r'[0-9]+', value)
+        if len(list_date) == 2:
+            m, y = list_date
+            d = 1
+        else:
+            d, m, y = list_date
+        date = QDate(int(y), int(m), int(d))
+        widget.setDate(date)
 
     def confirm_updt(self):
+        """
+        Confirma e aplica a edição da pendência selecionada.
+        """
         bush = ''
         edited = True
 
@@ -346,6 +411,9 @@ class Pedency(ICRUD):
         self.stacked_widget.setCurrentIndex(0)
 
     def __check_season_updt(self, resp):
+        """
+        Verifica se a edição já foi realizada nesta sessão.
+        """
         for old_updt in self.season_updts:
             if resp == old_updt:
                 self.season_updts.remove(old_updt)
@@ -353,12 +421,18 @@ class Pedency(ICRUD):
         return False
 
     def pedency_items(self, row):
+        """
+        Retorna os valores das colunas de uma linha da tabela de pendências.
+        """
         items = []
         for column in range(self.table_pedency.columnCount()):
             items.append(self.table_pedency.item(row, column).text())
         return items
 
     def __inputs_response(self):
+        """
+        Coleta os valores dos inputs do formulário de pendência.
+        """
         resp = []
         for input in self.inputs:
             text = self.ref_input_text[type(input)](input)
@@ -366,6 +440,9 @@ class Pedency(ICRUD):
         return resp
 
     def __check_updt(self, resp, row):
+        """
+        Verifica se houve alteração nos dados da pendência.
+        """
         for column in range(self.table_pedency.columnCount()):
             item = self.table_pedency.item(row, column)
             if item.text() != resp[column]:
@@ -373,6 +450,9 @@ class Pedency(ICRUD):
         return False
         
     def remove(self):
+        """
+        Marca ou remove uma pendência da tabela, conforme o contexto.
+        """
         try:
             item = self.table_pedency.selectedItems()[0]
             row = item.row()
@@ -397,6 +477,9 @@ class Pedency(ICRUD):
             messagebox.showerror('Aviso', 'Primeiro, selecione a pendência que deseja remover')
 
     def change(self) -> Change | None:
+        """
+        Retorna um objeto Change com as alterações feitas nas pendências.
+        """
         changes = Change()
         for row in range(self.table_pedency.rowCount()):
             item = self.table_pedency.item(row, 0)
@@ -424,6 +507,9 @@ class Pedency(ICRUD):
         return changes
     
     def has_change(self)-> bool:
+        """
+        Verifica se há alterações pendentes nas pendências.
+        """
         for row in range(self.table_pedency.rowCount()):
             item = self.table_pedency.item(row, 0)
             if item.background() != self.no_brush:
@@ -431,6 +517,9 @@ class Pedency(ICRUD):
         return False
 
     def __data_row(self, row) -> dict[str]:
+        """
+        Retorna os dados de uma linha da tabela de pendências como dicionário.
+        """
         data = {}
         for column in range(self.table_pedency.columnCount()):
             item = self.table_pedency.item(row, column)
@@ -439,6 +528,9 @@ class Pedency(ICRUD):
         return data
     
     def save(self):
+        """
+        Aplica as alterações visuais e remove pendências marcadas para remoção.
+        """
         remove_count = 0
         for row in range(self.table_pedency.rowCount()):
             current_row = row - remove_count
@@ -453,11 +545,17 @@ class Pedency(ICRUD):
                     item.setBackground(self.no_brush)
 
     def data(self) -> dict[list]:
+        """
+        Retorna os dados atuais das pendências e impostos.
+        """
         data_pedency = self.__data_column(self.table_pedency)
         data_taxes = self.__data_column(self.table_taxes)
         return data_pedency, data_taxes
 
     def __data_column(self, table):
+        """
+        Retorna os dados de uma tabela como dicionário de listas por coluna.
+        """
         data_column = {}
         for column in range(table.columnCount()):
             key = table.horizontalHeaderItem(column)
