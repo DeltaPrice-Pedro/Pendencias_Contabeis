@@ -36,9 +36,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         Inicializa a janela principal, configura conexões, ícones, widgets e carrega dados iniciais.
         """
-        """
-        Inicializa a janela principal, configura conexões, ícones, widgets e carrega dados iniciais.
-        """
         super().__init__(parent)
         self.message_error_docker = 'Falha na conexão com o banco de dados. Favor verificar se o aplicativo "DOCKER" está inicializado no servidor, caso constrário, entre em contato com o suporte disponível\n\n{}'
 
