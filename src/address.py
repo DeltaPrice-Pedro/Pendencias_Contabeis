@@ -32,6 +32,7 @@ class Address:
         self.sizePolicy_2 = QSizePolicy(
             QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Expanding
         )
+        
         self.sizePolicy.setHorizontalStretch(0)
         self.sizePolicy.setVerticalStretch(0)
 
@@ -55,6 +56,8 @@ class Address:
         self.no_brush = QBrush(Qt.BrushStyle.NoBrush)
 
         self.send_btn, self.page = self.__page()
+        
+        self.valid_email_pattern = r'@|\.com|\.org'
         self.fill(id, address)
         pass
 
@@ -249,7 +252,7 @@ class Address:
                     'Defina um endereço de e-mail para o espaço adcionado, caso contrário, o remova'
             )
                     
-        if len(findall(r'@|\.com', text)) != 2:
+        if len(findall(self.valid_email_pattern, text)) != 2:
             raise Exception(
                     'Defina um endereço de e-mail válido'
             )
